@@ -14,12 +14,12 @@ export default defineNuxtConfig({
   ],
 
   build: {
-    transpile: ['vuetify'],
+    transpile: ['vuetify', 'mosha-vue-toastify'],
   },
   vite: {
     define: {
       'process.env.DEBUG': false,
-    }
+    },
   },
 
   srcDir: 'src/',
