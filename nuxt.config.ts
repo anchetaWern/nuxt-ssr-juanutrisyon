@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
 export default defineNuxtConfig({
   runtimeConfig: {
     public: {
@@ -18,22 +19,17 @@ export default defineNuxtConfig({
   vite: {
     define: {
       'process.env.DEBUG': false,
-    },
+    }
   },
 
   srcDir: 'src/',
+
 
   devtools: { enabled: true },
   ssr: true,
 
   nitro: {
-    preset: 'cloudflare-pages',
-    prerender: {
-      autoSubfolderIndex: false,
-      ignore: [
-        '/images/**' 
-      ]
-    }
+    preset: 'vercel' // 'cloudflare-pages'
   },
 
   app: {

@@ -24,15 +24,22 @@
           :cols="card.flex"
         >
           <v-card @click="goToCategory(card.slug)" :id="card.slug === 'vegetables' ? 'categoryCard' : ''">
-            <v-img
-              :src="card.src"
-              class="align-end"
-              gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-              height="200px"
-              cover
-            >
-              <v-card-title class="text-white text-body-2 text-wrap" v-text="card.title"></v-card-title>
-            </v-img>
+
+            <div class="relative" style="height: 200px; overflow: hidden;">
+              <img
+                :src="card.src"
+                :alt="card.title"
+                class="w-full h-full object-cover"
+                style="object-fit: cover; object-position: center; height: 200px; width: 100%;"
+              />
+             
+              <div
+                class="px-4 py-2"
+                style="position: absolute; bottom: 0; width: 100%; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7));"
+              >
+                <span class="text-white text-body-2">{{ card.title }}</span>
+              </div>
+            </div>
 
           </v-card>
         </v-col>
@@ -97,19 +104,6 @@ import Tour from '@/components/Tour.vue';
 import { auth } from '@/firebase.js';
 import { onAuthStateChanged } from "firebase/auth";
 
-import vegetablesImage from '@/assets/images/vegetables.jpg';
-import aquaticFoodsImage from '@/assets/images/aquatic-foods.jpg';
-import fruitsImage from '@/assets/images/fruits.jpg';
-import dairyProductsImage from '@/assets/images/dairy-products.jpg';
-import cerealsAndGrainsImage from '@/assets/images/cereals-and-grains.jpg';
-import herbsAndSpicesImage from '@/assets/images/herbs-and-spices.jpg';
-import legumesNutsSeedsImage from '@/assets/images/legumes-nuts-seeds.jpg';
-import meatAndPoultryImage from '@/assets/images/meat-and-poultry.jpg';
-import fatsAndOilsImage from '@/assets/images/fats-and-oils.jpg';
-import beveragesImage from '@/assets/images/beverages.jpg';
-import sugarsAndSweetsImage from '@/assets/images/sugars-and-sweets.jpg';
-import preparedAndProcessedImage from '@/assets/images/prepared-and-processed.jpg';
-import foragedFoodsImage from '@/assets/images/foraged-foods.jpg';
 
 const router = useRouter();
 
@@ -128,19 +122,19 @@ const tourModeEnabled = inject("tourModeEnabled");
 const isLoading = ref(false);
 
 const cards = ref([
-  { id: 2, slug: 'vegetables', title: 'Vegetables', src: vegetablesImage, flex: 12 },
-  { id: 4, slug: 'aquatic-foods', title: 'Aquatic Foods', src: aquaticFoodsImage, flex: 6 },
-  { id: 4, slug: 'meat-and-poultry', title: 'Meat and Poultry', src: meatAndPoultryImage, flex: 6 },
-  { id: 7, slug: 'legumes-nuts-and-seeds', title: 'Legumes, nuts, and seeds', src: legumesNutsSeedsImage, flex: 6 },
-  { id: 8, slug: 'fats-and-oils', title: 'Fats and Oils', src: fatsAndOilsImage, flex: 6 },
-  { id: 3, slug: 'fruits', title: 'Fruits', src: fruitsImage, flex: 6 },
-  { id: 1, slug: 'cereals-and-grains', title: 'Cereals and Grains', src: cerealsAndGrainsImage, flex: 6 },
-  { id: 6, slug: 'dairy-products', title: 'Dairy Products', src: dairyProductsImage, flex: 6 },
-  { id: 11, slug: 'herbs-and-spices', title: 'Herbs and Spices', src: herbsAndSpicesImage, flex: 6 },
-  { id: 10, slug: 'beverages', title: 'Beverages', src: beveragesImage, flex: 6 },
-  { id: 12, slug: 'prepared-and-processed', title: 'Prepared and Processed', src: preparedAndProcessedImage, flex: 6 },
-  { id: 9, slug: 'sugars-and-sweets', title: 'Sugars and Sweets', src: sugarsAndSweetsImage, flex: 6 },
-  { id: 9, slug: 'foraged-foods', title: 'Foraged Foods', src: foragedFoodsImage, flex: 6 },
+  { id: 2, slug: 'vegetables', title: 'Vegetables', src: '/images/vegetables.jpg', flex: 12 },
+  { id: 4, slug: 'aquatic-foods', title: 'Aquatic Foods', src: '/images/aquatic-foods.jpg', flex: 6 },
+  { id: 4, slug: 'meat-and-poultry', title: 'Meat and Poultry', src: '/images/meat-and-poultry.jpg', flex: 6 },
+  { id: 7, slug: 'legumes-nuts-and-seeds', title: 'Legumes, nuts, and seeds', src: '/images/legumes-nuts-seeds.jpg', flex: 6 },
+  { id: 8, slug: 'fats-and-oils', title: 'Fats and Oils', src: '/images/fats-and-oils.jpg', flex: 6 },
+  { id: 3, slug: 'fruits', title: 'Fruits', src: '/images/fruits.jpg', flex: 6 },
+  { id: 1, slug: 'cereals-and-grains', title: 'Cereals and Grains', src: '/images/cereals-and-grains.jpg', flex: 6 },
+  { id: 6, slug: 'dairy-products', title: 'Dairy Products', src: '/images/dairy-products.jpg', flex: 6 },
+  { id: 11, slug: 'herbs-and-spices', title: 'Herbs and Spices', src: '/images/herbs-and-spices.jpg', flex: 6 },
+  { id: 10, slug: 'beverages', title: 'Beverages', src: '/images/beverages.jpg', flex: 6 },
+  { id: 12, slug: 'prepared-and-processed', title: 'Prepared and Processed', src: '/images/prepared-and-processed.jpg', flex: 6 },
+  { id: 9, slug: 'sugars-and-sweets', title: 'Sugars and Sweets', src: '/images/sugars-and-sweets.jpg', flex: 6 },
+  { id: 9, slug: 'foraged-foods', title: 'Foraged Foods', src: '/images/foraged-foods.jpg', flex: 6 },
 ]);
 
 const targets = ref([

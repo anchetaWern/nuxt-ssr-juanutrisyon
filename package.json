@@ -27,5 +27,8 @@
     "vue-gtag": "^3.3.0",
     "vue-router": "^4.5.1",
     "vuetify": "3.8"
+  },
+  "devDependencies": {
+    "vite-plugin-static-copy": "^2.3.1"
   }
 }
