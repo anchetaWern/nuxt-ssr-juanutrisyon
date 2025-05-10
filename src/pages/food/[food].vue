@@ -690,7 +690,7 @@ import {
 
 import { useRoute } from 'vue-router'; 
 
-import { createToast, clearToasts } from 'mosha-vue-toastify'
+import Toast, { createToast, clearToasts } from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css'
 
 import { useHead } from '@vueuse/head'

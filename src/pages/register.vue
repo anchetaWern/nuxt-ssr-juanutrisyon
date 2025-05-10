@@ -33,7 +33,7 @@
 <script>
 import { auth } from '@/firebase.js';
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { createToast } from 'mosha-vue-toastify'
+import Toast, { createToast } from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css'
 import axios from 'axios'
 

@@ -229,7 +229,7 @@ import { ref, watch, onMounted, nextTick, defineEmits, inject } from 'vue';
 
 import axios from 'axios';
 
-import { createToast, clearToasts } from 'mosha-vue-toastify'
+import Toast, { createToast, clearToasts } from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css'
 
 import { 

@@ -163,7 +163,7 @@ import logo from '@/assets/images/juan-nutrisyon.png';
 import { ref, inject } from 'vue';
 import { auth } from '@/firebase.js';
 import { signOut } from "firebase/auth";
-import { createToast } from 'mosha-vue-toastify';
+import Toast, { createToast } from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css';
 import { useRouter } from 'vue-router';
 

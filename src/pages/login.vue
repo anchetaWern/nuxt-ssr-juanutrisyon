@@ -30,7 +30,7 @@
 import { ref } from 'vue';
 import { auth } from '@/firebase.js';
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { createToast } from 'mosha-vue-toastify'
+import Toast, { createToast } from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css'
 
 import axios from 'axios';

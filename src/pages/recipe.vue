@@ -301,7 +301,7 @@ import axios from 'axios';
 
 import Compressor from 'compressorjs'
 
-import { createToast } from 'mosha-vue-toastify'
+import Toast, { createToast } from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css'
 
 import { 
