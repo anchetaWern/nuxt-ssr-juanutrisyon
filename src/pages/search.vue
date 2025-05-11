@@ -156,6 +156,7 @@ function updateSearchSummary(newSummary) {
 // Watchers for reactive updates
 watch(currentPage, (newPage) => {
   router.push({ query: { ...route.query, page: newPage } });
+  console.log('tanddo')
   updateSearchResults();
 });
 
@@ -191,6 +192,7 @@ watch(
       }
 
       updateSearchSummary(search_summary);
+      console.log('hazam: ', newParams);
       updateSearchResults();
     }
   },
@@ -371,7 +373,7 @@ const constructQuery = () => {
 }
 
 
-const updateSearchResults = () => {
+const updateSearchResults = async () => {
 
   const query = constructQuery();
   
@@ -381,55 +383,67 @@ const updateSearchResults = () => {
 
   isLoading.value = true;
 
-  retryAxios(url)
-    .then((res) => {
-      
+
+  try {
+    const dynamicKey = `food-${query}-${currentCategory.value}-${currentPage.value}`;
+
+    const { data: foodsData, error } = await useAsyncData(dynamicKey, () =>
+        $fetch(url)
+    )
+
+    if (error.value) {
+      console.error('Error fetching foods:', error.value)
+      return;
+    } 
+
+    if (foodsData.value) {
+
       const items_per_page = 10;
 
       isLoading.value = false;
 
-      totalPages.value = Math.round(res.data.total / items_per_page);
+      totalPages.value = Math.round(foodsData.value.total / items_per_page);
 
-      updateTargets(res.data.total);
+      updateTargets(foodsData.value.total);
 
-      items.value = res.data.data.flatMap((itm, index, array) => {
-        
-        const macros = itm.nutrients.map((nutrient) => {
-          if (macros_keys.indexOf(nutrient.name) !== -1) {
-            return {
-              [nutrient.name]: `${nutrient.amount.toFixed(2)}${nutrient.unit}` 
-            }
-            return false;
+      items.value = foodsData.value.data.flatMap((itm, index, array) => {
+      
+      const macros = itm.nutrients.map((nutrient) => {
+        if (macros_keys.indexOf(nutrient.name) !== -1) {
+          return {
+            [nutrient.name]: `${nutrient.amount.toFixed(2)}${nutrient.unit}` 
           }
-        })
-        .filter(nut => nut)
-        .reduce((acc, obj) => {
-          return { ...acc, ...obj };
-        }, {});
-
-        const item = {
-          prependAvatar: itm.title_image,
-          title: itm.description,
-          subtitle: `${itm.calories}${itm.calories_unit}; C: ${macros['total carbohydrates']} F: ${macros['total fat']}, P: ${macros['protein']}`,
-          to: `/food/${itm.description_slug}`
-        };
-
-        if (index < array.length - 1) {
-          return [item, { type: 'divider' }];
-        } else {
-          return [item];
+          return false;
         }
-      });
+      })
+      .filter(nut => nut)
+      .reduce((acc, obj) => {
+        return { ...acc, ...obj };
+      }, {});
 
-    })
-    .catch((err) => {
-      console.log('search err: ', err);
-      isLoading.value = false;
+      const item = {
+        prependAvatar: itm.title_image,
+        title: itm.description,
+        subtitle: `${itm.calories}${itm.calories_unit}; C: ${macros['total carbohydrates']} F: ${macros['total fat']}, P: ${macros['protein']}`,
+        to: `/food/${itm.description_slug}`
+      };
+
+      if (index < array.length - 1) {
+        return [item, { type: 'divider' }];
+      } else {
+        return [item];
+      }
     });
+
+    } else {
+      console.log('nada: ', foodsData.value);
+    }
+  } catch (err) {
+    console.log('search err: ', err);
+    isLoading.value = false;
+  }
 }
 
 
-onMounted(() => {
-  updateSearchResults();
-});
+await updateSearchResults();
 </script>
