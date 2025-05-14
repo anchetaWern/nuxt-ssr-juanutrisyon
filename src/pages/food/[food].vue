@@ -857,18 +857,18 @@ watch(selected_serving_qty, (new_serving_qty, old_serving_qty) => {
 
 watchEffect(() => {
     if (food.value) {
-    const pageTitle = food.value.description;
-    const pageDescription = `${food.value.calories}${food.value.calories_unit}. View more info at app.juanutrisyon.info`;
+        const pageTitle = food.value.description;
+        const pageDescription = `${food.value.calories}${food.value.calories_unit}. View more info at app.juanutrisyon.info`;
 
-    useHead({
-        title: pageTitle,
-        meta: [
-            { name: 'description', content: pageDescription },
-            { property: 'og:title', content: `Juan Nutrisyon - ${pageTitle}` },
-            { property: 'og:description', content: pageDescription },
-            { property: 'og:image', content: food.value.title_image },
-        ],
-    });
+        useHead({
+            title: pageTitle,
+            meta: [
+                { name: 'description', content: pageDescription },
+                { property: 'og:title', content: `Juan Nutrisyon - ${pageTitle}` },
+                { property: 'og:description', content: pageDescription },
+                { property: 'og:image', content: food.value.title_image },
+            ],
+        });
     }
 });
 
@@ -1271,8 +1271,9 @@ const fetchFoodData = async () => {
 
     newServingSize.value = foodData.value.serving_size;
 
-    if (foodData.value.custom_servings) {
-        const serving_units = foodData.value.custom_servings.serving_units
+    if (foodData.value && foodData.value.custom_serving_by_subtype) {
+        console.log('meron: ', foodData.value.custom_serving_by_subtype.serving_units);
+        const serving_units = foodData.value.custom_serving_by_subtype.serving_units
             .map(itm => ({
                 name: itm.name,
                 weight: itm.weight,
@@ -1281,12 +1282,16 @@ const fetchFoodData = async () => {
             }))
             .filter(itm => {
                 return (itm.volume_in_ml && foodData.value.density) || itm.weight
-            })
+            });
+
+
 
             if (serving_units.length > 0) {
                 custom_serving_sizes.value = serving_units
             }
-    } 
+    } else {
+        console.log('waley');
+    }
  
     
     const { data: consolidatedDailyNutrientDv, error: daily_nutrient_dv_err } = await useAsyncData('dailyNutrient', () => 
@@ -1351,35 +1356,47 @@ const fetchFoodData = async () => {
 // await fetchFoodData()
 
 // 
+console.log('slug: ', route.params.food);
+
 const { data: foodData, error } = await useAsyncData('food', () =>
     $fetch(`${API_BASE_URI}/foods/${route.params.food}`)
 )
 
+if (error) {
+    console.error('Error fetching food:', error.value);
+}
+
 if (foodData.value) {
-    console.error('Error fetching food:', error.value)
+    
 
     food.value = foodData.value;
     updateTargets(foodData.value);
 
     newServingSize.value = foodData.value.serving_size;
 
+    let serving_units = null;
+
     if (foodData.value.custom_servings) {
-        const serving_units = foodData.value.custom_servings.serving_units
-            .map(itm => ({
-                name: itm.name,
-                weight: itm.weight,
-                unit: itm.weight_unit,
-                volume_in_ml: itm.volume_in_ml,
-            }))
-            .filter(itm => {
-                return (itm.volume_in_ml && foodData.value.density) || itm.weight
-            })
+        serving_units = foodData.value.custom_servings.serving_units;
+    } else if (foodData.value.custom_serving_by_subtype) {
+        serving_units = foodData.value.custom_serving_by_subtype.serving_units;
+    }
 
-            if (serving_units.length > 0) {
-                custom_serving_sizes.value = serving_units
-            }
-    } 
+    if (serving_units) {
+        serving_units.map(itm => ({
+            name: itm.name,
+            weight: itm.weight,
+            unit: itm.weight_unit,
+            volume_in_ml: itm.volume_in_ml,
+        }))
+        .filter(itm => {
+            return (itm.volume_in_ml && foodData.value.density) || itm.weight
+        })
 
+        if (serving_units.length > 0) {
+            custom_serving_sizes.value = serving_units
+        }
+    }
 
 
     //
