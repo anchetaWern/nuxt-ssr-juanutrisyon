@@ -338,7 +338,10 @@ onMounted(() => {
     recipeName.value = sessionStorage.getItem('recipe_name');
 
     if (sessionStorage.getItem('serving_count')) {
+      console.log('hako: ', parseInt(sessionStorage.getItem('serving_count')));
       servingCount.value = parseInt(sessionStorage.getItem('serving_count'));
+    } else {
+      console.log('none');
     }
     
   }
@@ -611,6 +614,8 @@ watch(selected_serving_qty, (new_serving_qty, old_serving_qty) => {
 });
 
 watch(servingCount, () => {
+  console.log('now refreshing recipe..', servingCount.value);
+  refreshNutrients();
   refreshRecipe();
 });
 
