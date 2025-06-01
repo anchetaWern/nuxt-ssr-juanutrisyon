@@ -32,7 +32,7 @@
       <div v-if="analyze && analyze.length > 0 && servingSizes">
         <div class="text-subtitle-1 mt-5 mb-2">Summary</div>
 
-        <v-row id="analysis-summary" justify="space-between" dense no-gutters>
+        <v-row id="analysis-summary" v-if="summary_nutrients && summary_nutrients.length > 0" justify="space-between" dense no-gutters>
           <v-col
             v-for="summary_nut in summary_nutrients"
             :key="summary_nut.name"
@@ -273,7 +273,7 @@ onMounted(() => {
     const stored_analyze_items = JSON.parse(sessionStorage.getItem('analyze') || '[]');
     analyze.value = stored_analyze_items;
 
-    const stored_analyze_serving_sizes = JSON.parse(sessionStorage.getItem('analyze_serving_sizes') || '[]');
+    const stored_analyze_serving_sizes = JSON.parse(sessionStorage.getItem('analyze_serving_sizes') || '{}');
     servingSizes.value = stored_analyze_serving_sizes;
   }
 });
@@ -603,16 +603,19 @@ const refreshNutrients = () => {
       const aggregated_nutrients = aggregateNutrients(analyze_data, analyze_serving_sizes_data, 1);
     
       const filtered_nutrients = filterNutrients(aggregated_nutrients, summary_nutrients_values);
+      console.log('filtered nutrients: ', filtered_nutrients);
       
       const filtered_deficient_nutrients = filterDeficientNutrients(aggregated_nutrients, recommended_daily_values.value);
-      
+      console.log('deficient nutrients: ', filtered_deficient_nutrients);
+
       const filtered_overconsumed_nutrients = filterOverconsumedNutrients(aggregated_nutrients, recommended_daily_values.value);
-      
+      console.log('filtered overconsumed nutrients: ', filtered_overconsumed_nutrients);
+
       const overconsumed_nutrient_names = filtered_overconsumed_nutrients.map(itm => itm.name);
       
       // exclude overconsumed nutrients
       const filtered_good_coverage_nutrients = filterGoodCoverageNutrients(aggregated_nutrients, recommended_daily_values.value, overconsumed_nutrient_names);
-      
+      console.log('good nutrients: ', filtered_good_coverage_nutrients);
       summary_nutrients.value = filtered_nutrients;
 
       deficient_nutrients.value = filtered_deficient_nutrients;
