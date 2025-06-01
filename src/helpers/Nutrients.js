@@ -389,12 +389,12 @@ export function filterNutrients(nutrients, filterNames) {
     return sorted_nutrients;
 }
 
-const moderatedNutrients = ['cholesterol', 'calcium']; 
 
-const excludedNutrients = ['saturated fat', 'trans fat', 'sugar'];
 
 export function filterDeficientNutrients(nutrients, limits) {
-  
+    
+    const excludedNutrients = ['saturated fat', 'trans fat', 'sugar'];
+
     const deficient_nutrients = [];
   
     nutrients.forEach(item => {
@@ -468,6 +468,8 @@ export function filterDeficientNutrients(nutrients, limits) {
 
 
 export function filterOverconsumedNutrients(nutrients, limits) {
+    const moderatedNutrients = ['cholesterol', 'calcium']; 
+    const excludedNutrients = ['saturated fat', 'trans fat', 'sugar'];
 
     const overconsumed_nutrients = [];
   
@@ -515,6 +517,8 @@ export function filterOverconsumedNutrients(nutrients, limits) {
 
 
 export function filterGoodCoverageNutrients(nutrients, limits, overConsumedNutrients) {
+   
+    const excludedNutrients = ['saturated fat', 'trans fat', 'sugar'];
 
     const good_coverage_nutrients = [];
   
