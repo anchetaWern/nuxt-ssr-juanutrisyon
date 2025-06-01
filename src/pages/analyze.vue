@@ -270,8 +270,11 @@ const servingSizes = ref({});
 
 onMounted(() => {
   if (process.client) {
-    analyze.value = JSON.parse(sessionStorage.getItem('analyze'));
-    servingSizes.value = JSON.parse(sessionStorage.getItem('analyze_serving_sizes'));
+    const stored_analyze_items = JSON.parse(sessionStorage.getItem('analyze') || '[]');
+    analyze.value = stored_analyze_items;
+
+    const stored_analyze_serving_sizes = JSON.parse(sessionStorage.getItem('analyze_serving_sizes') || '[]');
+    servingSizes.value = stored_analyze_serving_sizes;
   }
 });
 
