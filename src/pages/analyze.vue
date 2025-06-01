@@ -16,7 +16,7 @@
         You haven't added any foods yet. You can click on the 'Analyze' button on a food page to add it. 
       </v-alert>
 
-      <div id="analyzed-foods" v-if="analyze && analyze.length > 0">
+      <div id="analyzed-foods" v-if="analyze && analyze.length > 0 && servingSizes">
        
         <div v-for="food in analyze" :key="food.description_slug" class="mb-3">
           <FoodCard 
@@ -29,7 +29,7 @@
         </div>
       </div>
 
-      <div v-if="analyze && analyze.length > 0">
+      <div v-if="analyze && analyze.length > 0 && servingSizes">
         <div class="text-subtitle-1 mt-5 mb-2">Summary</div>
 
         <v-row id="analysis-summary" justify="space-between" dense no-gutters>
