@@ -599,9 +599,12 @@ const refreshNutrients = () => {
     const analyze_serving_sizes_data = JSON.parse(sessionStorage.getItem('analyze_serving_sizes'));
 
     if (analyze_data && analyze_serving_sizes_data) {
-      
+      console.log('analyze data: ', analyze_data);
+      console.log('analyze serving sizes data: ', analyze_serving_sizes_data);
+
       const aggregated_nutrients = aggregateNutrients(analyze_data, analyze_serving_sizes_data, 1);
-    
+      console.log('aggregated nutrients: ', aggregated_nutrients);
+      
       const filtered_nutrients = filterNutrients(aggregated_nutrients, summary_nutrients_values);
       console.log('filtered nutrients: ', filtered_nutrients);
       
