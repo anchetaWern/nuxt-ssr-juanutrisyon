@@ -49,7 +49,6 @@
         placeholder="Type the name of food"
         v-model="query"
         autofocus
-        @keyup.enter="search"
       >
        
       </v-text-field>
