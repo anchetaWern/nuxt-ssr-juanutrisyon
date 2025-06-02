@@ -404,23 +404,32 @@ const loadCustomServingsData = () => {
 
 
 const fetchDailyValues = async () => {
+  /*
   let consolidated_daily_nutrient_dv = null;
 
-  if (process.client) {
+  if (sessionStorage.getItem('consolidated_daily_nutrient_dv')) {
+      consolidated_daily_nutrient_dv = JSON.parse(sessionStorage.getItem('consolidated_daily_nutrient_dv'));
+  } else {
+      const fda_daily_nutrient_values_res = await axios.get(`${API_BASE_URI}/consolidated-recommended-daily-nutrient-intake?gender=male&age=19`);
+      consolidated_daily_nutrient_dv = fda_daily_nutrient_values_res.data;
+      sessionStorage.setItem('consolidated_daily_nutrient_dv', JSON.stringify(consolidated_daily_nutrient_dv));
+  }
+  */
 
-    if (sessionStorage.getItem('consolidated_daily_nutrient_dv')) {
-        consolidated_daily_nutrient_dv = JSON.parse(sessionStorage.getItem('consolidated_daily_nutrient_dv'));
-    } else {
-        const fda_daily_nutrient_values_res = await axios.get(`${API_BASE_URI}/consolidated-recommended-daily-nutrient-intake?gender=male&age=19`);
-        consolidated_daily_nutrient_dv = fda_daily_nutrient_values_res.data;
-        sessionStorage.setItem('consolidated_daily_nutrient_dv', JSON.stringify(consolidated_daily_nutrient_dv));
-    }
+  const { data: consolidated_daily_nutrient_dv, error: daily_nutrient_dv_err } = await useAsyncData('dailyNutrient', () => 
+      $fetch(`${API_BASE_URI}/consolidated-recommended-daily-nutrient-intake?gender=male&age=19`)
+  );
 
-    const fda_daily_nutrient_values_arr = consolidated_daily_nutrient_dv.map((itm) => {
+  if (consolidated_daily_nutrient_dv.value) {
+
+    console.log('consolidated: ', consolidated_daily_nutrient_dv.value);
+
+    const fda_daily_nutrient_values_arr = consolidated_daily_nutrient_dv.value.map((itm) => {
         return {
             [itm.nutrient]: itm.daily_value,
         }
     });
+
     const fda_daily_nutrient_values = Object.assign({}, ...fda_daily_nutrient_values_arr);
     recommended_daily_values.value = fda_daily_nutrient_values;
   }
@@ -598,7 +607,7 @@ const refreshNutrients = () => {
     const analyze_data = JSON.parse(sessionStorage.getItem('analyze'));
     const analyze_serving_sizes_data = JSON.parse(sessionStorage.getItem('analyze_serving_sizes'));
 
-    if (analyze_data && analyze_serving_sizes_data) {
+    if (analyze_data && analyze_data.length > 0 && analyze_serving_sizes_data && recommended_daily_values.value) {
       console.log('analyze data: ', analyze_data);
       console.log('analyze serving sizes data: ', analyze_serving_sizes_data);
 
@@ -607,6 +616,8 @@ const refreshNutrients = () => {
       
       const filtered_nutrients = filterNutrients(aggregated_nutrients, summary_nutrients_values);
       console.log('filtered nutrients: ', filtered_nutrients);
+
+      console.log('reco values: ', recommended_daily_values.value);
       
       const filtered_deficient_nutrients = filterDeficientNutrients(aggregated_nutrients, recommended_daily_values.value);
       console.log('deficient nutrients: ', filtered_deficient_nutrients);
@@ -675,9 +686,9 @@ const submitIssue = async () => {
 
 //
 
-onMounted(() => {
+onMounted(async () => {
   loadCustomServingsData();
-  fetchDailyValues();
+  await fetchDailyValues();
   refreshNutrients();
 });
 </script>

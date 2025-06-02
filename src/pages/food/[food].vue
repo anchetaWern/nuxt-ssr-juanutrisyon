@@ -945,133 +945,144 @@ const getValueColor = (value, daily_limit) => {
 
 
 const addIngredientToRecipe = (ingredient, ingredient_serving_size) => {
-    const recipe = sessionStorage.getItem('recipe');
-    let recipe_data = [];
-    if (recipe) {
-        recipe_data = JSON.parse(recipe);
+
+    if (process.client) {
+
+        const recipe = sessionStorage.getItem('recipe');
+        let recipe_data = [];
+        if (recipe) {
+            recipe_data = JSON.parse(recipe);
+        }
+
+        const index = recipe_data.findIndex(itm => itm.description_slug === food.value.description_slug);
+
+        if (index === -1) {
+            recipe_data.push(ingredient);
+            sessionStorage.setItem('recipe', JSON.stringify(recipe_data));
+
+            let serving_size_data = {};
+            const serving_size = sessionStorage.getItem('recipe_serving_sizes');
+            if (serving_size) {
+                serving_size_data = JSON.parse(serving_size);
+            }
+
+            serving_size_data[ingredient.description_slug] = ingredient_serving_size;
+            sessionStorage.setItem('recipe_serving_sizes', JSON.stringify(serving_size_data));
+
+            let stored_custom_servings = {};
+            const stored_cs = sessionStorage.getItem('recipe_custom_servings');
+            if (stored_cs) {
+                stored_custom_servings = JSON.parse(stored_cs);
+            }
+
+            stored_custom_servings[ingredient.description_slug] = {
+                'weight': selected_custom_serving.value ? selected_custom_serving.value : ingredient_serving_size, 
+                'qty': selected_serving_qty.value ? selected_serving_qty.value : 1, 
+            }
+
+            sessionStorage.setItem('recipe_custom_servings', JSON.stringify(stored_custom_servings));
+
+            return true;
+        }
+        //
+        return false;
     }
-
-    const index = recipe_data.findIndex(itm => itm.description_slug === food.value.description_slug);
-
-    if (index === -1) {
-        recipe_data.push(ingredient);
-        sessionStorage.setItem('recipe', JSON.stringify(recipe_data));
-
-        let serving_size_data = {};
-        const serving_size = sessionStorage.getItem('recipe_serving_sizes');
-        if (serving_size) {
-            serving_size_data = JSON.parse(serving_size);
-        }
-
-        serving_size_data[ingredient.description_slug] = ingredient_serving_size;
-        sessionStorage.setItem('recipe_serving_sizes', JSON.stringify(serving_size_data));
-
-        let stored_custom_servings = {};
-        const stored_cs = sessionStorage.getItem('recipe_custom_servings');
-        if (stored_cs) {
-            stored_custom_servings = JSON.parse(stored_cs);
-        }
-
-        stored_custom_servings[ingredient.description_slug] = {
-            'weight': selected_custom_serving.value ? selected_custom_serving.value : ingredient_serving_size, 
-            'qty': selected_serving_qty.value ? selected_serving_qty.value : 1, 
-        }
-
-        sessionStorage.setItem('recipe_custom_servings', JSON.stringify(stored_custom_servings));
-
-        return true;
-    }
-    //
-    return false;
 }
 
 
 const addToRecipe = () => {
     
-    let added = false;
+    if (process.client) {
 
-    if (food.value.recipe_ingredients.length) {
-        
-        const added_results = [];
+        let added = false;
 
-        food.value.recipe_ingredients.forEach((itm) => {
-            added_results.push(addIngredientToRecipe(itm.ingredient, itm.serving_size));
-        });
+        if (food.value.recipe_ingredients.length) {
+            
+            const added_results = [];
 
-        if (added_results.length && added_results[0]) {
-            added = true;
-            sessionStorage.setItem('serving_count', food.value.servings_per_container);
-            sessionStorage.setItem('recipe_name', food.value.description);
+            food.value.recipe_ingredients.forEach((itm) => {
+                added_results.push(addIngredientToRecipe(itm.ingredient, itm.serving_size));
+            });
+
+            if (added_results.length && added_results[0]) {
+                added = true;
+                sessionStorage.setItem('serving_count', food.value.servings_per_container);
+                sessionStorage.setItem('recipe_name', food.value.description);
+            }
+            
+
+        } else {
+            added = addIngredientToRecipe(food.value, food.value.serving_size);
         }
         
 
-    } else {
-        added = addIngredientToRecipe(food.value, food.value.serving_size);
+        if (added) {
+
+            createToast(
+                {
+                    title: 'Added!',
+                    description: food.value.recipe_ingredients.length ? 'Recipe ingredients was added' : 'Ingredient was added to recipe'
+                }, 
+                { type: 'success', position: 'bottom-right' }
+            );
+
+            emit('update-ingredient-count-child');
+        }
     }
-    
-
-    if (added) {
-
-        createToast(
-            {
-                title: 'Added!',
-                description: food.value.recipe_ingredients.length ? 'Recipe ingredients was added' : 'Ingredient was added to recipe'
-            }, 
-            { type: 'success', position: 'bottom-right' }
-        );
-
-        emit('update-ingredient-count-child');
-    }
-
 }
 
 
 const addForAnalysis = () => {
-    const analyze = sessionStorage.getItem('analyze');
-    let analyze_data = [];
-    if (analyze) {
-        analyze_data = JSON.parse(analyze);
+
+    if (process.client) {
+
+        const analyze = sessionStorage.getItem('analyze');
+        let analyze_data = [];
+        if (analyze) {
+            analyze_data = JSON.parse(analyze);
+        }
+
+        const index = analyze_data.findIndex(itm => itm.description_slug === food.value.description_slug);
+        if (index === -1) {
+            analyze_data.push(food.value);
+            sessionStorage.setItem('analyze', JSON.stringify(analyze_data));
+
+            let serving_size_data = {};
+            const serving_size = sessionStorage.getItem('analyze_serving_sizes');
+            if (serving_size) {
+                serving_size_data = JSON.parse(serving_size);
+            }
+
+            serving_size_data[food.value.description_slug] = newServingSize.value ? newServingSize.value : food.value.serving_size; 
+            sessionStorage.setItem('analyze_serving_sizes', JSON.stringify(serving_size_data));
+
+            
+            let stored_custom_servings = {};
+            const stored_cs = sessionStorage.getItem('analyze_custom_servings');
+            if (stored_cs) {
+                stored_custom_servings = JSON.parse(stored_cs);
+            }
+
+            stored_custom_servings[food.value.description_slug] = {
+                'weight': selected_custom_serving.value ? selected_custom_serving.value : food.value.serving_size, 
+                'qty': selected_serving_qty.value ? selected_serving_qty.value : 1, 
+            }
+
+            sessionStorage.setItem('analyze_custom_servings', JSON.stringify(stored_custom_servings));
+            
+
+            createToast(
+                {
+                    title: 'Added!',
+                    description: 'Food was added for analysis'
+                }, 
+                { type: 'success', position: 'bottom-right' }
+            );
+
+            emit('update-analyze-count-child');
+        }
+
     }
-
-    const index = analyze_data.findIndex(itm => itm.description_slug === food.value.description_slug);
-    if (index === -1) {
-        analyze_data.push(food.value);
-        sessionStorage.setItem('analyze', JSON.stringify(analyze_data));
-
-        let serving_size_data = {};
-        const serving_size = sessionStorage.getItem('analyze_serving_sizes');
-        if (serving_size) {
-            serving_size_data = JSON.parse(serving_size);
-        }
-
-        serving_size_data[food.value.description_slug] = newServingSize.value ? newServingSize.value : food.value.serving_size; 
-        sessionStorage.setItem('analyze_serving_sizes', JSON.stringify(serving_size_data));
-
-        
-        let stored_custom_servings = {};
-        const stored_cs = sessionStorage.getItem('analyze_custom_servings');
-        if (stored_cs) {
-            stored_custom_servings = JSON.parse(stored_cs);
-        }
-
-        stored_custom_servings[food.value.description_slug] = {
-            'weight': selected_custom_serving.value ? selected_custom_serving.value : food.value.serving_size, 
-            'qty': selected_serving_qty.value ? selected_serving_qty.value : 1, 
-        }
-
-        sessionStorage.setItem('analyze_custom_servings', JSON.stringify(stored_custom_servings));
-        
-
-        createToast(
-            {
-                title: 'Added!',
-                description: 'Food was added for analysis'
-            }, 
-            { type: 'success', position: 'bottom-right' }
-        );
-
-        emit('update-analyze-count-child');
-    } 
 }
 
 
@@ -1547,6 +1558,7 @@ const fetchData = async () => {
     
         let consolidated_daily_nutrient_dv = null;
         // todo: remove sessionStorage check
+        /*
         if (sessionStorage.getItem('consolidated_daily_nutrient_dv')) {
             consolidated_daily_nutrient_dv = JSON.parse(sessionStorage.getItem('consolidated_daily_nutrient_dv'));
         } else {
@@ -1554,7 +1566,13 @@ const fetchData = async () => {
             consolidated_daily_nutrient_dv = fda_daily_nutrient_values_res.data.value;
             sessionStorage.setItem('consolidated_daily_nutrient_dv', JSON.stringify(consolidated_daily_nutrient_dv));
         }
-        
+        */
+
+        const fda_daily_nutrient_values_res = await useFetch(`${API_BASE_URI}/consolidated-recommended-daily-nutrient-intake?gender=male&age=19`);
+        consolidated_daily_nutrient_dv = fda_daily_nutrient_values_res.data.value;
+        if (process.client) {
+            sessionStorage.setItem('consolidated_daily_nutrient_dv', JSON.stringify(consolidated_daily_nutrient_dv));
+        }
 
         const fda_daily_nutrient_values_arr = consolidated_daily_nutrient_dv.map((itm) => {
             return {
@@ -1684,7 +1702,9 @@ const fetchData = async () => {
 
         // get fao claims
         // TODO: remove sessionStorage
+
         let fao_nutrient_content_claims = null;
+        /*
         if (sessionStorage.getItem('fao_nutrient_content_claims')) {
             fao_nutrient_content_claims = JSON.parse(sessionStorage.getItem('fao_nutrient_content_claims'));
         } else {
@@ -1692,7 +1712,14 @@ const fetchData = async () => {
             fao_nutrient_content_claims = fda_daily_nutrient_values_res.data.value;
             sessionStorage.setItem('fao_nutrient_content_claims', JSON.stringify(fao_nutrient_content_claims));
         }
+        */
 
+        const fao_nutrient_content_claims_res = await useFetch(`${API_BASE_URI}/fao-nutrient-content-claims`);
+        fao_nutrient_content_claims = fao_nutrient_content_claims_res.data.value;
+        if (process.client) {
+            sessionStorage.setItem('fao_nutrient_content_claims', JSON.stringify(fao_nutrient_content_claims));
+        }
+        
         // filter using the current food state
         const normalized_food_state = normalizeFoodState(food.value.state.name);
         const filtered_fao_nutrient_content_claims = fao_nutrient_content_claims.filter((itm) => {

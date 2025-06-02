@@ -912,8 +912,8 @@ const changeServingSize = () => {
     modifyServingSizeDialog.value = false;
 
     // note: works
-  console.log('nado: ', current_food_slug.value);
-  console.log('sado: ', current_food_serving_size.value);
+    console.log('nado: ', current_food_slug.value);
+    console.log('sado: ', current_food_serving_size.value);
 
     updateServingSize(current_food_slug.value, current_food_serving_size.value);
 

@@ -392,7 +392,7 @@ export function filterNutrients(nutrients, filterNames) {
 
 
 export function filterDeficientNutrients(nutrients, limits) {
-    
+   
     const excludedNutrients = ['saturated fat', 'trans fat', 'sugar'];
 
     const deficient_nutrients = [];

@@ -50,26 +50,34 @@ onAuthStateChanged(auth, (user) => {
 });
 
 onMounted(() => {
-  const recipe_data = JSON.parse(sessionStorage.getItem('recipe'));
-  const recipe_serving_sizes = JSON.parse(sessionStorage.getItem('recipe_serving_sizes'));
-  if (recipe_data && recipe_serving_sizes) {
-    ingredientCount.value = recipe_data.length;
+
+  if (process.client) {
+
+    const recipe_data = JSON.parse(sessionStorage.getItem('recipe'));
+    const recipe_serving_sizes = JSON.parse(sessionStorage.getItem('recipe_serving_sizes'));
+    if (recipe_data && recipe_serving_sizes) {
+      ingredientCount.value = recipe_data.length;
+    }
+
+    const analyze_data = JSON.parse(sessionStorage.getItem('analyze'));
+    if (analyze_data) {
+      analyzeCount.value = analyze_data.length;
+    }
   }
 
-  const analyze_data = JSON.parse(sessionStorage.getItem('analyze'));
-  if (analyze_data) {
-    analyzeCount.value = analyze_data.length;
-  }
 });
 
 const updateIngredientCount = () => {
-  const recipe_data = JSON.parse(sessionStorage.getItem('recipe'));
-  const recipe_serving_sizes = JSON.parse(sessionStorage.getItem('recipe_serving_sizes'));
 
-  if (recipe_data && recipe_serving_sizes) {
-    ingredientCount.value = recipe_data.length;
-  } else {
-    ingredientCount.value = 0;
+  if (process.client) {
+    const recipe_data = JSON.parse(sessionStorage.getItem('recipe'));
+    const recipe_serving_sizes = JSON.parse(sessionStorage.getItem('recipe_serving_sizes'));
+
+    if (recipe_data && recipe_serving_sizes) {
+      ingredientCount.value = recipe_data.length;
+    } else {
+      ingredientCount.value = 0;
+    }
   }
 }
 
@@ -79,7 +87,9 @@ const updateServingSize = () => {
 
 const updateServingCount = (servingCount) => {
 
-  sessionStorage.setItem('serving_count', servingCount);
+  if (process.client) {
+    sessionStorage.setItem('serving_count', servingCount);
+  }
 }
 
 const updateAnalyzeCount = () => {
