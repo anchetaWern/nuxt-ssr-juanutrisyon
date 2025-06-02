@@ -175,7 +175,7 @@
 
       <div class="text-subtitle-1 mb-2">Estimated nutrients per serving</div>
 
-      <div id="macros-section" class="mt-3" v-if="macros.length">
+      <div id="macros-section" class="mt-3" v-if="macros.length && recommended_daily_values">
         <span class="text-subtitle-2">Macros</span>
         <NutrientsTable 
           v-if="macros"
@@ -189,7 +189,7 @@
       </div>
 
 
-      <div id="vitamins-section" class="mt-3" v-if="vitamins.length">
+      <div id="vitamins-section" class="mt-3" v-if="vitamins.length && recommended_daily_values">
         <span class="text-subtitle-2">Vitamins</span>
         <NutrientsTable 
           :nutrients="vitamins" 
@@ -201,7 +201,7 @@
           :getValueColor="getValueColor" />
       </div>
 
-      <div id="minerals-section" class="mt-3" v-if="minerals.length">
+      <div id="minerals-section" class="mt-3" v-if="minerals.length && recommended_daily_values">
         <span class="text-subtitle-2">Minerals</span>
         <NutrientsTable 
           :nutrients="minerals" 
@@ -213,7 +213,7 @@
           :getValueColor="getValueColor" />
       </div>
 
-      <div id="other-nutrients-section" class="mt-3" v-if="others.length">
+      <div id="other-nutrients-section" class="mt-3" v-if="others.length && recommended_daily_values">
         <span class="text-subtitle-2">Others</span>
         <NutrientsTable 
           :nutrients="others" 
