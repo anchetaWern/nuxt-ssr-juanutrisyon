@@ -377,70 +377,73 @@ const updateSearchResults = async () => {
 
   const query = constructQuery();
   
-  const macros_keys = ['total carbohydrates', 'protein', 'total fat'];
-  
-  const url = currentCategory.value ? `${API_BASE_URI}/foods?${query}&category=${currentCategory.value}&page=${currentPage.value}` : `${API_BASE_URI}/foods?${query}&page=${currentPage.value}`;
+  if (query || currentCategory.value) {
+    const macros_keys = ['total carbohydrates', 'protein', 'total fat'];
+    
+    const url = currentCategory.value ? `${API_BASE_URI}/foods?${query}&category=${currentCategory.value}&page=${currentPage.value}` : `${API_BASE_URI}/foods?${query}&page=${currentPage.value}`;
 
-  isLoading.value = true;
+    isLoading.value = true;
 
 
-  try {
-    const dynamicKey = `food-${query}-${currentCategory.value}-${currentPage.value}`;
+    try {
+      const dynamicKey = `food-${query}-${currentCategory.value}-${currentPage.value}`;
 
-    const { data: foodsData, error } = await useAsyncData(dynamicKey, () =>
-        $fetch(url)
-    )
+      const { data: foodsData, error } = await useAsyncData(dynamicKey, () =>
+          $fetch(url)
+      )
 
-    if (error.value) {
-      console.error('Error fetching foods:', error.value)
-      return;
-    } 
+      if (error.value) {
+        console.error('Error fetching foods:', error.value)
+        return;
+      } 
 
-    if (foodsData.value) {
+      if (foodsData.value) {
 
-      const items_per_page = 10;
+        const items_per_page = 10;
 
-      isLoading.value = false;
+        isLoading.value = false;
 
-      totalPages.value = Math.round(foodsData.value.total / items_per_page);
+        totalPages.value = Math.round(foodsData.value.total / items_per_page);
 
-      updateTargets(foodsData.value.total);
+        updateTargets(foodsData.value.total);
 
-      items.value = foodsData.value.data.flatMap((itm, index, array) => {
-      
-      const macros = itm.nutrients.map((nutrient) => {
-        if (macros_keys.indexOf(nutrient.name) !== -1) {
-          return {
-            [nutrient.name]: `${nutrient.amount.toFixed(2)}${nutrient.unit}` 
+        items.value = foodsData.value.data.flatMap((itm, index, array) => {
+        
+        const macros = itm.nutrients.map((nutrient) => {
+          if (macros_keys.indexOf(nutrient.name) !== -1) {
+            return {
+              [nutrient.name]: `${nutrient.amount.toFixed(2)}${nutrient.unit}` 
+            }
+            return false;
           }
-          return false;
+        })
+        .filter(nut => nut)
+        .reduce((acc, obj) => {
+          return { ...acc, ...obj };
+        }, {});
+
+        const item = {
+          prependAvatar: itm.title_image,
+          title: itm.description,
+          subtitle: `${itm.calories}${itm.calories_unit}; C: ${macros['total carbohydrates']} F: ${macros['total fat']}, P: ${macros['protein']}`,
+          to: `/food/${itm.description_slug}`
+        };
+
+        if (index < array.length - 1) {
+          return [item, { type: 'divider' }];
+        } else {
+          return [item];
         }
-      })
-      .filter(nut => nut)
-      .reduce((acc, obj) => {
-        return { ...acc, ...obj };
-      }, {});
+      });
 
-      const item = {
-        prependAvatar: itm.title_image,
-        title: itm.description,
-        subtitle: `${itm.calories}${itm.calories_unit}; C: ${macros['total carbohydrates']} F: ${macros['total fat']}, P: ${macros['protein']}`,
-        to: `/food/${itm.description_slug}`
-      };
-
-      if (index < array.length - 1) {
-        return [item, { type: 'divider' }];
       } else {
-        return [item];
+        console.log('nada: ', foodsData.value);
       }
-    });
-
-    } else {
-      console.log('nada: ', foodsData.value);
+    } catch (err) {
+      console.log('search err: ', err);
+      isLoading.value = false;
     }
-  } catch (err) {
-    console.log('search err: ', err);
-    isLoading.value = false;
+
   }
 }
 
