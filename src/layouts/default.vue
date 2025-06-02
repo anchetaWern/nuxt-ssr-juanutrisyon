@@ -97,13 +97,16 @@ const updateItems = (q) => {
   
   const category = currentRoute.value.query.category;
 
-  router.push({ 
-    name: 'search', 
-    query: { 
-      category,
-      q, 
-    }
-  });
+  if (category || q) {
+    router.push({ 
+      name: 'search', 
+      query: { 
+        category,
+        q, 
+      }
+    });
+  }
+  
 }
 
 
