@@ -312,6 +312,7 @@ import {
     getOthers,
     modifyServingSize,
     amountPerContainer,
+    convertKjToKcal,
 } from '@/helpers/Nutrients';
 
 import { calculatePercentage, wholeNumber, formatNumber } from '@/helpers/Numbers';
@@ -848,8 +849,8 @@ const refreshNutrients = () => {
         const serving_size_unit = itm.serving_size_unit;
         const food_state = itm.food_state;
         const food_substate = itm.food_substate;
-        const original_calories = itm.calories;
-        const new_calories = modifyServingSize(original_serving_size, serving_size, itm.calories);
+        const original_calories = convertKjToKcal(itm.calories, itm.calories_unit);
+        const new_calories = modifyServingSize(original_serving_size, serving_size, original_calories);
       
         return {
           slug: itm.description_slug,

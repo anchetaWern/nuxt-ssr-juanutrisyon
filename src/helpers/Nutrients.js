@@ -848,7 +848,7 @@ export function sortNutrients(nutrients) {
 
 export function convertKjToKcal(value, unit)
 {
-    if (unit === 'kj') {
+    if (unit === 'kj' || unit === 'KJ' || unit === 'kJ') {
         return Math.round(value * 0.239);
     }
 

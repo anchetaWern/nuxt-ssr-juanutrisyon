@@ -63,6 +63,7 @@ import { defineComponent, watch, ref, getCurrentInstance, inject, onMounted } fr
 import axios from 'axios';
 import { useRouter, useRoute } from 'vue-router';
 import { unslugify } from '@/helpers/Str';
+import { convertKjToKcal } from '@/helpers/Nutrients';
 import Tour from '@/components/Tour.vue';
 
 import { retryAxios } from '@/api/retryAxios';
@@ -425,7 +426,7 @@ const updateSearchResults = async () => {
         const item = {
           prependAvatar: itm.title_image,
           title: itm.description,
-          subtitle: `${itm.calories}${itm.calories_unit}; C: ${macros['total carbohydrates']} F: ${macros['total fat']}, P: ${macros['protein']}`,
+          subtitle: `${convertKjToKcal(itm.calories, itm.calories_unit)}kcal; C: ${macros['total carbohydrates']} F: ${macros['total fat']}, P: ${macros['protein']}`,
           to: `/food/${itm.description_slug}`
         };
 
