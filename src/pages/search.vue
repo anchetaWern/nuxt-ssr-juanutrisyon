@@ -410,23 +410,10 @@ const updateSearchResults = async () => {
 
         items.value = foodsData.value.data.flatMap((itm, index, array) => {
         
-        const macros = itm.nutrients.map((nutrient) => {
-          if (macros_keys.indexOf(nutrient.name) !== -1) {
-            return {
-              [nutrient.name]: `${nutrient.amount.toFixed(2)}${nutrient.unit}` 
-            }
-            return false;
-          }
-        })
-        .filter(nut => nut)
-        .reduce((acc, obj) => {
-          return { ...acc, ...obj };
-        }, {});
-
         const item = {
           prependAvatar: itm.title_image,
           title: itm.description,
-          subtitle: `${convertKjToKcal(itm.calories, itm.calories_unit)}kcal; C: ${macros['total carbohydrates']} F: ${macros['total fat']}, P: ${macros['protein']}`,
+          subtitle: `${convertKjToKcal(itm.calories, itm.calories_unit)}kcal`,
           to: `/food/${itm.description_slug}`
         };
 
