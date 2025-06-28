@@ -271,6 +271,7 @@ const servingSizes = ref({});
 onMounted(() => {
   if (process.client) {
     const stored_analyze_items = JSON.parse(sessionStorage.getItem('analyze') || '[]');
+    console.log('now setting analyze: ', stored_analyze_items);
     analyze.value = stored_analyze_items;
 
     const stored_analyze_serving_sizes = JSON.parse(sessionStorage.getItem('analyze_serving_sizes') || '{}');
@@ -402,38 +403,26 @@ const loadCustomServingsData = () => {
   }
 }
 
-
 const fetchDailyValues = async () => {
-  /*
-  let consolidated_daily_nutrient_dv = null;
+  console.log('===fetching daily values...');
 
-  if (sessionStorage.getItem('consolidated_daily_nutrient_dv')) {
-      consolidated_daily_nutrient_dv = JSON.parse(sessionStorage.getItem('consolidated_daily_nutrient_dv'));
-  } else {
-      const fda_daily_nutrient_values_res = await axios.get(`${API_BASE_URI}/consolidated-recommended-daily-nutrient-intake?gender=male&age=19`);
-      consolidated_daily_nutrient_dv = fda_daily_nutrient_values_res.data;
-      sessionStorage.setItem('consolidated_daily_nutrient_dv', JSON.stringify(consolidated_daily_nutrient_dv));
+  try {
+    const data = await $fetch(`${API_BASE_URI}/consolidated-recommended-daily-nutrient-intake?gender=male&age=19`);
+
+    if (data) {
+      console.log('consolidated: ', data);
+
+      const fda_daily_nutrient_values_arr = data.map((itm) => ({
+        [itm.nutrient]: itm.daily_value,
+      }));
+
+      const fda_daily_nutrient_values = Object.assign({}, ...fda_daily_nutrient_values_arr);
+      recommended_daily_values.value = fda_daily_nutrient_values;
+    }
+  } catch (error) {
+    console.error('Failed to fetch daily values:', error);
   }
-  */
-
-  const { data: consolidated_daily_nutrient_dv, error: daily_nutrient_dv_err } = await useAsyncData('dailyNutrient', () => 
-      $fetch(`${API_BASE_URI}/consolidated-recommended-daily-nutrient-intake?gender=male&age=19`)
-  );
-
-  if (consolidated_daily_nutrient_dv.value) {
-
-    console.log('consolidated: ', consolidated_daily_nutrient_dv.value);
-
-    const fda_daily_nutrient_values_arr = consolidated_daily_nutrient_dv.value.map((itm) => {
-        return {
-            [itm.nutrient]: itm.daily_value,
-        }
-    });
-
-    const fda_daily_nutrient_values = Object.assign({}, ...fda_daily_nutrient_values_arr);
-    recommended_daily_values.value = fda_daily_nutrient_values;
-  }
-}
+};
 
 
 const openModifyServingSizeModal = (food_slug, custom_servings_category) => {
@@ -574,6 +563,7 @@ const removeFood = (slug) => {
 const updateServingSize = (slug, newServingSize) => {
 
   if (process.client) {
+    console.log('HANTO')
     servingSizes.value[slug] = newServingSize;
     sessionStorage.setItem('analyze_serving_sizes', JSON.stringify(servingSizes.value));
 
@@ -602,10 +592,15 @@ const getValueColor = (value, daily_limit) => {
 
 
 const refreshNutrients = () => {
-  
+  console.log('ref called');
   if (process.client) {  
+    console.log('kliyente');
+
     const analyze_data = JSON.parse(sessionStorage.getItem('analyze'));
     const analyze_serving_sizes_data = JSON.parse(sessionStorage.getItem('analyze_serving_sizes'));
+    console.log('analyze data: ', analyze_data);
+    console.log('serving sizes: ', analyze_serving_sizes_data);
+    console.log('reco daily: ', recommended_daily_values.value); // this is empty
 
     if (analyze_data && analyze_data.length > 0 && analyze_serving_sizes_data && recommended_daily_values.value) {
       console.log('analyze data: ', analyze_data);
@@ -687,6 +682,7 @@ const submitIssue = async () => {
 //
 
 onMounted(async () => {
+  console.log('on mounted..');
   loadCustomServingsData();
   await fetchDailyValues();
   refreshNutrients();
