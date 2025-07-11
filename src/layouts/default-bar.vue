@@ -2,7 +2,7 @@
   <v-app-bar flat>
     <v-app-bar-title>
       <a href="/" style="color: #333;">
-        <img :src="logo" alt="juan nutrisyon logo" style="width:150px;" id="appIcon" />
+        <img :src="logo" alt="juan nutrisyon logo" style="width:130px;" id="appIcon" />
       </a>
     </v-app-bar-title>
 
@@ -19,7 +19,7 @@
       >
         <v-btn size="x-small" icon="mdi-chef-hat" @click="goToRecipe" id="recipeAnalysisButton"></v-btn>
       </v-badge>
-      <v-btn v-if="ingredientCount == 0" size="x-small" icon="mdi-chef-hat" @click="goToRecipe" id="recipeAnalysisButton"></v-btn>
+      <v-btn v-if="ingredientCount == 0" size="x-small" icon="mdi-chef-hat" @click="goToRecipe" id="recipeAnalysisButton" :class="{ 'active-button': $route.name === 'recipe' }"></v-btn>
 
       <v-badge
         v-if="analyzeCount > 0"
@@ -27,10 +27,11 @@
         overlap
         color="success"
       >
-        <v-btn size="x-small" icon="mdi-chart-box" @click="goToAnalysis" id="dietAnalysisButton"></v-btn>
+        <v-btn size="x-small" icon="mdi-chart-box" @click="goToAnalysis" id="dietAnalysisButton" :class="{ 'active-button': $route.name === 'analyze' }"></v-btn>
       </v-badge>
-      <v-btn v-if="analyzeCount == 0" size="x-small" icon="mdi-chart-box" @click="goToAnalysis" id="dietAnalysisButton"></v-btn>
+      <v-btn v-if="analyzeCount == 0" size="x-small" icon="mdi-chart-box" @click="goToAnalysis" id="dietAnalysisButton" :class="{ 'active-button': $route.name === 'analyze' }"></v-btn>
       
+      <v-btn size="x-small" icon="mdi-robot" @click="goToAI" id="aiButton" :class="{ 'active-button': $route.name === 'ai' }"></v-btn>
 
       <v-btn size="x-small" icon="mdi-help" @click="helpDialog = true" id="helpButton"></v-btn>
       <v-btn size="x-small" icon="mdi-magnify" @click="searchDialog = true" id="searchButton"></v-btn>
@@ -200,6 +201,7 @@ const enableTourMode = () => {
 const goToLogin = () => router.push('/login');
 const goToRecipe = () => router.push('/recipe');
 const goToAnalysis = () => router.push('/analyze');
+const goToAI = () => router.push('/ai');
 
 const logoutUser = async () => {
   try {
@@ -219,5 +221,10 @@ const logoutUser = async () => {
   font-weight: bold;
   border-radius: 8px;
   padding: 8px;
+}
+
+.active-button {
+  background-color: #598d21; 
+  color: white;
 }
 </style>
