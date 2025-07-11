@@ -16,7 +16,7 @@
             @click:append="showPassword = !showPassword"
         ></v-text-field>
 
-        <v-btn color="primary" block @click="login" rounded="0">Login</v-btn>
+        <v-btn color="primary" block @click="login" rounded="0" :loading="loggingIn">Login</v-btn>
 
         <div class="mt-2 text-center">
             <a href="/register">Create account</a>
@@ -25,76 +25,65 @@
  
 </template>
 
-
-<script>
-import { ref } from 'vue';
-import { auth } from '@/firebase.js';
-import { signInWithEmailAndPassword } from "firebase/auth";
-import Toast, { createToast } from 'mosha-vue-toastify'
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { auth } from '@/firebase.js'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { createToast } from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css'
+import axios from 'axios'
 
-import axios from 'axios';
+const API_BASE_URI = import.meta.env.VITE_API_URI
 
-const API_BASE_URI = import.meta.env.VITE_API_URI;
+const email = ref('')
+const password = ref('')
+const showPassword = ref(false)
+const loggingIn = ref(false)
 
-export default {
+const router = useRouter()
 
-    data: () => ({
-        email: '',
-        password: '',
-        showPassword: false
-    }),
-    
+const login = async () => {
+  loggingIn.value = true
 
-    methods: {
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email.value,
+      password.value
+    )
 
-        async login() {
-         
-            try {
-                const userCredential = await signInWithEmailAndPassword(
-                    auth,
-                    this.email,
-                    this.password
-                );
+    const user = userCredential.user
 
-                const user = userCredential.user;
+    const token = await user.getIdToken()
 
-                const token = await user.getIdToken();
-                
-                const res = await axios.post(`${API_BASE_URI}/firebase-auth/sync`, 
-                    { 
-                        token
-                    }, 
-                );
+    const res = await axios.post(`${API_BASE_URI}/firebase-auth/sync`, {
+      token,
+    })
 
-                localStorage.setItem('api_key', res.data.user.api_key);
-             
-                createToast(
-                    {
-                        title: 'Login successful',
-                        description: "You'll now be redirected to the homepage."
-                    }, 
-                    { type: 'success', position: 'bottom-right' }
-                );
+    localStorage.setItem('api_key', res.data.user.api_key)
 
-                this.$router.push(`/`);
+    createToast(
+      {
+        title: 'Login successful',
+        description: "You'll now be redirected to the homepage.",
+      },
+      { type: 'success', position: 'bottom-right' }
+    )
 
-            } catch (error) {
+    router.push(`/`)
+  } catch (error) {
+    console.log('login error: ', error)
 
-                console.log('login error: ', error);
-              
-                createToast(
-                    {
-                        title: 'Error logging in.',
-                        description: "Please check your credentials."
-                    }, 
-                    { type: 'danger', position: 'bottom-right' }
-                );
-
-            }
-        
-        }
-
-    }
+    createToast(
+      {
+        title: 'Error logging in.',
+        description: 'Please check your credentials.',
+      },
+      { type: 'danger', position: 'bottom-right' }
+    )
+  } finally {
+    loggingIn.value = false
+  }
 }
 </script>

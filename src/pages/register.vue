@@ -20,7 +20,7 @@
             @click:append="showPassword = !showPassword"
         ></v-text-field>
 
-        <v-btn color="primary" block @click="register" rounded="0" :disabled="createUserNotOk">Create Account</v-btn>
+        <v-btn color="primary" block @click="register" rounded="0" :disabled="createUserNotOk" :loading="creatingAccount">Create Account</v-btn>
 
         <div class="mt-2 text-center">
             <a href="/login">Login</a>
@@ -30,71 +30,71 @@
 </template>
 
 
-<script>
-import { auth } from '@/firebase.js';
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import Toast, { createToast } from 'mosha-vue-toastify'
+<script setup>
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { auth } from '@/firebase.js'
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { createToast } from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css'
 import axios from 'axios'
 
-import { validateEmail } from "@/helpers/Validate";
+import { validateEmail } from '@/helpers/Validate'
 
-const API_BASE_URI = import.meta.env.VITE_API_URI;
+const API_BASE_URI = import.meta.env.VITE_API_URI
 
-export default {
-    
-    data: () => ({
-        email: '',
-        username: '',
-        password: '',
-    }),
+const email = ref('')
+const username = ref('')
+const password = ref('')
+const creatingAccount = ref(false)
 
-    computed: {
-        createUserNotOk() {
-            return !(this.email && this.username && this.password && validateEmail(this.email));
-        },
-    },
+const router = useRouter()
 
-    methods: {
-        async register() {
-         
-            try {
-                const userCredential = await createUserWithEmailAndPassword(
-                    auth,
-                    this.email,
-                    this.password
-                );
-                const user = userCredential.user;
+const createUserNotOk = computed(() => {
+  return !(
+    email.value &&
+    username.value &&
+    password.value &&
+    validateEmail(email.value)
+  )
+})
 
-                const token = await user.getIdToken();
+const register = async () => {
+  creatingAccount.value = true
 
-                await updateProfile(user, { displayName: this.username });
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email.value,
+      password.value
+    )
+    const user = userCredential.user
 
-                const user_res = await axios.post(`${API_BASE_URI}/firebase-auth/sync`, { token });
-               
-                createToast(
-                    {
-                        title: 'Created user!',
-                        description: "You'll now be redirected to the login page."
-                    }, 
-                    { type: 'success', position: 'bottom-right' }
-                );
+    const token = await user.getIdToken()
 
-                this.$router.push('/login');
-                
-            } catch (error) {
-               
-                createToast(
-                    {
-                        title: 'Cannot create user',
-                        description: 'Please check your details.'
-                    }, 
-                    { type: 'danger', position: 'bottom-right' }
-                );
+    await updateProfile(user, { displayName: username.value })
 
-            }
+    await axios.post(`${API_BASE_URI}/firebase-auth/sync`, { token })
 
-        }
-    }
+    createToast(
+      {
+        title: 'Created user!',
+        description: "You'll now be redirected to the login page.",
+      },
+      { type: 'success', position: 'bottom-right' }
+    )
+
+    router.push('/login')
+  } catch (error) {
+    createToast(
+      {
+        title: 'Cannot create user',
+        description: 'Please check your details.',
+      },
+      { type: 'danger', position: 'bottom-right' }
+    )
+  } finally {
+    creatingAccount.value = false
+  }
 }
 </script>
