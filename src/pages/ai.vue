@@ -55,7 +55,7 @@
                     :key="item.nutrient"
                 >
                     <td>
-                        <a :href="`/food/${item.matched_id}`">{{ item.ingredient }} ({{ wholeNumber(item.grams / servingCount) }}g)</a>
+                        <a :href="`/food/${item.matched_id}`" target="_blank">{{ item.ingredient }} ({{ wholeNumber(item.grams / servingCount) }}g)</a>
                         <v-badge
                           v-if="!item.matched_id"
                           color="error"
