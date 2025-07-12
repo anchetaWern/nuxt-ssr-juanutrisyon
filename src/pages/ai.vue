@@ -60,7 +60,7 @@
                     :key="item.nutrient"
                 >
                     <td>
-                        <a :href="`/food/${item.matched_id}`" target="_blank">{{ item.ingredient }} ({{ wholeNumber(item.grams / servingCount) }}g)</a>
+                        <a :href="`/food/${item.matched_id}`" target="_blank">{{ item.ingredient }} ({{ formatNumber(item.grams / servingCount) }}g)</a>
                         <v-badge
                           v-if="!item.matched_id"
                           color="error"
@@ -217,7 +217,7 @@ const getValueColor = (value, daily_limit) => {
 };
 
 const analyze = async () => {
-    console.log('current user: ', currentUser.value);
+    
     if (currentUser.value && currentUser.value.email === 'nutrikid@gmail.com') {
 
       console.log('bamster: ', meal.value);
