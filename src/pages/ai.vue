@@ -212,8 +212,8 @@ const getValueColor = (value, daily_limit) => {
 };
 
 const analyze = async () => {
-
-    if (currentUser && currentUser.email === 'nutrikid@gmail.com') {
+    console.log('current user: ', currentUser.value);
+    if (currentUser.value && currentUser.value.email === 'nutrikid@gmail.com') {
 
       console.log('bamster: ', meal.value);
 
