@@ -28,13 +28,18 @@
                     </td>
                 </tr>
                 <tr>
+                    <td class="text-grey-darken-3" v-if="servingCount">
+                        Total servings of the recipe: {{ servingCount }}
+                    </td>
+                </tr>
+                <tr>
                     <td class="text-grey-darken-3" v-if="serving_size">
                         Serving Size: {{ serving_size }} ({{ wholeNumber(serving_size_in_grams) }}g)
                     </td>
                 </tr>
                 <tr>
                     <td class="text-grey-darken-3" v-if="recipe_calories_per_serving">
-                        Calories: {{ wholeNumber(recipe_calories_per_serving) }}kcal
+                        Calories per serving: {{ wholeNumber(recipe_calories_per_serving) }}kcal
                     </td>
                 </tr>
                 
@@ -45,7 +50,7 @@
             <thead>
                 <tr>
                     <th class="text-left">
-                        Ingredients
+                        Ingredients (weight per serving)
                     </th>
                 </tr>
             </thead>
