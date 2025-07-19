@@ -20,6 +20,8 @@
 
         <v-btn size="small" color="primary" @click="analyze" :loading="analyzing" :disabled="analyzeNotOk" block>Analyze</v-btn>
 
+        <div class="text-grey-darken-3 text-xs mt-1" v-if="totalSeconds">Request took {{ totalSeconds }} seconds</div>
+
         <v-table v-if="food">
             <tbody>
                 <tr>
@@ -167,6 +169,8 @@ const food = ref('');
 const nutrients = ref(null);
 const servingCount = ref(null);
 
+const totalSeconds = ref(0);
+
 const ingredients = ref(null);
 
 const serving_size = ref(null);
@@ -220,6 +224,8 @@ const analyze = async () => {
     
     if (currentUser.value && currentUser.value.email === 'nutrikid@gmail.com') {
 
+      totalSeconds.value = 0;
+
       console.log('bamster: ', meal.value);
 
       analyzing.value = true;
@@ -231,6 +237,8 @@ const analyze = async () => {
             }, 
           );
           console.log('res: ', res.data);
+
+          totalSeconds.value = res.data.total_seconds.toFixed(2);
           
           food.value = res.data.food;
 
