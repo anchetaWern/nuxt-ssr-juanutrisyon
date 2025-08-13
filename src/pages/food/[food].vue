@@ -47,7 +47,7 @@
 
     <div class="mt-5 pt-5" v-if="food.nutrients.length > 0">
         <div class="text-body2 text-center font-weight-medium">Nutrition Facts <v-btn id="nutrition-help" variant="text" size="x-small" icon="mdi-help" @click="dvHelp = true"></v-btn></div>
-       
+        
         <v-switch 
             id="display-values-per-container"
             v-if="hasValuesPerContainerToggle"
@@ -246,8 +246,15 @@
                 </tr>
             </tbody>
         </v-table>
+
+        <v-switch 
+            v-model="displayMoreNutrients" 
+            label="Show more nutrient data"
+            color="success"
+            hide-details
+            inset
+        ></v-switch>
         
-        <v-divider></v-divider>
 
         <div ref="exportable" class="capture-area hidden" v-if="recommended_daily_values">
 
@@ -262,12 +269,13 @@
             />
         </div>
 
-        <div class="mt-3" v-if="elements && elements.length && recommended_daily_values">
+        <div class="mt-3" v-if="elements && elements.length && recommended_daily_values && displayMoreNutrients">
             <span class="text-subtitle-2">Elements</span>
             <NutrientsTable 
                 :nutrients="elements" 
                 :servingsPerContainer="servingsPerContainer" 
                 :displayValuesPerContainer="displayValuesPerContainer"
+                :displayMoreNutrients="displayMoreNutrients"
                 :recommended_daily_values="recommended_daily_values"
                 :originalServingSize="food.serving_size"
                 :newServingSize="newServingSize"
@@ -284,6 +292,7 @@
                 :nutrients="macros" 
                 :servingsPerContainer="servingsPerContainer" 
                 :displayValuesPerContainer="displayValuesPerContainer"
+                :displayMoreNutrients="displayMoreNutrients"
                 :recommended_daily_values="recommended_daily_values"
                 :originalServingSize="food.serving_size"
                 :newServingSize="newServingSize"
@@ -301,6 +310,7 @@
                 :nutrients="vitamins" 
                 :servingsPerContainer="servingsPerContainer" 
                 :displayValuesPerContainer="displayValuesPerContainer"
+                :displayMoreNutrients="displayMoreNutrients"
                 :recommended_daily_values="recommended_daily_values"
                 :originalServingSize="food.serving_size"
                 :newServingSize="newServingSize"
@@ -317,6 +327,7 @@
                 :nutrients="minerals" 
                 :servingsPerContainer="servingsPerContainer" 
                 :displayValuesPerContainer="displayValuesPerContainer"
+                :displayMoreNutrients="displayMoreNutrients"
                 :recommended_daily_values="recommended_daily_values"
                 :originalServingSize="food.serving_size"
                 :newServingSize="newServingSize"
@@ -333,6 +344,7 @@
                 :nutrients="others" 
                 :servingsPerContainer="servingsPerContainer" 
                 :displayValuesPerContainer="displayValuesPerContainer"
+                :displayMoreNutrients="displayMoreNutrients"
                 :recommended_daily_values="recommended_daily_values"
                 :originalServingSize="food.serving_size"
                 :newServingSize="newServingSize"
@@ -696,6 +708,8 @@ import 'mosha-vue-toastify/dist/style.css'
 import { useHead } from '@vueuse/head'
 
 const API_BASE_URI = import.meta.env.VITE_API_URI;
+
+const displayMoreNutrients = ref(false);
 
 const emit = defineEmits(['update-ingredient-count-child', 'update-analyze-count-child']);
 

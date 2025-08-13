@@ -36,12 +36,13 @@
                 </td>
             </tr>
 
-            <tr v-if="nutrient.composition">
+            <tr v-if="nutrient.composition && (nutrients_with_visible_composition.indexOf(nutrient.name) !== -1 || displayMoreNutrients)">
                 <td colspan="2">
                     <NutrientsTable 
                       :nutrients="nutrient.composition" 
                       :servingsPerContainer="servingsPerContainer" 
                       :displayValuesPerContainer="displayValuesPerContainer" 
+                      :displayMoreNutrients="displayMoreNutrients"
                       :recommended_daily_values="recommended_daily_values"
                       :originalServingSize="originalServingSize"
                       :newServingSize="newServingSize"
@@ -86,6 +87,11 @@ export default {
       required: true,
       default: true,
     },
+    displayMoreNutrients: {
+      type: Boolean,
+      required: true,
+      default: true,
+    },
     originalServingSize: {
       type: Number,
       required: false,
@@ -125,6 +131,11 @@ export default {
 
 
   setup(props) {
+
+      const nutrients_with_visible_composition = [
+        'total fat',
+        'total carbohydrates',
+      ];
     
       const nutrients_with_recommended_daily_values = [
         'dietary fiber', 'protein', 'total fat', 'saturated fat', 'cholesterol', 'total carbohydrates', 'sugar', 
@@ -218,6 +229,7 @@ export default {
           capitalizeWords,
           formatNumber,
           nutrients_with_recommended_daily_values,
+          nutrients_with_visible_composition,
           nutrientsWithPercentage,
           amountPerContainer,
           FAONutrientContentClaim,
