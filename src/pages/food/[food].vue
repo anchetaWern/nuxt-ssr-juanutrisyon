@@ -6,7 +6,7 @@
 
   <div class="mt-5" v-if="food">
     
-    <div class="pt-3 sticky-title">
+    <div :class="`pt-3 sticky-title ${food.type ? 'pt-5' : 'pt-12'}`">
         <div class="d-flex justify-end cursor-pointer">
             <div>
                 <v-chip id="food-category" size="small" variant="outlined" v-if="food.type">
@@ -1783,6 +1783,5 @@ const openReportIssueModal = () => {
     top: 0;
     background: #FFF;
     z-index: 10;
-    padding-top: 20px !important;
 }
 </style>
