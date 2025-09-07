@@ -1,5 +1,7 @@
 <template>
+  
   <v-app>
+    <Analytics mode="production" />
     <default-bar 
       :updateItems="updateItems" 
       :ingredientCount="ingredientCount"
@@ -26,6 +28,7 @@ import { computed, ref, onMounted, provide } from 'vue';
 import { useRouter } from 'vue-router'
 import { auth } from '@/firebase.js';
 import { onAuthStateChanged } from "firebase/auth";
+import { Analytics } from '@vercel/analytics/nuxt'
 
 import DefaultBar from './default-bar.vue'
 import DefaultView from './default-view.vue'
