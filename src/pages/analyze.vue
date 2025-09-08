@@ -248,6 +248,27 @@ import Tour from '@/components/Tour.vue';
 
 const API_BASE_URI = import.meta.env.VITE_API_URI;
 
+useHead({
+  title: 'Diet Analyzer - Juan Nutrisyon',
+
+  meta: [
+    { hid: 'description', name: 'description', content: 'The Diet Analyzer shows you an overview of the most important nutrients, deficient nutrients, and over-consumed nutrients from your diet.' },
+    { name: 'robots', content: 'index, follow' },
+
+    // Open Graph (Facebook, LinkedIn, etc.)
+    { property: 'og:title', content: 'Diet Analyzer - Juan Nutrisyon' },
+    { property: 'og:description', content: 'The Diet Analyzer shows you an overview of the most important nutrients, deficient nutrients, and over-consumed nutrients from your diet.' },
+    { property: 'og:type', content: 'website' },
+
+    // Twitter Card
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: 'Diet Analyzer - Juan Nutrisyon' },
+    { name: 'twitter:description', content: 'The Diet Analyzer shows you an overview of the most important nutrients, deficient nutrients, and over-consumed nutrients from your diet.' },
+
+  ]
+
+});
+
 
 const summary_nutrients_values = ['water', 'protein', 'dietary fiber', 'sodium', 'saturated fat', 'cholesterol', 'sugar', 'total carbohydrates', 'total fat']; 
 

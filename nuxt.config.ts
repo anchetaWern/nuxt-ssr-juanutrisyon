@@ -7,6 +7,28 @@ export default defineNuxtConfig({
     }
   },
 
+  modules: [
+    '@nuxtjs/sitemap',
+    '@nuxtjs/robots'
+  ],
+
+  sitemap: {
+    site: {
+      url: 'https://app.juanutrisyon.info'
+     
+    },
+    
+  },
+  robots: {
+    rules: {
+      UserAgent: '*',
+      Allow: '/'
+    },
+    sitemap: [
+      'https://app.juanutrisyon.info/sitemap.xml'
+    ],
+  },
+
   css: [
     'vuetify/styles',
     '@mdi/font/css/materialdesignicons.css',

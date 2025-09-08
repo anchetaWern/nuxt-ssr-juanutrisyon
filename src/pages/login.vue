@@ -34,6 +34,27 @@ import { createToast } from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css'
 import axios from 'axios'
 
+useHead({
+  title: 'Login - Juan Nutrisyon',
+
+  meta: [
+    { hid: 'description', name: 'description', content: 'Login with your Juan Nutrisyon account.' },
+    { name: 'robots', content: 'index, follow' },
+
+    // Open Graph (Facebook, LinkedIn, etc.)
+    { property: 'og:title', content: 'Login - Juan Nutrisyon' },
+    { property: 'og:description', content: 'Login with your Juan Nutrisyon account.' },
+    { property: 'og:type', content: 'website' },
+
+    // Twitter Card
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: 'Login - Juan Nutrisyon' },
+    { name: 'twitter:description', content: 'Login with your Juan Nutrisyon account.' },
+
+  ]
+
+});
+
 const API_BASE_URI = import.meta.env.VITE_API_URI
 
 const email = ref('')

@@ -104,6 +104,28 @@ import Tour from '@/components/Tour.vue';
 import { auth } from '@/firebase.js';
 import { onAuthStateChanged } from "firebase/auth";
 
+useHead({
+  title: 'Juan Nutrisyon App',
+
+  meta: [
+    { hid: 'description', name: 'description', content: 'Your personal nutrition companion to help you make informed food choices—without guilt or fear.' },
+    { name: 'robots', content: 'index, follow' },
+
+
+    // Open Graph (Facebook, LinkedIn, etc.)
+    { property: 'og:title', content: 'Juan Nutrisyon App' },
+    { property: 'og:description', content: 'Your personal nutrition companion to help you make informed food choices—without guilt or fear.' },
+    { property: 'og:type', content: 'website' },
+
+    // Twitter Card
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: 'Juan Nutrisyon App' },
+    { name: 'twitter:description', content: 'Your personal nutrition companion to help you make informed food choices—without guilt or fear.' },
+
+  ]
+
+});
+
 
 const router = useRouter();
 

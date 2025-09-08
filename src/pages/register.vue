@@ -41,6 +41,27 @@ import axios from 'axios'
 
 import { validateEmail } from '@/helpers/Validate'
 
+useHead({
+  title: 'Register - Juan Nutrisyon',
+
+  meta: [
+    { hid: 'description', name: 'description', content: 'Create a Juan Nutrisyon account.' },
+    { name: 'robots', content: 'index, follow' },
+
+    // Open Graph (Facebook, LinkedIn, etc.)
+    { property: 'og:title', content: 'Register - Juan Nutrisyon' },
+    { property: 'og:description', content: 'Create a Juan Nutrisyon account.' },
+    { property: 'og:type', content: 'website' },
+
+    // Twitter Card
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: 'Register - Juan Nutrisyon' },
+    { name: 'twitter:description', content: 'Create a Juan Nutrisyon account.' },
+
+  ]
+
+});
+
 const API_BASE_URI = import.meta.env.VITE_API_URI
 
 const email = ref('')

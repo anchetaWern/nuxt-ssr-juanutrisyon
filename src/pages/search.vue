@@ -70,6 +70,27 @@ import { retryAxios } from '@/api/retryAxios';
 
 const API_BASE_URI = import.meta.env.VITE_API_URI;
 
+useHead({
+  title: 'Food Search Results - Juan Nutrisyon',
+
+  meta: [
+    { hid: 'description', name: 'description', content: 'View the results of your search query.' },
+    { name: 'robots', content: 'index, follow' },
+
+    // Open Graph (Facebook, LinkedIn, etc.)
+    { property: 'og:title', content: 'Food Search Results - Juan Nutrisyon' },
+    { property: 'og:description', content: 'View the results of your search query.' },
+    { property: 'og:type', content: 'website' },
+
+    // Twitter Card
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: 'Food Search Results - Juan Nutrisyon' },
+    { name: 'twitter:description', content: 'View the results of your search query.' },
+
+  ]
+
+});
+
 
 // Inject global state
 const tourModeEnabled = inject("tourModeEnabled");

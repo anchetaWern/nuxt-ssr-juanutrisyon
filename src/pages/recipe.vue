@@ -322,6 +322,27 @@ import { auth } from '@/firebase.js';
 import { onAuthStateChanged } from "firebase/auth";
 import Tour from '@/components/Tour.vue';
 
+useHead({
+  title: 'Recipe Creator - Juan Nutrisyon',
+
+  meta: [
+    { hid: 'description', name: 'description', content: 'The Recipe Creator shows you the nutrients available for a recipe and allows you to save it for later viewing.' },
+    { name: 'robots', content: 'index, follow' },
+
+    // Open Graph (Facebook, LinkedIn, etc.)
+    { property: 'og:title', content: 'Recipe Creator - Juan Nutrisyon' },
+    { property: 'og:description', content: 'The Recipe Creator shows you the nutrients available for a recipe and allows you to save it for later viewing.' },
+    { property: 'og:type', content: 'website' },
+
+    // Twitter Card
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: 'Recipe Creator - Juan Nutrisyon' },
+    { name: 'twitter:description', content: 'The Recipe Creator shows you the nutrients available for a recipe and allows you to save it for later viewing.' },
+
+  ]
+
+});
+
 
 const router = useRouter();
 
