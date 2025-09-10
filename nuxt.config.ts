@@ -1,4 +1,15 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import fs from 'fs';
+import path from 'path';
+
+let foodsSources = ['/api/__sitemap__/urls/foods?page=1']; // fallback
+try {
+  const p = path.resolve(process.cwd(), '.sitemap-pages.json');
+  foodsSources = JSON.parse(fs.readFileSync(p, 'utf8'));
+} catch (e) {
+  // fallback kept
+  console.warn('No .sitemap-pages.json found, using fallback');
+}
 
 export default defineNuxtConfig({
   runtimeConfig: {
@@ -12,13 +23,30 @@ export default defineNuxtConfig({
     '@nuxtjs/robots'
   ],
 
-  sitemap: {
-    site: {
-      url: 'https://app.juanutrisyon.info'
-     
-    },
-    
+  site: {
+    url: "https://app.juanutrisyon.info",
+    name: "Juan Nutrisyon"
   },
+
+
+
+  sitemap: {
+    sitemaps: {
+      foods: {
+        
+        sources: foodsSources
+
+
+      },
+      static: {
+        sources: [
+          '/api/__sitemap__/urls/static',
+        ]
+      }
+    }
+  },
+
+
   robots: {
     rules: {
       UserAgent: '*',
