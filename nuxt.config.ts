@@ -32,12 +32,13 @@ export default defineNuxtConfig({
 
   sitemap: {
     sitemaps: {
-      foods: {
-        
-        sources: foodsSources
+      ...Object.fromEntries(
+        foodsSources.map((src, i) => [
+          `foods-${i + 1}`, 
+          { sources: [src] }
+        ])
+      ),
 
-
-      },
       static: {
         sources: [
           '/api/__sitemap__/urls/static',

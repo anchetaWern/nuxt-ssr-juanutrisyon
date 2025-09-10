@@ -1,3 +1,4 @@
+/*
 export default defineSitemapEventHandler(async(event) => {
   
   try {
@@ -31,4 +32,17 @@ export default defineSitemapEventHandler(async(event) => {
   }
 
 })
-  
+*/
+export default defineSitemapEventHandler(async (event) => {
+  const page = parseInt(getQuery(event).page || '1', 10)
+
+  // Fetch your chunk of foods from API
+  const foods_response = await $fetch(
+    `https://api.juanutrisyon.info/api/sitemap-foods?page=${page}`
+  )
+
+  return foods_response.data.map((food) => ({
+    loc: `https://app.juanutrisyon.info/food/${food.description_slug}`,
+    lastmod: food.updated_at,
+  }))
+})
