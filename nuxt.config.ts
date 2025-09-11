@@ -21,23 +21,23 @@ export default defineNuxtConfig({
   sitemap: {
     siteUrl: 'https://app.juanutrisyon.info',
   
-    sitemap: {
-      sitemaps: {
-        foods: {
-          sources: [
-            'https://api.juanutrisyon.info/sitemaps/sitemap-foods-1.xml',
-            'https://api.juanutrisyon.info/sitemaps/sitemap-foods-2.xml',
-            'https://api.juanutrisyon.info/sitemaps/sitemap-foods-3.xml',
-          ]
-        },
-  
-        static: {
-          sources: [
-            'https://api.juanutrisyon.info/sitemaps/sitemap-static.xml',
-          ]
-        }
+
+    sitemaps: {
+      foods: {
+        urls: [
+          { loc: 'https://api.juanutrisyon.info/sitemaps/sitemap-foods-1.xml' },
+          { loc: 'https://api.juanutrisyon.info/sitemaps/sitemap-foods-2.xml' },
+          { loc: 'https://api.juanutrisyon.info/sitemaps/sitemap-foods-3.xml' },
+        ]
+      },
+
+      static: {
+        sources: [
+          'https://api.juanutrisyon.info/sitemaps/sitemap-static.xml',
+        ]
       }
-    },
+    }
+
 
   },
 
