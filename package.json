@@ -3,10 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "generate:sitemap": "node scripts/generate-sitemap-pages.js",
-    "build": "npm run generate:sitemap && nuxt build",
+    "build": "nuxt build",
     "start": "nuxt start",
-    "dev": "npm run generate:sitemap && nuxt dev",
+    "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"

@@ -1,16 +1,4 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import fs from 'fs';
-import path from 'path';
-
-let foodsSources = ['/api/__sitemap__/urls/foods?page=1']; // fallback
-try {
-  const p = path.resolve(process.cwd(), '.sitemap-pages.json');
-  foodsSources = JSON.parse(fs.readFileSync(p, 'utf8'));
-} catch (e) {
-  // fallback kept
-  console.warn('No .sitemap-pages.json found, using fallback');
-}
-
 export default defineNuxtConfig({
   runtimeConfig: {
     public: {
@@ -31,20 +19,10 @@ export default defineNuxtConfig({
 
 
   sitemap: {
-    sitemaps: {
-      ...Object.fromEntries(
-        foodsSources.map((src, i) => [
-          `foods-${i + 1}`, 
-          { sources: [src] }
-        ])
-      ),
-
-      static: {
-        sources: [
-          '/api/__sitemap__/urls/static',
-        ]
-      }
-    }
+    siteUrl: 'https://app.juanutrisyon.info',
+    sources: [
+      'https://api.juanutrisyon.info/sitemaps/sitemap-index.xml'
+    ]
   },
 
 
