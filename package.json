@@ -8,7 +8,6 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "prebuild": "mkdir -p public/sitemaps && curl -o public/sitemaps/sitemap-foods-1.xml https://api.juanutrisyon.info/sitemaps/sitemap-foods-1.xml && curl -o public/sitemaps/sitemap-foods-2.xml https://api.juanutrisyon.info/sitemaps/sitemap-foods-2.xml && curl -o public/sitemaps/sitemap-foods-3.xml https://api.juanutrisyon.info/sitemaps/sitemap-foods-3.xml && curl -o public/sitemaps/sitemap-static.xml https://api.juanutrisyon.info/sitemaps/sitemap-static.xml",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
