@@ -25,15 +25,15 @@ export default defineNuxtConfig({
     sitemaps: {
       foods: {
         urls: [
-          { loc: 'https://api.juanutrisyon.info/sitemaps/sitemap-foods-1.xml', lastmod: new Date().toISOString().split('T')[0] },
-          { loc: 'https://api.juanutrisyon.info/sitemaps/sitemap-foods-2.xml', lastmod: new Date().toISOString().split('T')[0] },
-          { loc: 'https://api.juanutrisyon.info/sitemaps/sitemap-foods-3.xml', lastmod: new Date().toISOString().split('T')[0] },
+          { loc: 'https://app.juanutrisyon.info/sitemaps/sitemap-foods-1.xml', lastmod: new Date().toISOString().split('T')[0] },
+          { loc: 'https://app.juanutrisyon.info/sitemaps/sitemap-foods-2.xml', lastmod: new Date().toISOString().split('T')[0] },
+          { loc: 'https://app.juanutrisyon.info/sitemaps/sitemap-foods-3.xml', lastmod: new Date().toISOString().split('T')[0] },
         ]
       },
 
       static: {
         sources: [
-          'https://api.juanutrisyon.info/sitemaps/sitemap-static.xml',
+          'https://app.juanutrisyon.info/sitemaps/sitemap-static.xml',
         ]
       }
     }
