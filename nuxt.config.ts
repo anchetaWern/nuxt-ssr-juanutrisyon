@@ -18,9 +18,7 @@ export default defineNuxtConfig({
 
 
 
-  sitemap: {
-    sitemaps: {}, // disable Nuxt auto-sitemaps
-  },
+  sitemap: false,
 
 
   robots: {
