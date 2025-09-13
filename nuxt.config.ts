@@ -7,7 +7,7 @@ export default defineNuxtConfig({
   },
 
   modules: [
-    '@nuxtjs/sitemap',
+   
     '@nuxtjs/robots'
   ],
 
@@ -18,8 +18,7 @@ export default defineNuxtConfig({
 
 
 
-  sitemap: false,
-
+ 
 
   robots: {
     rules: {
