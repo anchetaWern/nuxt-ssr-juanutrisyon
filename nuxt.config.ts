@@ -19,37 +19,19 @@ export default defineNuxtConfig({
 
 
   sitemap: {
-    siteUrl: 'https://app.juanutrisyon.info',
-  
-
-    sitemaps: {
-      foods: {
-        urls: [
-          { loc: 'https://app.juanutrisyon.info/sitemaps/sitemap-foods-1.xml', lastmod: new Date().toISOString().split('T')[0] },
-          { loc: 'https://app.juanutrisyon.info/sitemaps/sitemap-foods-2.xml', lastmod: new Date().toISOString().split('T')[0] },
-          { loc: 'https://app.juanutrisyon.info/sitemaps/sitemap-foods-3.xml', lastmod: new Date().toISOString().split('T')[0] },
-        ]
-      },
-
-      static: {
-        sources: [
-          'https://app.juanutrisyon.info/sitemaps/sitemap-static.xml',
-        ]
-      }
-    }
-
-
+    sitemaps: {}, // disable Nuxt auto-sitemaps
   },
 
 
   robots: {
     rules: {
       UserAgent: '*',
-      Allow: '/'
+      Allow: '/',
+      Disallow: '/__sitemap__/'
     },
     sitemap: [
-      'https://app.juanutrisyon.info/sitemap.xml'
-    ],
+      'https://app.juanutrisyon.info/sitemaps/sitemap-index.xml',
+    ]
   },
 
   css: [
