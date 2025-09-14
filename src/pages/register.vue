@@ -44,6 +44,13 @@ import { validateEmail } from '@/helpers/Validate'
 useHead({
   title: 'Register - Juan Nutrisyon',
 
+  link: [
+    {
+      rel: 'canonical',
+      href: `https://app.juanutrisyon.info/register`
+    }
+  ],
+
   meta: [
     { hid: 'description', name: 'description', content: 'Create a Juan Nutrisyon account.' },
     { name: 'robots', content: 'index, follow' },

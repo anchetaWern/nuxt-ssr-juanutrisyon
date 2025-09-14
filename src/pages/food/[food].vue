@@ -675,7 +675,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watchEffect, watch, defineEmits, inject } from 'vue';
+import { ref, onMounted, watchEffect, watch, defineEmits, inject, computed } from 'vue';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Pie } from 'vue-chartjs'
 import axios from 'axios'
@@ -842,8 +842,7 @@ const food_ingredients = ref(null);
 const issueDescription = ref('');
 
 //
-const pageTitle = 'Juan Nutrisyon';
-const pageDescription = 'View more info at app.juanutrisyon.info';
+
 
 const tourModeEnabled = inject("tourModeEnabled");
 
@@ -869,22 +868,33 @@ watch(selected_serving_qty, (new_serving_qty, old_serving_qty) => {
     }
 });
 
-watchEffect(() => {
-    if (food.value) {
-        const pageTitle = food.value.description;
-        const pageDescription = `${food.value.calories}${food.value.calories_unit}. View more info at app.juanutrisyon.info`;
 
-        useHead({
-            title: pageTitle,
-            meta: [
-                { name: 'description', content: pageDescription },
-                { property: 'og:title', content: `Juan Nutrisyon - ${pageTitle}` },
-                { property: 'og:description', content: pageDescription },
-                { property: 'og:image', content: food.value.title_image },
-            ],
-        });
-    }
-});
+// ===
+const pageTitle = computed(() => food.value?.description ?? 'Juan Nutrisyon')
+const pageDescription = computed(() =>
+  food.value
+    ? `${food.value.calories}${food.value.calories_unit}. View more info at https://app.juanutrisyon.info`
+    : 'Your personal nutrition companion to help you make informed food choices—without guilt or fear.'
+)
+const canonical = computed(() =>
+  food.value
+    ? `https://app.juanutrisyon.info/food/${food.value.description_slug}` // <- note the / and .value
+    : 'https://app.juanutrisyon.info'
+)
+
+
+// call useHead once with a reactive getter — it updates when the computed values change
+useHead(() => ({
+  title: pageTitle.value,
+  link: [
+    { rel: 'canonical', href: canonical.value }
+  ],
+  meta: [
+    { name: 'description', content: pageDescription.value },
+    { property: 'og:title', content: `Juan Nutrisyon - ${pageTitle.value}` },
+    { property: 'og:description', content: pageDescription.value }
+  ]
+}))
 
 
 // ===

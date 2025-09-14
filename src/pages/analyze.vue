@@ -251,6 +251,13 @@ const API_BASE_URI = import.meta.env.VITE_API_URI;
 useHead({
   title: 'Diet Analyzer - Juan Nutrisyon',
 
+  link: [
+    {
+      rel: 'canonical',
+      href: `https://app.juanutrisyon.info/analyze`
+    }
+  ],
+
   meta: [
     { hid: 'description', name: 'description', content: 'The Diet Analyzer shows you an overview of the most important nutrients, deficient nutrients, and over-consumed nutrients from your diet.' },
     { name: 'robots', content: 'index, follow' },

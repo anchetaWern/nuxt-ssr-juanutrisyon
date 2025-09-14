@@ -325,6 +325,13 @@ import Tour from '@/components/Tour.vue';
 useHead({
   title: 'Recipe Creator - Juan Nutrisyon',
 
+  link: [
+    {
+      rel: 'canonical',
+      href: `https://app.juanutrisyon.info/recipe`
+    }
+  ],
+
   meta: [
     { hid: 'description', name: 'description', content: 'The Recipe Creator shows you the nutrients available for a recipe and allows you to save it for later viewing.' },
     { name: 'robots', content: 'index, follow' },

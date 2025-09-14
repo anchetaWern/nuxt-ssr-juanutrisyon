@@ -107,6 +107,13 @@ import { onAuthStateChanged } from "firebase/auth";
 useHead({
   title: 'Juan Nutrisyon App',
 
+  link: [
+    {
+      rel: 'canonical',
+      href: `https://app.juanutrisyon.info`
+    }
+  ],
+
   meta: [
     { hid: 'description', name: 'description', content: 'Your personal nutrition companion to help you make informed food choices—without guilt or fear.' },
     { name: 'robots', content: 'index, follow' },

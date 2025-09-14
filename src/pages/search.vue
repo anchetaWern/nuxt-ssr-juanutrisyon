@@ -73,6 +73,13 @@ const API_BASE_URI = import.meta.env.VITE_API_URI;
 useHead({
   title: 'Food Search Results - Juan Nutrisyon',
 
+  link: [
+    {
+      rel: 'canonical',
+      href: `https://app.juanutrisyon.info/search`
+    }
+  ],
+
   meta: [
     { hid: 'description', name: 'description', content: 'View the results of your search query.' },
     { name: 'robots', content: 'index, follow' },

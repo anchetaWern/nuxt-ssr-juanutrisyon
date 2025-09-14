@@ -37,6 +37,13 @@ import axios from 'axios'
 useHead({
   title: 'Login - Juan Nutrisyon',
 
+  link: [
+    {
+      rel: 'canonical',
+      href: `https://app.juanutrisyon.info/login`
+    }
+  ],
+
   meta: [
     { hid: 'description', name: 'description', content: 'Login with your Juan Nutrisyon account.' },
     { name: 'robots', content: 'index, follow' },
