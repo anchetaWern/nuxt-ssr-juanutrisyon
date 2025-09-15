@@ -39,14 +39,14 @@
     </div>  
 
     <div class="mt-3" v-if="hasMacros" id="macros-section">
-        <div class="text-body2 mb-1 text-center font-weight-medium">Macros</div>
+        <div class="text-body-2 mb-1 text-center font-weight-medium">Macronutrients</div>
         <div class="mt-1" style="height: 130px;">
             <Pie :data="chartData" :options="chartOptions" />
         </div>
     </div>
 
     <div class="mt-5 pt-5" v-if="food.nutrients.length > 0">
-        <div class="text-body2 text-center font-weight-medium">Nutrition Facts <v-btn id="nutrition-help" variant="text" size="x-small" icon="mdi-help" @click="dvHelp = true"></v-btn></div>
+        <h2 class="text-body-2 text-center font-weight-medium">Nutrition Facts <v-btn id="nutrition-help" variant="text" size="x-small" icon="mdi-help" @click="dvHelp = true"></v-btn></h2>
         
         <v-switch 
             id="display-values-per-container"
@@ -287,7 +287,7 @@
         </div>
 
         <div id="macros-details-section" class="mt-3" v-if="macros && macros.length && recommended_daily_values">
-            <span class="text-subtitle-2">Macros</span>
+            <h2 class="text-subtitle-2">Macronutrients</h2>
             <NutrientsTable 
                 :nutrients="macros" 
                 :servingsPerContainer="servingsPerContainer" 
@@ -305,7 +305,7 @@
         </div>
 
         <div id="vitamins-section" class="mt-3" v-if="vitamins && vitamins.length && recommended_daily_values">
-            <span class="text-subtitle-2">Vitamins</span>
+            <h2 class="text-subtitle-2">Vitamins</h2>
             <NutrientsTable 
                 :nutrients="vitamins" 
                 :servingsPerContainer="servingsPerContainer" 
@@ -322,7 +322,7 @@
         </div>
 
         <div id="minerals-section" class="mt-3" v-if="minerals && minerals.length && recommended_daily_values">
-            <span class="text-subtitle-2">Minerals</span>
+            <h2 class="text-subtitle-2">Minerals</h2>
             <NutrientsTable 
                 :nutrients="minerals" 
                 :servingsPerContainer="servingsPerContainer" 
@@ -339,7 +339,7 @@
         </div>
 
         <div id="others-section" class="mt-3" v-if="others && others.length && recommended_daily_values">
-            <span class="text-subtitle-2">Others</span>
+            <h2 class="text-subtitle-2">Others</h2>
             <NutrientsTable 
                 :nutrients="others" 
                 :servingsPerContainer="servingsPerContainer" 
@@ -363,7 +363,7 @@
     </div>
 
     <div id="ingredients-section" class="mt-5 text-center" v-if="food.ingredients">
-        <div class="text-body2 mb-1 text-center font-weight-medium">Ingredients</div>
+        <div class="text-body-2 mb-1 text-center font-weight-medium">Ingredients</div>
 
         <p class="text-subtitle2 text-grey-darken-3">
             {{ food.ingredients }}
@@ -375,7 +375,7 @@
     </div>
 
     <div id="allergen-section" class="mt-5" v-if="food.allergen_information">
-        <div class="text-body2 mb-1 text-center font-weight-medium">Allergen Info</div>
+        <div class="text-body-2 mb-1 text-center font-weight-medium">Allergen Info</div>
 
         <p class="text-subtitle2 text-grey-darken-3">
             {{ food.allergen_information }}
@@ -386,7 +386,7 @@
     <div class="mt-5 pt-5 text-center">
 
         <template v-if="images.length > 0">
-            <div class="text-body2 mb-1 font-weight-medium">Images</div>
+            <div class="text-body-2 mb-1 font-weight-medium">Images</div>
 
             <v-row id="images-section">
                 <v-col
@@ -573,7 +573,7 @@
     </div>
 
     <div class="mt-5" v-if="food.origin_country && food.origin_country !== 'PH'">
-        <div class="text-body2 mb-1">Origin Country: {{ food.origin_country }}</div>
+        <div class="text-body-2 mb-1">Origin Country: {{ food.origin_country }}</div>
     </div>
 
     <div id="report-issue" class="mt-5 text-center">
@@ -873,7 +873,7 @@ watch(selected_serving_qty, (new_serving_qty, old_serving_qty) => {
 const pageTitle = computed(() => food.value?.description ?? 'Juan Nutrisyon')
 const pageDescription = computed(() =>
   food.value
-    ? `${food.value.calories}${food.value.calories_unit}. View more info at https://app.juanutrisyon.info`
+    ? `${food.value.description} Nutrition Facts: Calories, total fat, total carbohydrates, dietary fiber, sugar, protein, vitamins and minerals.`
     : 'Your personal nutrition companion to help you make informed food choices—without guilt or fear.'
 )
 const canonical = computed(() =>
@@ -881,6 +881,14 @@ const canonical = computed(() =>
     ? `https://app.juanutrisyon.info/food/${food.value.description_slug}` // <- note the / and .value
     : 'https://app.juanutrisyon.info'
 )
+
+const pageImage = computed(() => {
+  if (Array.isArray(images.value) && images.value.length > 0) {
+    return images.value[0].src || '';
+  }
+  return '';
+});
+
 
 
 // call useHead once with a reactive getter — it updates when the computed values change
@@ -891,8 +899,16 @@ useHead(() => ({
   ],
   meta: [
     { name: 'description', content: pageDescription.value },
-    { property: 'og:title', content: `Juan Nutrisyon - ${pageTitle.value}` },
-    { property: 'og:description', content: pageDescription.value }
+    { property: 'og:title', content: `${pageTitle.value} Nutrition Facts | Juan Nutrisyon` },
+    { property: 'og:description', content: pageDescription.value },
+    { property: 'og:image', content: pageImage.value },
+    { property: 'og:url', content: canonical.value },
+    { property: 'og:type', content: 'article' },
+
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: `${pageTitle.value} Nutrition Facts | Juan Nutrisyon` },
+    { name: 'twitter:description', content: pageDescription.value },
+    { name: 'twitter:image', content: pageImage.value },
   ]
 }))
 
