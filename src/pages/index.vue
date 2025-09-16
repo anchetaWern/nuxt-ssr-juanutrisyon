@@ -105,7 +105,7 @@ import { auth } from '@/firebase.js';
 import { onAuthStateChanged } from "firebase/auth";
 
 useHead({
-  title: 'Juan Nutrisyon App',
+  title: 'Nutrition Facts for Filipino Foods – Juan Nutrisyon',
 
   link: [
     {
@@ -115,19 +115,19 @@ useHead({
   ],
 
   meta: [
-    { hid: 'description', name: 'description', content: 'Your personal nutrition companion to help you make informed food choices—without guilt or fear.' },
+    { hid: 'description', name: 'description', content: 'Explore nutrition facts for Filipino foods. Track calories, analyze diets, calculate recipe nutrition.' },
     { name: 'robots', content: 'index, follow' },
 
 
     // Open Graph (Facebook, LinkedIn, etc.)
-    { property: 'og:title', content: 'Juan Nutrisyon App' },
-    { property: 'og:description', content: 'Your personal nutrition companion to help you make informed food choices—without guilt or fear.' },
+    { property: 'og:title', content: 'Nutrition Facts for Filipino Foods – Juan Nutrisyon' },
+    { property: 'og:description', content: 'Explore nutrition facts for Filipino foods with our database. Track calories, analyze your diet, calculate recipe nutrition, and discover healthier choices for everyday meals.' },
     { property: 'og:type', content: 'website' },
 
     // Twitter Card
     { name: 'twitter:card', content: 'summary_large_image' },
-    { name: 'twitter:title', content: 'Juan Nutrisyon App' },
-    { name: 'twitter:description', content: 'Your personal nutrition companion to help you make informed food choices—without guilt or fear.' },
+    { name: 'twitter:title', content: 'Nutrition Facts for Filipino Foods – Juan Nutrisyon' },
+    { name: 'twitter:description', content: 'Explore nutrition facts for Filipino foods with our database. Track calories, analyze your diet, calculate recipe nutrition, and discover healthier choices for everyday meals.' },
 
   ]
 
