@@ -20,6 +20,7 @@
       <v-row dense justify="center">
         <v-col>
 
+
           <v-card
             title="Welcome to Juan Nutrisyon!🌱"
           >
@@ -179,6 +180,57 @@ useHead({
     { name: 'twitter:title', content: 'Nutrition Facts for Filipino Foods – Juan Nutrisyon' },
     { name: 'twitter:description', content: 'Explore nutrition facts for Filipino foods with our database. Track calories, analyze your diet, calculate recipe nutrition, and discover healthier choices for everyday meals.' },
 
+  ],
+
+  script: [
+    {
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://app.juanutrisyon.info/#website",
+            "name": "Juan Nutrisyon",
+            "url": "https://app.juanutrisyon.info",
+            "description": "Juan Nutrisyon helps Filipinos make healthier food choices by providing nutrition facts, diet analysis tools, food tracking, and recipe insights.",
+            "publisher": {
+              "@id": "https://app.juanutrisyon.info/#organization"
+            },
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://app.juanutrisyon.info/search?q={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          },
+          {
+            "@type": "WebApplication",
+            "@id": "https://app.juanutrisyon.info/#webapp",
+            "name": "Juan Nutrisyon",
+            "url": "https://app.juanutrisyon.info",
+            "operatingSystem": "Web",
+            "applicationCategory": "HealthApplication",
+            "description": "Analyze and track your diet, create and view recipe nutrients with Filipino food nutrition data.",
+            "publisher": {
+              "@id": "https://app.juanutrisyon.info/#organization"
+            }
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://app.juanutrisyon.info/#organization",
+            "name": "Juan Nutrisyon",
+            "url": "https://app.juanutrisyon.info",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://app.juanutrisyon.info/juan-nutrisyon-logo.jpg"
+            },
+            "sameAs": [
+              "https://www.facebook.com/juanutrisyon"
+            ]
+          }
+        ]
+      })
+    }
   ]
 
 });

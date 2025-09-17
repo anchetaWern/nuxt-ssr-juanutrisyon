@@ -2,7 +2,7 @@
   <v-app-bar flat>
     <v-app-bar-title>
       <a href="/" style="color: #333;">
-        <img :src="logo" alt="juan nutrisyon logo" style="width:130px;" id="appIcon" />
+        <img src="/juan-nutrisyon-logo.jpg" alt="juan nutrisyon logo" style="width:130px;" id="appIcon" />
       </a>
     </v-app-bar-title>
 
@@ -161,7 +161,7 @@
 
 </template>
 <script setup>
-import logo from '@/assets/images/juan-nutrisyon.png';
+
 import { ref, inject } from 'vue';
 import { auth } from '@/firebase.js';
 import { signOut } from "firebase/auth";
