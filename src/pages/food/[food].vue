@@ -696,7 +696,7 @@ import axios from 'axios'
 import NutrientsTable from '@/components/NutrientsTable.vue'
 import NutritionLabel from '@/components/NutritionLabel.vue'
 import { calculatePercentage, formatNumber } from '@/helpers/Numbers';
-import { convertWeight, FAONutrientContentClaim, normalizeFoodState, convertKjToKcal } from '@/helpers/Nutrients';
+import { convertWeight, FAONutrientContentClaim, normalizeFoodState, convertKjToKcal, extractNutrients } from '@/helpers/Nutrients';
 import Tour from '@/components/Tour.vue';
 
 import { toPng } from 'html-to-image';
@@ -905,12 +905,57 @@ const pageImage = computed(() => {
 
 
 
-// call useHead once with a reactive getter — it updates when the computed values change
+const needed_nutrients = [
+  "total carbohydrates",
+  "dietary fiber",
+  "sugar",
+  "protein",
+  "total fat",
+  "saturated fat",
+  "trans fat",
+  "cholesterol",
+  "sodium"
+];
+
+const structuredData = computed(() => {
+  if (!food.value) return null;
+
+  const nutrients = extractNutrients(food.value.nutrients || [], needed_nutrients);
+
+  console.log(JSON.stringify(nutrients));
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Food",
+    "name": pageTitle.value,
+    "image": pageImage.value,
+    "nutrition": {
+      "@type": "NutritionInformation",
+      "calories": {
+        "@type": "Energy",
+        "value": food.value?.calories,
+        "unitText": food.value?.calories_unit,
+      },
+      "servingSize": `${food.value?.serving_size} ${food.value?.serving_size_unit}`,
+      "carbohydrateContent": nutrients["total carbohydrates"] || "0 g",
+      "fiberContent": nutrients["dietary fiber"] || "0 g",
+      "sugarContent": nutrients["sugar"] || "0 g",
+      "proteinContent": nutrients["protein"] || "0 g",
+      "fatContent": nutrients["total fat"] || "0 g",
+      "saturatedFatContent": nutrients["saturated fat"] || "0 g",
+      "transFatContent": nutrients["trans fat"] || "0 g",
+      "cholesterolContent": nutrients["cholesterol"] || "0 mg",
+      "sodiumContent": nutrients["sodium"] || "0 mg"
+    },
+    "publisher": {
+      "@id": "https://app.juanutrisyon.info/#organization"
+    }
+  };
+});
+
 useHead(() => ({
   title: pageTitle.value,
-  link: [
-    { rel: 'canonical', href: canonical.value }
-  ],
+  link: [{ rel: 'canonical', href: canonical.value }],
   meta: [
     { name: 'description', content: pageDescription.value },
     { property: 'og:title', content: `${pageTitle.value} Nutrition Facts | Juan Nutrisyon` },
@@ -918,13 +963,20 @@ useHead(() => ({
     { property: 'og:image', content: pageImage.value },
     { property: 'og:url', content: canonical.value },
     { property: 'og:type', content: 'article' },
-
     { name: 'twitter:card', content: 'summary_large_image' },
     { name: 'twitter:title', content: `${pageTitle.value} Nutrition Facts | Juan Nutrisyon` },
     { name: 'twitter:description', content: pageDescription.value },
     { name: 'twitter:image', content: pageImage.value },
-  ]
-}))
+  ],
+  script: structuredData.value
+    ? [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(structuredData.value),
+        },
+      ]
+    : [],
+}));
 
 
 // ===

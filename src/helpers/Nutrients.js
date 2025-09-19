@@ -854,3 +854,42 @@ export function convertKjToKcal(value, unit)
 
     return Math.round(value);
 }
+
+export function extractNutrient(name, nutrients, unit = 'g') {
+    if (nutrients) {
+        console.log('nutrients: ', nutrients);
+        for (let item of nutrients) {
+            if (item.name.toLowerCase() === name.toLowerCase()) {
+              return `${item.amount} ${item.unit}`;
+            }
+            if (item.composition) {
+              const result = extractNutrient(name, item.composition);
+              if (result) return result;
+            }
+         }
+    }
+    
+    return `0 ${unit}`; // if not found
+  }
+
+export function extractNutrients(data, wanted = []) {
+    const results = {};
+  
+    function search(items) {
+      for (let item of items) {
+        const key = item.name.toLowerCase();
+  
+        if (wanted.includes(key)) {
+          results[key] = `${item.amount} ${item.unit}`;
+        }
+  
+        if (item.composition) {
+          search(item.composition);
+        }
+      }
+    }
+  
+    if (data) search(data);
+    return results;
+}
+  
