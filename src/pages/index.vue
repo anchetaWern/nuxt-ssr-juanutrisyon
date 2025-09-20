@@ -202,7 +202,24 @@ useHead({
               "@type": "SearchAction",
               "target": "https://app.juanutrisyon.info/search?q={search_term_string}",
               "query-input": "required name=search_term_string"
-            }
+            },
+            "hasPart": [
+              {
+                "@type": "WebPage",
+                "name": "Recipe Creation",
+                "url": "https://app.juanutrisyon.info/recipe"
+              },
+              {
+                "@type": "WebPage",
+                "name": "Diet Analysis",
+                "url": "https://app.juanutrisyon.info/analyze"
+              },
+              {
+                "@type": "WebPage",
+                "name": "Food Contribution",
+                "url": "https://contribute.juanutrisyon.info"
+              }
+            ]
           },
           {
             "@type": "WebApplication",
