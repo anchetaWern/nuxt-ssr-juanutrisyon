@@ -22,11 +22,12 @@
 
 
           <v-card
-            title="Welcome to Juan Nutrisyon!🌱"
+            title=""
           >
             <div class="px-5 pb-3 text-body-1">
+                <h1 class="text-h6">Juan Nutrisyon – Nutrition Facts for Filipino Foods and Recipes.</h1>
                 <div>
-                Your personal nutrition companion to help you make informed food choices—without guilt or fear.
+                Helping you make informed food choices—without guilt or fear.
                 </div>
 
                 <div class="mt-5">
