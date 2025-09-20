@@ -428,11 +428,9 @@ const updateSearchResults = async () => {
 
       if (foodsData.value) {
 
-        const items_per_page = 10;
-
         isLoading.value = false;
 
-        totalPages.value = Math.round(foodsData.value.total / items_per_page);
+        totalPages.value = foodsData.value.last_page;
 
         updateTargets(foodsData.value.total);
 
