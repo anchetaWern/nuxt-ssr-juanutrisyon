@@ -337,11 +337,6 @@ onAuthStateChanged(auth, (user) => {
     {
       target: "#appIcon",
       description: "Click on this if you want to go back to the home page"
-    },
-
-    {
-      target: "#categoryCard",
-      description: "Click this to list foods of a specific food category"
     }
   ]);
 
