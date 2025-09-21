@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import vuetify from 'vite-plugin-vuetify'
+
 export default defineNuxtConfig({
   runtimeConfig: {
     public: {
@@ -46,8 +48,11 @@ export default defineNuxtConfig({
     transpile: ['vuetify', 'mosha-vue-toastify'],
   },
   vite: {
+    plugins: [
+      vuetify({ autoImport: true })
+    ],
     define: {
-      'process.env.DEBUG': false,
+      'process.env.DEBUG': false, 
     },
   },
 
