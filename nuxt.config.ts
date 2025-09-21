@@ -8,8 +8,13 @@ export default defineNuxtConfig({
 
   modules: [
    
-    '@nuxtjs/robots'
+    '@nuxtjs/robots',
+    '@nuxt/image'
   ],
+
+  image: {
+    format: ['webp', 'avif']
+  },
 
   site: {
     url: "https://app.juanutrisyon.info",
@@ -47,6 +52,7 @@ export default defineNuxtConfig({
   },
 
   srcDir: 'src/',
+  
 
 
   devtools: { enabled: true },
