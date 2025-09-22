@@ -60,7 +60,7 @@
           <v-card>
             <div class="px-5 pt-3 pb-3 text-body-1">
               <h2 class="text-subtitle-1 font-weight-bold">View Food Database</h2>
-              <p class="text-body-2">With over 15,000 foods in our database you'll be sure to find what you're looking for. Our food data is sourced from PhilFCT and USDA food database, but we also add new foods from food labels.</p>
+              <p class="text-body-2">Juan Nutrisyon has over 15,000 foods in the database. Our food data is sourced from PhilFCT and USDA food database, but we also add nutrition facts from food labels.</p>
             </div>
 
             <div class="px-2 pb-2">
@@ -167,19 +167,19 @@ useHead({
   ],
 
   meta: [
-    { hid: 'description', name: 'description', content: 'Explore nutrition facts for Filipino foods with our database. Track calories, analyze your diet, calculate recipe nutrition, and discover healthier choices for everyday meals.' },
+    { hid: 'description', name: 'description', content: 'Explore nutrition facts for Filipino foods, track calories, analyze your diet, and calculate recipe nutrition.' },
     { name: 'robots', content: 'index, follow' },
 
 
     // Open Graph (Facebook, LinkedIn, etc.)
     { property: 'og:title', content: 'Nutrition Facts for Filipino Foods – Juan Nutrisyon' },
-    { property: 'og:description', content: 'Explore nutrition facts for Filipino foods with our database. Track calories, analyze your diet, calculate recipe nutrition, and discover healthier choices for everyday meals.' },
+    { property: 'og:description', content: 'Explore nutrition facts for Filipino foods, track calories, analyze your diet, and calculate recipe nutrition.' },
     { property: 'og:type', content: 'website' },
 
     // Twitter Card
     { name: 'twitter:card', content: 'summary_large_image' },
     { name: 'twitter:title', content: 'Nutrition Facts for Filipino Foods – Juan Nutrisyon' },
-    { name: 'twitter:description', content: 'Explore nutrition facts for Filipino foods with our database. Track calories, analyze your diet, calculate recipe nutrition, and discover healthier choices for everyday meals.' },
+    { name: 'twitter:description', content: 'Explore nutrition facts for Filipino foods, track calories, analyze your diet, and calculate recipe nutrition.' },
 
   ],
 
