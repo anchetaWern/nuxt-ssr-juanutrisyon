@@ -1,6 +1,6 @@
 <template>
  
-    <v-container class="mt-5">
+    <v-container class="mt-5" min-width="350">
         
         <v-text-field
             label="Email"
