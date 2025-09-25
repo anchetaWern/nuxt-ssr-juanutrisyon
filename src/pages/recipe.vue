@@ -173,13 +173,22 @@
           </tbody>
       </v-table>
 
+      <v-switch 
+          v-model="displayMoreNutrients" 
+          label="Show more nutrient data"
+          color="success"
+          hide-details
+          inset
+      ></v-switch>
+
       <div class="text-subtitle-1 mb-2">Estimated nutrients per serving</div>
 
       <div id="macros-section" class="mt-3" v-if="macros.length && recommended_daily_values">
-        <span class="text-subtitle-2">Macros</span>
+        <span class="text-subtitle-2">Macronutrients</span>
         <NutrientsTable 
           v-if="macros"
           :nutrients="macros" 
+          :displayMoreNutrients="displayMoreNutrients"
           servingsPerContainer="1" 
           displayValuesPerContainer="false"
           :recommended_daily_values="recommended_daily_values"
@@ -193,7 +202,8 @@
         <span class="text-subtitle-2">Vitamins</span>
         <NutrientsTable 
           :nutrients="vitamins" 
-          servingsPerContainer="1" 
+          servingsPerContainer="1"
+          :displayMoreNutrients="displayMoreNutrients" 
           displayValuesPerContainer="false"
           :recommended_daily_values="recommended_daily_values"
           :newServingSize="newServingSize"
@@ -205,7 +215,8 @@
         <span class="text-subtitle-2">Minerals</span>
         <NutrientsTable 
           :nutrients="minerals" 
-          servingsPerContainer="1" 
+          servingsPerContainer="1"
+          :displayMoreNutrients="displayMoreNutrients" 
           displayValuesPerContainer="false"
           :recommended_daily_values="recommended_daily_values"
           :newServingSize="newServingSize"
@@ -218,6 +229,7 @@
         <NutrientsTable 
           :nutrients="others" 
           servingsPerContainer="1" 
+          :displayMoreNutrients="displayMoreNutrients"
           displayValuesPerContainer="false"
           :recommended_daily_values="recommended_daily_values"
           :newServingSize="newServingSize"
@@ -375,6 +387,8 @@ onMounted(() => {
     
   }
 });
+
+const displayMoreNutrients = ref(false);
 
 const macros = ref([]);
 const vitamins = ref(null);
