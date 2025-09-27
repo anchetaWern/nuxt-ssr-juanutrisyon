@@ -51,8 +51,8 @@
         <v-table density="compact" v-if="ingredients">
             <thead>
                 <tr>
-                    <th class="text-left">
-                        Ingredients (weight per serving)
+                    <th class="text-left pb-2">
+                        Ingredients (weight per serving) <v-btn size="x-small" @click="addToRecipe">Add to Recipe</v-btn>
                     </th>
                 </tr>
             </thead>
@@ -75,14 +75,26 @@
         </v-table>
 
 
-<div class="text-subtitle-1 mb-2 mt-5" v-if="macros && macros.length">Estimated nutrients per serving</div>
+        <v-switch 
+            v-if="ingredients"
+            v-model="displayMoreNutrients" 
+            label="Show more nutrient data"
+            color="success"
+            hide-details
+            inset
+        ></v-switch>
 
+
+    <div class="text-subtitle-1 mb-2 mt-5" v-if="macros && macros.length">Estimated nutrients per serving</div>
+
+    <div ref="exportable">
       <div id="macros-section" class="mt-3" v-if="macros && macros.length && recommended_daily_values">
-        <span class="text-subtitle-2">Macros</span>
+        <span class="text-subtitle-2">Macronutrients</span>
         <NutrientsTable 
           v-if="macros"
           :nutrients="macros" 
-          servingsPerContainer="1" 
+          servingsPerContainer="1"
+          :displayMoreNutrients="displayMoreNutrients" 
           displayValuesPerContainer="false"
           :recommended_daily_values="recommended_daily_values"
           :newServingSize="newServingSize"
@@ -96,6 +108,7 @@
         <NutrientsTable 
           :nutrients="vitamins" 
           servingsPerContainer="1" 
+          :displayMoreNutrients="displayMoreNutrients"
           displayValuesPerContainer="false"
           :recommended_daily_values="recommended_daily_values"
           :newServingSize="newServingSize"
@@ -108,6 +121,7 @@
         <NutrientsTable 
           :nutrients="minerals" 
           servingsPerContainer="1" 
+          :displayMoreNutrients="displayMoreNutrients"
           displayValuesPerContainer="false"
           :recommended_daily_values="recommended_daily_values"
           :newServingSize="newServingSize"
@@ -120,13 +134,20 @@
         <NutrientsTable 
           :nutrients="others" 
           servingsPerContainer="1" 
+          :displayMoreNutrients="displayMoreNutrients"
           displayValuesPerContainer="false"
           :recommended_daily_values="recommended_daily_values"
           :newServingSize="newServingSize"
           :newServingCount="newServingCount"
           :getValueColor="getValueColor" />
       </div>
+    </div>
 
+    <div id="export-image" class="text-center mt-2" v-if="nutrients">
+      <v-btn variant="plain" size="x-small" @click="exportAsImage">
+      Export food label
+      </v-btn>
+    </div>
 
     </v-container>
 
@@ -139,10 +160,11 @@
 </style>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, defineEmits } from 'vue';
 import axios from 'axios';
 import { auth } from '@/firebase.js';
 import { onAuthStateChanged } from 'firebase/auth';
+
 
 import { 
     aggregateNutrients,
@@ -155,7 +177,47 @@ import {
     convertKjToKcal,
 } from '@/helpers/Nutrients';
 
+import { toPng } from 'html-to-image';
+
 import { calculatePercentage, wholeNumber, formatNumber } from '@/helpers/Numbers';
+
+import Toast, { createToast, clearToasts } from 'mosha-vue-toastify'
+import 'mosha-vue-toastify/dist/style.css'
+
+const emit = defineEmits(['update-ingredient-count-child']);
+
+const displayMoreNutrients = ref(false);
+
+const exportable = ref(null);
+
+useHead({
+  title: 'AI Nutrient Estimator - Juan Nutrisyon',
+
+  link: [
+    {
+      rel: 'canonical',
+      href: `https://app.juanutrisyon.info/ai`
+    }
+  ],
+
+  meta: [
+    { hid: 'description', name: 'description', content: 'The AI Nutrient Estimator estimates nutrients based on your food description.' },
+    { name: 'robots', content: 'index, follow' },
+
+
+    // Open Graph (Facebook, LinkedIn, etc.)
+    { property: 'og:title', content: 'AI Nutrient Estimator - Juan Nutrisyon' },
+    { property: 'og:description', content: 'The AI Nutrient Estimator estimates nutrients based on your food description.' },
+    { property: 'og:type', content: 'website' },
+
+    // Twitter Card
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: 'AI Nutrient Estimator - Juan Nutrisyon' },
+    { name: 'twitter:description', content: 'The AI Nutrient Estimator estimates nutrients based on your food description.' },
+
+  ]
+
+});
 
 const API_BASE_URI = import.meta.env.VITE_API_URI;
 
@@ -192,6 +254,7 @@ const analyzing = ref(false);
 const recipe_link = ref(null);
 
 onAuthStateChanged(auth, (user) => {
+  
   if (user) {
     currentUser.value = {
       email: user.email,
@@ -205,6 +268,7 @@ onAuthStateChanged(auth, (user) => {
   } else {
     currentUser.value = null
   }
+  
 })
 
 const getValueColor = (value, daily_limit) => {
@@ -221,7 +285,7 @@ const getValueColor = (value, daily_limit) => {
 };
 
 const analyze = async () => {
-    
+    // :disabled="analyzeNotOk"
     if (currentUser.value && currentUser.value.email === 'nutrikid@gmail.com') {
 
       totalSeconds.value = 0;
@@ -238,13 +302,15 @@ const analyze = async () => {
           );
           console.log('res: ', res.data);
 
+          sessionStorage.setItem('ai_analyzer', JSON.stringify(res.data));
+
           totalSeconds.value = res.data.total_seconds.toFixed(2);
           
           food.value = res.data.food;
 
           nutrients.value = res.data.nutrients;
           servingCount.value = parseInt(res.data.recipe_total_servings);
-        
+          console.log('ingredients: ', res.data.ingredients);
           ingredients.value = res.data.ingredients;
           serving_size.value = res.data.serving_size; 
           serving_size_in_grams.value = res.data.serving_size_in_grams;
@@ -419,6 +485,104 @@ const refreshNutrients = () => {
     }
   }
           
+}
+
+
+const addIngredientToRecipe = (ingredient, ingredient_serving_size) => {
+
+    if (process.client) {
+
+        const recipe = sessionStorage.getItem('recipe');
+        let recipe_data = [];
+        if (recipe) {
+            recipe_data = JSON.parse(recipe);
+        }
+
+        const index = recipe_data.findIndex(itm => itm.description_slug === food.value.description_slug);
+
+        if (index === -1) {
+            recipe_data.push(ingredient);
+            sessionStorage.setItem('recipe', JSON.stringify(recipe_data));
+
+            let serving_size_data = {};
+            const serving_size = sessionStorage.getItem('recipe_serving_sizes');
+            if (serving_size) {
+                serving_size_data = JSON.parse(serving_size);
+            }
+
+            serving_size_data[ingredient.description_slug] = ingredient_serving_size;
+            sessionStorage.setItem('recipe_serving_sizes', JSON.stringify(serving_size_data));
+
+            let stored_custom_servings = {};
+            const stored_cs = sessionStorage.getItem('recipe_custom_servings');
+            if (stored_cs) {
+                stored_custom_servings = JSON.parse(stored_cs);
+            }
+
+            stored_custom_servings[ingredient.description_slug] = {
+                'weight': serving_size_in_grams.value, 
+                'qty': 1, 
+            }
+
+            sessionStorage.setItem('recipe_custom_servings', JSON.stringify(stored_custom_servings));
+
+            return true;
+        }
+        //
+        return false;
+    }
+}
+
+
+const addToRecipe = () => {
+  // TODO: how to get the recipe name and ingredients and serving sizes
+
+  // incorrect: recipe_serving_sizes (undefined key)
+  // incorrect: recipe (should be the whole nutrition data)
+  // missing: recipe_custom_servings 
+  const added_results = [];
+  
+  nutrients.value.forEach((itm, index) => {
+      // itm does not have the full food data required
+      console.log('matoi: ', ingredients.value[index]);
+      added_results.push(addIngredientToRecipe(itm, ingredients.value[index].grams));
+  });
+
+  if (added_results.length && added_results[0]) {
+      sessionStorage.setItem('serving_count', servingCount.value);
+      sessionStorage.setItem('recipe_name', food.value);
+
+      createToast(
+        {
+            title: 'Added!',
+            description: 'Ingredients added to recipe creator!'
+        }, 
+        { type: 'success', position: 'bottom-right' }
+      );
+
+      emit('update-ingredient-count-child');
+  }
+ 
+}
+
+const exportAsImage = () => {
+    
+  const node = exportable.value;
+
+  toPng(node)
+      .then((dataUrl) => {
+          
+          const link = document.createElement('a');
+          link.download = `${food.value}-nutrient-info.png`;
+          link.href = dataUrl;
+          link.click();
+          
+      })
+      .catch((error) => {
+          console.log('error: ', error);
+          node.classList.add('hidden');
+          console.error('Error exporting image:', error);
+      });
 }
 
 </script>
