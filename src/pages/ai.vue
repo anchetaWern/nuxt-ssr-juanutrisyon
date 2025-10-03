@@ -286,7 +286,7 @@ const getValueColor = (value, daily_limit) => {
 
 const analyze = async () => {
     // :disabled="analyzeNotOk"
-    if (currentUser.value && currentUser.value.email === 'nutrikid@gmail.com') {
+    if (currentUser.value && (currentUser.value.email === 'nutrikid@gmail.com' || currentUser.value.email === 'juan-user@gmail.com')) {
 
       totalSeconds.value = 0;
 
