@@ -262,7 +262,7 @@ onAuthStateChanged(auth, (user) => {
       uid: user.uid
     }
 
-    if (user.email === 'nutrikid@gmail.com') {
+    if (user.email === 'nutrikid@gmail.com' || user.email === 'juan-user@gmail.com') {
       analyzeNotOk.value = false;
     }
   } else {
