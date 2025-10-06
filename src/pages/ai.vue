@@ -30,6 +30,33 @@
                     </td>
                 </tr>
                 <tr>
+
+                  <td>
+                  
+                    <v-table density="compact">
+                        <thead>
+                            <tr>
+                                <th class="text-left pb-2">
+                                    Ingredients (weight for whole recipe) 
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                v-for="item in ingredients"
+                                :key="item.matched_id"
+                            >
+                                <td>
+                                    {{ item.input }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </v-table>
+
+                  </td>
+
+                </tr>
+                <tr>
                     <td class="text-grey-darken-3" v-if="servingCount">
                         Total servings of the recipe: {{ servingCount }}
                     </td>
@@ -286,7 +313,8 @@ const getValueColor = (value, daily_limit) => {
 
 const analyze = async () => {
     // :disabled="analyzeNotOk"
-    if (currentUser.value && (currentUser.value.email === 'nutrikid@gmail.com' || currentUser.value.email === 'juan-user@gmail.com')) {
+    const test_user = (currentUser.value.email === 'nutrikid@gmail.com' || currentUser.value.email === 'juan-user@gmail.com');
+    if (currentUser.value && test_user) {
 
       totalSeconds.value = 0;
 
