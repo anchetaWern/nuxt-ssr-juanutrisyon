@@ -125,7 +125,7 @@
             </div>
 
             <div class="px-2 pb-2">
-              <v-btn block href="/recipe" color="primary">
+              <v-btn block href="https://contribute.juanutrisyon.info" color="primary">
               Contribute
               </v-btn>
             </div>
