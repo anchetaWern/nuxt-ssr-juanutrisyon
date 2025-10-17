@@ -1384,10 +1384,21 @@ const updateTargets = (food) => {
 
 
 const fetchFoodData = async () => {
-  
+    /*
     const { data: foodData, error } = await useAsyncData('food', () =>
         $fetch(`${API_BASE_URI}/foods/${route.params.food}`)
     )
+    */
+    const { data: foodData } = await useAsyncData(
+        () => `food-${route.params.food}`,
+        () => $fetch(`/api/foods/${route.params.food}`),
+        {
+            server: true,
+            lazy: false,
+            transform: (data) => data,
+            getCachedData: (key) => nuxtApp.payload.data[key]
+        }
+    );
 
     if (error.value) {
         console.error('Error fetching food:', error.value)
