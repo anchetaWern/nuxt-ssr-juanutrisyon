@@ -65,7 +65,18 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'vercel', // 'cloudflare-pages'
-    compressPublicAssets: true
+    compressPublicAssets: true,
+
+    prerender: {
+      routes: [
+        '/',     
+        '/login',
+        '/register',             
+        '/recipe',
+        '/analyze',
+        '/ai',            
+      ]
+    }
   },
 
   app: {
