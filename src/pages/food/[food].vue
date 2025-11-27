@@ -21,7 +21,7 @@
                 <span id="food-alternate-names" v-if="food.alternate_names != 'N/A'" class="text-medium-emphasis text-subtitle-2">{{ food.alternate_names }}</span>
             </div>
             <div class="w-33">
-                <v-btn id="add-to-recipe" size="x-small" color="success" variant="outlined" @click="addToRecipe">{{ food.recipe_ingredients.length ? "Modify Recipe" : "Add to Recipe" }}</v-btn>
+                <v-btn id="add-to-recipe" size="x-small" color="success" variant="outlined" @click="addToRecipe">Add to Recipe</v-btn>
                 <v-btn id="add-to-analyze" size="x-small" color="primary" variant="outlined" @click="addForAnalysis">Analyze</v-btn>
             </div>
         </div>
@@ -397,6 +397,9 @@
                 </tr>
             </tbody>
         </v-table>
+        <div>
+            <v-btn id="add-to-recipe" size="x-small" color="warning" variant="outlined" @click="modifyRecipe">Modify Recipe</v-btn>
+        </div>
     </div>
 
     <div id="recipe-source-section" class="mt-5 text-center" v-if="food.recipe_source">
@@ -1134,11 +1137,9 @@ const addIngredientToRecipe = (ingredient, ingredient_serving_size) => {
     }
 }
 
-
-const addToRecipe = () => {
-    
+const modifyRecipe = () => {
     if (process.client) {
-
+        
         let added = false;
 
         if (food.value.recipe_ingredients.length) {
@@ -1154,12 +1155,8 @@ const addToRecipe = () => {
                 sessionStorage.setItem('serving_count', food.value.servings_per_container);
                 sessionStorage.setItem('recipe_name', food.value.description);
             }
-            
-
-        } else {
-            added = addIngredientToRecipe(food.value, food.value.serving_size);
         }
-        
+
 
         if (added) {
 
@@ -1173,6 +1170,27 @@ const addToRecipe = () => {
 
             emit('update-ingredient-count-child');
         }
+
+    }
+}
+
+
+const addToRecipe = () => {
+    
+    if (process.client) {
+
+        addIngredientToRecipe(food.value, food.value.serving_size);
+        
+        createToast(
+            {
+                title: 'Added!',
+                description: food.value.recipe_ingredients.length ? 'Recipe ingredients was added' : 'Ingredient was added to recipe'
+            }, 
+            { type: 'success', position: 'bottom-right' }
+        );
+
+        emit('update-ingredient-count-child');
+        
     }
 }
 
