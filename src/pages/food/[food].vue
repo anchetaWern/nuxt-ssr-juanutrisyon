@@ -392,7 +392,7 @@
                     :key="item.id"
                 >
                     <td>
-                        <a :href="`/food/${item.ingredient.description_slug}`" target="_blank">{{ item.ingredient.description }} ({{ item.ingredient.serving_size }}{{ item.ingredient.serving_size_unit }})</a>
+                        <a :href="`/food/${item.ingredient.description_slug}`" target="_blank">{{ item.ingredient.description }} ({{ item.serving_size }}{{ item.serving_size_unit }})</a>
                     </td>
                 </tr>
             </tbody>
