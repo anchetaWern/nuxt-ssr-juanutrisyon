@@ -591,6 +591,17 @@
         transition="dialog-bottom-transition"
     >
         <template v-slot:default="{ isActive }">
+
+            <v-card-actions>
+                <v-spacer></v-spacer>
+
+                <v-btn
+                    text="close"
+                    variant="flat"
+                    @click="isActive.value = false"
+                ></v-btn>
+            </v-card-actions>
+            
             <v-card title="Daily Values">
     
                 <template v-slot:text>
@@ -653,15 +664,7 @@
                     </div>
                 </template>
 
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-
-                    <v-btn
-                        text="ok"
-                        variant="flat"
-                        @click="isActive.value = false"
-                    ></v-btn>
-                </v-card-actions>
+                
             </v-card>
         </template>
     </v-dialog>
