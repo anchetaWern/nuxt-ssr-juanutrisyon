@@ -382,7 +382,24 @@
         </p>
     </div>
 
-    <div id="recipe-source" class="mt-5 text-center">
+    <div id="recipe-ingredients-section" class="mt-5" v-if="food.recipe_ingredients">
+        <div class="text-body-2 mb-1 text-center font-weight-medium">Recipe Ingredients</div>
+        <v-table density="compact">
+           
+            <tbody>
+                <tr
+                    v-for="item in food.recipe_ingredients"
+                    :key="item.id"
+                >
+                    <td>
+                        <a :href="`/food/${item.ingredient.description_slug}`" target="_blank">{{ item.ingredient.description }} ({{ item.ingredient.serving_size }}{{ item.ingredient.serving_size_unit }})</a>
+                    </td>
+                </tr>
+            </tbody>
+        </v-table>
+    </div>
+
+    <div id="recipe-source-section" class="mt-5 text-center" v-if="food.recipe_source">
         <div class="text-body-2 mb-1 text-center font-weight-medium">Recipe Source</div>
         <div>
             <a :href="food.recipe_source.website_url" target="_blank">{{ food.recipe_source.name }}</a>
