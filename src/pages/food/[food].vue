@@ -382,6 +382,13 @@
         </p>
     </div>
 
+    <div id="recipe-source" class="mt-5 text-center">
+        <div class="text-body-2 mb-1 text-center font-weight-medium">Recipe Source</div>
+        <div>
+            <a :href="food.recipe_source.website_url" target="_blank">{{ food.recipe_source.name }}</a>
+        </div>
+    </div>
+
 
     <div class="mt-5 pt-5 text-center">
 
@@ -543,7 +550,7 @@
                 <template v-slot:actions>
                     <v-btn
                         class="ms-auto"
-                        text="Ok"
+                        text="Close"
                         @click="closeImageModal"
                     ></v-btn>
                 </template>
@@ -601,7 +608,7 @@
                     @click="isActive.value = false"
                 ></v-btn>
             </v-card-actions>
-            
+
             <v-card title="Daily Values">
     
                 <template v-slot:text>
