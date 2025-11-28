@@ -382,7 +382,7 @@
         </p>
     </div>
 
-    <div id="recipe-ingredients-section" class="mt-5" v-if="food.recipe_ingredients">
+    <div id="recipe-ingredients-section" class="mt-5" v-if="food.recipe_ingredients && food.recipe_ingredients.length > 0">
         <div class="text-body-2 mb-1 text-center font-weight-medium">Recipe Ingredients</div>
         <v-table density="compact">
            
