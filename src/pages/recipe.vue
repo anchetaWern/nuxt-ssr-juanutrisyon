@@ -500,6 +500,7 @@ if (recipe.value && Object.keys(servingSizes.value).length === 0) {
 onAuthStateChanged(auth, (user) => {
   if (user) {
     loggedInUser.value = user;
+    console.log('logged in user: ', loggedInUser.value);
     updateTargets([
       {
         target: '#recipe-name',
@@ -590,6 +591,7 @@ const saveRecipe = async () => {
     try {
 
       const recipe_res = await axios.post(`${API_BASE_URI}/recipe`, { 
+        'user_id': loggedInUser.value.uid,
         'name': recipeName.value,
         'image': captured_title_image_data.value, 
         'serving_count': servingCount.value,
