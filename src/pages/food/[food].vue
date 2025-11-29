@@ -925,6 +925,7 @@ watch(selected_serving_qty, (new_serving_qty, old_serving_qty) => {
 });
 
 
+
 // ===
 const pageTitle = computed(() => food.value?.description ?? 'Juan Nutrisyon')
 const pageDescription = computed(() =>
@@ -1019,7 +1020,6 @@ useHead(() => ({
       ]
     : [],
 }));
-
 
 // ===
 
@@ -1152,6 +1152,8 @@ const modifyRecipe = () => {
 
             if (added_results.length && added_results[0]) {
                 added = true;
+                sessionStorage.setItem('food_id', food.value.id);
+                sessionStorage.setItem('recipe_id', food.value.recipe.id);
                 sessionStorage.setItem('serving_count', food.value.servings_per_container);
                 sessionStorage.setItem('recipe_name', food.value.description);
             }

@@ -589,8 +589,13 @@ const saveRecipe = async () => {
   if (recipeName.value && servingCount.value && captured_title_image_data.value) {
     
     try {
+      const food_id = sessionStorage.getItem('food_id');
+      const recipe_id = sessionStorage.getItem('recipe_id');
+      console.log('recipe id: ', recipe_id);
 
       const recipe_res = await axios.post(`${API_BASE_URI}/recipe`, { 
+        'food_id': food_id,
+        'recipe_id': recipe_id,
         'user_id': loggedInUser.value.uid,
         'name': recipeName.value,
         'image': captured_title_image_data.value, 
@@ -624,6 +629,8 @@ const saveRecipe = async () => {
       title_image_file_input.value = null;
 
       if (process.client) {
+        sessionStorage.removeItem('food_id');
+        sessionStorage.removeItem('recipe_id');
         sessionStorage.removeItem('recipe');
         sessionStorage.removeItem('recipe_custom_servings');
         sessionStorage.removeItem('recipe_name');
