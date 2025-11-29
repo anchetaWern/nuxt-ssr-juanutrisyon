@@ -1142,6 +1142,8 @@ const modifyRecipe = () => {
         
         let added = false;
 
+        console.log('food: ', food.value);
+
         if (food.value.recipe_ingredients.length) {
             
             const added_results = [];
