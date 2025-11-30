@@ -1158,6 +1158,7 @@ const modifyRecipe = () => {
                 sessionStorage.setItem('recipe_id', food.value.recipe.id);
                 sessionStorage.setItem('serving_count', food.value.servings_per_container);
                 sessionStorage.setItem('recipe_name', food.value.description);
+                sessionStorage.setItem('recipe_image', food.value.title_image);
             }
         }
 

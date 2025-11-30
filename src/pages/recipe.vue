@@ -52,7 +52,7 @@
             ref="title_image_file_input">
           </v-file-input>
 
-          <img id="recipe-image-preview" :src="captured_title_image_data" class="img" />
+          <img id="recipe-image-preview" :src="recipe_image || captured_title_image_data" class="img" />
 
           <v-btn id="save-recipe" color="primary" block @click="saveRecipe" rounded="0" :disabled="saveRecipeDisabled">Save Recipe</v-btn>
         </div>
@@ -373,10 +373,15 @@ const servingCount = ref(1);
 
 const recipeName = ref(null);
 
+const recipeImage = ref(null);
+
 onMounted(() => {
   if (process.client) {
     recipe.value = JSON.parse(sessionStorage.getItem('recipe'));
     recipeName.value = sessionStorage.getItem('recipe_name');
+    const recipe_image = sessionStorage.getItem('recipe_image');
+    recipeImage.value = recipe_image;
+    captured_title_image_data.value = recipe_image;
 
     if (sessionStorage.getItem('serving_count')) {
       console.log('hako: ', parseInt(sessionStorage.getItem('serving_count')));
@@ -586,26 +591,33 @@ const saveRecipe = async () => {
   
   saveRecipeDisabled.value = true;
 
-  if (recipeName.value && servingCount.value && captured_title_image_data.value) {
+  if (recipeName.value && servingCount.value && (captured_title_image_data.value || sessionStorage.getItem('recipe_image'))) {
     
     try {
       const food_id = sessionStorage.getItem('food_id');
       const recipe_id = sessionStorage.getItem('recipe_id');
       console.log('recipe id: ', recipe_id);
 
-      const recipe_res = await axios.post(`${API_BASE_URI}/recipe`, { 
-        'food_id': food_id,
-        'recipe_id': recipe_id,
-        'user_id': loggedInUser.value.uid,
-        'name': recipeName.value,
-        'image': captured_title_image_data.value, 
-        'serving_count': servingCount.value,
-        'serving_size': serving_size.value,
-        'calories': recipe_calories_per_serving.value,
-        'ingredients': ingredients.value,
-        'nutrients': recipe_nutrients.value,
-        'food_state': recipe_food_state.value,
-      },
+      const recipe_form_data = { 
+          'food_id': food_id,
+          'recipe_id': recipe_id,
+          'user_id': loggedInUser.value.uid,
+          'name': recipeName.value,
+          'serving_count': servingCount.value,
+          'serving_size': serving_size.value,
+          'calories': recipe_calories_per_serving.value,
+          'ingredients': ingredients.value,
+          'nutrients': recipe_nutrients.value,
+          'food_state': recipe_food_state.value,
+      };
+
+      if (captured_title_image_data.value) {
+        Object.assign(recipe_form_data, {
+           'image': captured_title_image_data.value
+        });
+      }
+
+      const recipe_res = await axios.post(`${API_BASE_URI}/recipe`, recipe_form_data,
       {
         timeout: 30000,
         headers: {
