@@ -357,7 +357,7 @@
         
         <div id="export-image" class="text-center mt-2">
             <v-btn variant="plain" size="x-small" @click="exportAsImage">
-            Export food label
+            Download Nutrition Label
             </v-btn>
         </div>
     </div>
