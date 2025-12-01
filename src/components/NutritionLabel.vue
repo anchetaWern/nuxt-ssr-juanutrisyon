@@ -1,8 +1,8 @@
 <template>
   <v-card class="nutrition-label pa-1 rounded-0" outlined>
  
-    <h2 class="header mb-1">Nutrition Facts</h2>
-    <h4 class="bold">{{ name }}</h4>
+    <h2 class="header mt-2">Nutrition Facts</h2><span>powered by app.juanutrisyon.info</span>
+    <h4 class="bold mt-1 mb-1 text-h6">{{ name }}</h4>
 
     <Line />
     
@@ -257,6 +257,7 @@ export default {
 .header {
     font-size: 1.5rem;
     font-weight: 1000;
+    line-height: 1.2rem;
 }
 
 .nutrition-label {
