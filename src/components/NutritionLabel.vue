@@ -1,7 +1,8 @@
 <template>
   <v-card class="nutrition-label pa-1 rounded-0" outlined>
  
-    <h2 class="header mb-2">Nutrition Facts</h2>
+    <h2 class="header mb-1">Nutrition Facts</h2>
+    <h4 class="bold">{{ name }}</h4>
 
     <Line />
     
@@ -110,6 +111,15 @@ export default {
       Bar
   },
   props: {
+    name: {
+      type: String,
+      required: true,
+    },
+    showAllNutrients: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     servingsPerContainer: {
       type: String,
       required: true,
@@ -217,6 +227,12 @@ export default {
 
   methods: {
       showNutrient(nutrient) {
+        if (this.showAllNutrients) {
+          const exempted = ['water', 'ash', 'search priority', 'food state', 'daily values reference'];
+          if (exempted.indexOf(nutrient) === -1) {
+            return true;
+          }
+        }
         return showNutrients.indexOf(nutrient) !== -1;
       },
 
