@@ -256,7 +256,7 @@
         ></v-switch>
         
 
-        <div v-if="recommended_daily_values">
+        <div ref="exportable" class="capture-area hidden" v-if="recommended_daily_values">
 
             <NutritionLabel 
                 :name="food.description"
