@@ -1,14 +1,13 @@
 {
   "name": "nuxt-app",
   "private": true,
-  "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "start": "nuxt start",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
+    "postinstall": "nuxt prepare",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "start": "nuxt start"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
@@ -16,6 +15,7 @@
     "@nuxtjs/robots": "^5.5.1",
     "@nuxtjs/sitemap": "^7.4.3",
     "@vercel/analytics": "^1.5.0",
+    "@vite-pwa/nuxt": "^1.1.0",
     "@vueuse/head": "^2.0.0",
     "axios": "^1.6.8",
     "chart.js": "^4.4.2",
@@ -27,6 +27,7 @@
     "nuxt": "^3.17.1",
     "p-retry": "^6.2.1",
     "pinia": "^2.1.7",
+    "register-service-worker": "^1.7.2",
     "vite-plugin-vuetify": "^2.1.2",
     "vue": "^3.5.13",
     "vue-chartjs": "^5.3.1",
@@ -36,5 +37,6 @@
   },
   "devDependencies": {
     "vite-plugin-static-copy": "^2.3.1"
-  }
+  },
+  "type": "module"
 }

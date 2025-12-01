@@ -11,7 +11,9 @@ export default defineNuxtConfig({
   modules: [
    
     '@nuxtjs/robots',
-    '@nuxt/image'
+    '@nuxt/image',
+
+    '@vite-pwa/nuxt'
   ],
 
   image: {
@@ -102,6 +104,31 @@ export default defineNuxtConfig({
       ]
     }
   },
+
+  pwa: {
+    registerType: 'autoUpdate',
+    manifest: {
+      name: 'Juan Nutrisyon',
+      short_name: 'Juan Nutrisyon',
+      start_url: '/',
+      display: 'standalone',
+      background_color: '#ffffff',
+      theme_color: '#84A42E',
+      icons: [
+        {
+          src: '/icons/icon-192x192.png',
+          sizes: '192x192',
+          type: 'image/png'
+        },
+        {
+          src: '/icons/icon-512x512.png',
+          sizes: '512x512',
+          type: 'image/png'
+        }
+      ]
+    }
+  },
+
 
   compatibilityDate: '2025-04-30'
 })
