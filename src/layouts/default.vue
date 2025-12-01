@@ -1,6 +1,8 @@
 <template>
   
   <v-app>
+    <NuxtPwaManifest />
+    
     <Analytics mode="production" />
     <default-bar 
       :updateItems="updateItems" 
