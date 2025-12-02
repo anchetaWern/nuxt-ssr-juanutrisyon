@@ -136,12 +136,12 @@
           <tbody>
               <tr>
                   <td id="serving-size-mirror" class="text-grey-darken-3">
-                      Serving Size: {{ serving_size }}g
+                      Serving Size: {{ wholeNumber(serving_size) }}g
                   </td>
               </tr>
               <tr>
                   <td id="serving-count-mirror" class="text-grey-darken-3">
-                      Total Servings: {{ servingCount }}
+                      Total Servings: {{ wholeNumber(servingCount) }}
                   </td>
               </tr>
 
