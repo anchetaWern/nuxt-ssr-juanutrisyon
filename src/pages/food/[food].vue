@@ -403,10 +403,10 @@
         </div>
     </div>
 
-    <div id="recipe-source-section" class="mt-5 text-center" v-if="food.recipe_source">
+    <div id="recipe-source-section" class="mt-5 text-center" v-if="food.recipe">
         <div class="text-body-2 mb-1 text-center font-weight-medium">Recipe Source</div>
         <div>
-            <a :href="food.recipe_source.website_url" target="_blank">{{ food.recipe_source.name }}</a>
+            <a :href="food.recipe.source_url" target="_blank">{{ food.recipe_source.name }}</a>
         </div>
     </div>
 
