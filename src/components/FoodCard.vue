@@ -21,7 +21,7 @@
          
           <div class="food-description pl-2 pt-2 text-body-2">
             <a :href="`/food/${food.description_slug}`">{{ limit(food.description) }}</a>
-            <div class="text-xs">Original no. of servings: {{ food.servings_per_container }}</div>
+            <div class="text-xs" v-if="food.servings_per_container">Original no. of servings: {{ food.servings_per_container }}</div>
 
           </div>
 
