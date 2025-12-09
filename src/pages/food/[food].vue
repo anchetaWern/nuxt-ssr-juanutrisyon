@@ -1,5 +1,11 @@
 <template>
 
+    <v-container class="mt-5" id="food-container">
+
+<v-row justify="center">
+      <v-col cols="12" md="8" lg="6" xl="6">
+
+    
 <div class="text-center mt-10" v-if="isLoading">
     <v-progress-circular indeterminate color="primary"></v-progress-circular>
 </div>
@@ -728,6 +734,10 @@
     </section>
 
 
+    </v-col>
+    </v-row>
+
+</v-container>
 
 </template>
 
@@ -1943,6 +1953,10 @@ const openReportIssueModal = () => {
 </script>
 
 <style>
+#food-container {
+    padding: 0.5rem 0 !important;
+}
+
 .capture-area {
     width: 300px;
     position: relative;

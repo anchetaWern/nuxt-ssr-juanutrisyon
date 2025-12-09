@@ -2,6 +2,9 @@
  
     <v-container class="mt-5" id="analyze-container">
     
+<v-row justify="center">
+      <v-col cols="12" md="8" lg="6" xl="6">
+
       <div class="text-subtitle-1 mb-2">
         Analyze your diet
         <v-btn size="x-small" variant="text" icon="mdi-help" @click="helpDialog = true" id="helpButton"></v-btn>
@@ -165,6 +168,9 @@
               </template>
           </v-card>
       </v-dialog>
+
+</v-col>
+</v-row>
 
     </v-container>
 
