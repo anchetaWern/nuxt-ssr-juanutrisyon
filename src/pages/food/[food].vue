@@ -621,8 +621,6 @@ const dvHelp = ref(false);
 
 const displayValuesPerContainer = ref(false);
 
-// ==
-
 const route = useRoute();
 
 const isLoading = ref(false);
@@ -662,8 +660,6 @@ const images = computed(() => {
 
     return images_arr;
 });
-
-
 
 
 const custom_serving_sizes = ref(null);
@@ -879,7 +875,7 @@ const exportAsImage = () => {
 }
 
 const openIngredientsInfoModal = async () => {
-    // todo:
+  
     const food_slug = route.params.food;
     const res = await useFetch(`${API_BASE_URI}/food-ingredients/${food_slug}`)
     food_ingredients.value = res.data.value;
@@ -1112,11 +1108,7 @@ const updateTargets = (food) => {
 
 
 const fetchFoodData = async () => {
-    /*
-    const { data: foodData, error } = await useAsyncData('food', () =>
-        $fetch(`${API_BASE_URI}/foods/${route.params.food}`)
-    )
-    */
+   
     const { data: foodData } = await useAsyncData(
         () => `food-${route.params.food}`,
         () => $fetch(`/api/foods/${route.params.food}`),
@@ -1190,38 +1182,7 @@ const fetchFoodData = async () => {
         daily_values_table.value = dv_table;
        
     }
-   
-   
-
-    /*
-    if (foodData.value.servings_per_container) {
-        servingsPerContainer.value = foodData.value.servings_per_container;
-
-        if (foodData.value.servings_per_container > 1) {
-            hasValuesPerContainerToggle.value = true;
-        }
-    }
-    */
-
-    /*
-    const { data: faoNutrientContentClaimData, error: faoNutrientContentError } = await useAsyncData('faoNutrientContent', () => 
-        $fetch(`${API_BASE_URI}/fao-nutrient-content-claims`)
-    );
-
-    if (faoNutrientContentError) {
-        console.log('fao nutrient content error..');
-    } else {
-        const normalized_food_state = normalizeFoodState(foodData.value.state.name);
-        const filtered_fao_nutrient_content_claims = faoNutrientContentClaimData.value.filter((itm) => {
-            return itm.food_state === normalized_food_state;
-        });
-    
-        fao_nutrient_claims.value = filtered_fao_nutrient_content_claims;
-    }
-    */
 }
-
-// await fetchFoodData()
 
 // 
 console.log('slug: ', route.params.food);
@@ -1265,7 +1226,6 @@ if (foodData.value) {
             custom_serving_sizes.value = serving_units
         }
     }
-
 
     //
     const macros_keys = ['total carbohydrates', 'protein', 'total fat'];
@@ -1340,9 +1300,6 @@ if (foodData.value) {
 }
 
 
-
-
-
 const { data: consolidatedDailyNutrientDv, error: daily_nutrient_dv_err } = await useAsyncData('dailyNutrient', () => 
     $fetch(`${API_BASE_URI}/consolidated-recommended-daily-nutrient-intake?gender=male&age=19`)
 );
@@ -1414,16 +1371,6 @@ const fetchData = async () => {
 
     
         let consolidated_daily_nutrient_dv = null;
-        // todo: remove sessionStorage check
-        /*
-        if (sessionStorage.getItem('consolidated_daily_nutrient_dv')) {
-            consolidated_daily_nutrient_dv = JSON.parse(sessionStorage.getItem('consolidated_daily_nutrient_dv'));
-        } else {
-            const fda_daily_nutrient_values_res = await useFetch(`${API_BASE_URI}/consolidated-recommended-daily-nutrient-intake?gender=male&age=19`);
-            consolidated_daily_nutrient_dv = fda_daily_nutrient_values_res.data.value;
-            sessionStorage.setItem('consolidated_daily_nutrient_dv', JSON.stringify(consolidated_daily_nutrient_dv));
-        }
-        */
 
         const fda_daily_nutrient_values_res = await useFetch(`${API_BASE_URI}/consolidated-recommended-daily-nutrient-intake?gender=male&age=19`);
         consolidated_daily_nutrient_dv = fda_daily_nutrient_values_res.data.value;
@@ -1460,26 +1407,6 @@ const fetchData = async () => {
                 hasValuesPerContainerToggle.value = true;
             }
         }
-        
-    
-        
-        /**
-        TODO: use computed
-
-        const images = computed(() => {
-            const images_arr = [];
-
-            if (foodData.value?.title_image) {
-                images_arr.push({
-                    title: 'Food',
-                    src: foodData.value.title_image,
-                });
-            }
-
-            return images_arr;
-        });
-
-        */
 
         const images_arr = [];
 
@@ -1558,18 +1485,8 @@ const fetchData = async () => {
         others.value = getOthers(res.data.value.nutrients);
 
         // get fao claims
-        // TODO: remove sessionStorage
-
         let fao_nutrient_content_claims = null;
-        /*
-        if (sessionStorage.getItem('fao_nutrient_content_claims')) {
-            fao_nutrient_content_claims = JSON.parse(sessionStorage.getItem('fao_nutrient_content_claims'));
-        } else {
-            const fda_daily_nutrient_values_res = await useFetch(`${API_BASE_URI}/fao-nutrient-content-claims`);
-            fao_nutrient_content_claims = fda_daily_nutrient_values_res.data.value;
-            sessionStorage.setItem('fao_nutrient_content_claims', JSON.stringify(fao_nutrient_content_claims));
-        }
-        */
+       
 
         const fao_nutrient_content_claims_res = await useFetch(`${API_BASE_URI}/fao-nutrient-content-claims`);
         fao_nutrient_content_claims = fao_nutrient_content_claims_res.data.value;
@@ -1591,14 +1508,6 @@ const fetchData = async () => {
     }
 
 }
-
-/*
-// temporary
-onMounted(() => {
-    fetchData();
-});
-*/
-
 
 
 const viewCategory = (slug) => {
