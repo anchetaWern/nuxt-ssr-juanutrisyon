@@ -469,23 +469,7 @@
 
         </v-dialog>
 
-        <v-dialog
-            v-model="modifyServingCountDialog"
-            width="300"
-        >
-            <v-card>
-                <v-text-field
-                    hide-details="auto"
-                    label="Serving Count"
-                    placeholder="5"
-                    v-model="newServingCount"
-                    autofocus
-                ></v-text-field>
-            
-                <v-btn color="primary" block @click="modifyServingCount" rounded="0">Modify number of servings</v-btn>
-            </v-card>
-
-        </v-dialog>
+        <ModifyServingCountModal v-model:open="modifyServingCountDialog" v-model:newServingCount="newServingCount" />
 
         <IngredientsAnalysisModal v-model:open="ingredientsInfoDialog" :food_ingredients="food_ingredients" />
 
@@ -587,6 +571,8 @@ import ImageGallery from '@/components/ImageGallery.vue';
 import ReportIssueModal from '@/components/Modals/ReportIssueModal.vue';
 
 import IngredientsAnalysisModal from '@/components/Modals/IngredientsAnalysisModal.vue';
+
+import ModifyServingCountModal from '@/components/Modals/ModifyServingCountModal.vue';
 
 const API_BASE_URI = import.meta.env.VITE_API_URI;
 
@@ -1081,13 +1067,6 @@ const addForAnalysis = () => {
 const modifyServingSize = () => {
     modifyServingSizeDialog.value = false;
 }
-
-
-const modifyServingCount = () => {
-
-    modifyServingCountDialog.value = false;
-}
-
 
 
 
