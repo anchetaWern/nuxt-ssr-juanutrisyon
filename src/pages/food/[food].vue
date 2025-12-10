@@ -419,41 +419,7 @@
 
     <div class="mt-5 pt-5 text-center">
 
-        <template v-if="images.length > 0">
-            <div class="text-body-2 mb-1 font-weight-medium">Images</div>
-
-            <v-row id="images-section">
-                <v-col
-                    v-for="img in images"
-                    :key="img"
-                    class="d-flex child-flex"
-                    cols="6"
-                >
-                    <v-img
-                        :lazy-src="img"
-                        :src="img.src"
-                        aspect-ratio="1"
-                        class="bg-grey-lighten-2"
-                        cover
-                        @click="openImageModal(img)"
-                    >
-                        <template v-slot:placeholder>
-                            <v-row
-                                align="center"
-                                class="fill-height ma-0"
-                                justify="center"
-                            >
-                                <v-progress-circular
-                                    color="grey-lighten-5"
-                                    indeterminate
-                                ></v-progress-circular>
-                            </v-row>
-                        </template>
-                    </v-img>
-                </v-col>
-            </v-row>
-
-        </template>
+        <ImageGallery :images="images" />
 
 
         <v-dialog
@@ -560,29 +526,7 @@
         </v-dialog>
 
 
-        <v-dialog
-            max-width="400"
-            v-model="imageModalVisible"   
-        >
-            <v-card
-                
-                :title="currentImage.title"
-                v-if="currentImage"
-            >
-                <v-img
-                    :src="currentImage.src"
-                    cover
-                ></v-img>
-
-                <template v-slot:actions>
-                    <v-btn
-                        class="ms-auto"
-                        text="Close"
-                        @click="closeImageModal"
-                    ></v-btn>
-                </template>
-            </v-card>
-        </v-dialog>
+       
 
 
         <v-dialog
@@ -694,6 +638,8 @@ import { useHead } from '@vueuse/head'
 
 import DailyValuesModal from '@/components/Modals/DailyValuesModal.vue';
 
+import ImageGallery from '@/components/ImageGallery.vue';
+
 const API_BASE_URI = import.meta.env.VITE_API_URI;
 
 const displayMoreNutrients = ref(false);
@@ -732,10 +678,9 @@ const chartOptions = {
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
-const imageModalVisible = ref(false);
 const reportIssueModalVisible = ref(false);
 
-const currentImage = ref(null);
+
 
 const nutrients = ref(null);
 
@@ -1858,14 +1803,7 @@ const viewCategory = (slug) => {
     router.push(`/search?category=${slug}`);
 }
 
-const closeImageModal = () => {
-    imageModalVisible.value = false;
-}
 
-const openImageModal = (img) => {
-    imageModalVisible.value = true;
-    currentImage.value = img;
-}
 
 const openReportIssueModal = () => {
     reportIssueModalVisible.value = true;
