@@ -389,25 +389,11 @@
         </p>
     </div>
 
-    <div id="recipe-ingredients-section" class="mt-5" v-if="food.recipe_ingredients && food.recipe_ingredients.length > 0">
-        <div class="text-body-2 mb-1 text-center font-weight-medium">Recipe Ingredients</div>
-        <v-table density="compact">
-           
-            <tbody>
-                <tr
-                    v-for="item in food.recipe_ingredients"
-                    :key="item.id"
-                >
-                    <td>
-                        <a :href="`/food/${item.ingredient.description_slug}`" target="_blank">{{ item.ingredient.description }} ({{ item.serving_size }}{{ item.serving_size_unit }})</a>
-                    </td>
-                </tr>
-            </tbody>
-        </v-table>
-        <div>
-            <v-btn id="add-to-recipe" size="x-small" color="warning" variant="outlined" @click="modifyRecipe">Modify Recipe</v-btn>
-        </div>
-    </div>
+    <RecipeIngredients 
+        :food="food"
+        :selectedCustomServing="selected_custom_serving"   
+        :selectedServingQty="selected_serving_qty" 
+    />
 
     <div id="recipe-source-section" class="mt-5 text-center" v-if="food.recipe && food.recipe_source">
         <div class="text-body-2 mb-1 text-center font-weight-medium">Recipe Source</div>
@@ -539,6 +525,9 @@ import axios from 'axios'
 import NutrientsTable from '@/components/NutrientsTable.vue'
 import NutritionLabel from '@/components/NutritionLabel.vue'
 import { calculatePercentage, formatNumber } from '@/helpers/Numbers';
+
+import { addIngredientToRecipe } from '@/helpers/RecipeIngredients';
+
 import { convertWeight, FAONutrientContentClaim, normalizeFoodState, convertKjToKcal, extractNutrients } from '@/helpers/Nutrients';
 import Tour from '@/components/Tour.vue';
 
@@ -573,6 +562,8 @@ import ReportIssueModal from '@/components/Modals/ReportIssueModal.vue';
 import IngredientsAnalysisModal from '@/components/Modals/IngredientsAnalysisModal.vue';
 
 import ModifyServingCountModal from '@/components/Modals/ModifyServingCountModal.vue';
+
+import RecipeIngredients from '@/components/RecipeIngredients.vue'
 
 const API_BASE_URI = import.meta.env.VITE_API_URI;
 
@@ -676,7 +667,7 @@ const images = computed(() => {
 
 
 const custom_serving_sizes = ref(null);
-const selected_custom_serving = ref(null);
+const selected_custom_serving = ref(null); 
 const selected_serving_qty = ref(1);
 
 const fao_nutrient_claims = ref(null);
@@ -902,99 +893,11 @@ const getValueColor = (value, daily_limit) => {
 };
 
 
-const addIngredientToRecipe = (ingredient, ingredient_serving_size) => {
-
-    if (process.client) {
-
-        const recipe = sessionStorage.getItem('recipe');
-        let recipe_data = [];
-        if (recipe) {
-            recipe_data = JSON.parse(recipe);
-        }
-
-        const index = recipe_data.findIndex(itm => itm.description_slug === food.value.description_slug);
-
-        if (index === -1) {
-            recipe_data.push(ingredient);
-            sessionStorage.setItem('recipe', JSON.stringify(recipe_data));
-
-            let serving_size_data = {};
-            const serving_size = sessionStorage.getItem('recipe_serving_sizes');
-            if (serving_size) {
-                serving_size_data = JSON.parse(serving_size);
-            }
-
-            serving_size_data[ingredient.description_slug] = ingredient_serving_size;
-            sessionStorage.setItem('recipe_serving_sizes', JSON.stringify(serving_size_data));
-
-            let stored_custom_servings = {};
-            const stored_cs = sessionStorage.getItem('recipe_custom_servings');
-            if (stored_cs) {
-                stored_custom_servings = JSON.parse(stored_cs);
-            }
-
-            stored_custom_servings[ingredient.description_slug] = {
-                'weight': selected_custom_serving.value ? selected_custom_serving.value : ingredient_serving_size, 
-                'qty': selected_serving_qty.value ? selected_serving_qty.value : 1, 
-            }
-
-            sessionStorage.setItem('recipe_custom_servings', JSON.stringify(stored_custom_servings));
-
-            return true;
-        }
-        //
-        return false;
-    }
-}
-
-const modifyRecipe = () => {
-    if (process.client) {
-        
-        let added = false;
-
-        console.log('food: ', food.value);
-
-        if (food.value.recipe_ingredients.length) {
-            
-            const added_results = [];
-
-            food.value.recipe_ingredients.forEach((itm) => {
-                added_results.push(addIngredientToRecipe(itm.ingredient, itm.serving_size));
-            });
-
-            if (added_results.length && added_results[0]) {
-                added = true;
-                sessionStorage.setItem('food_id', food.value.id);
-                sessionStorage.setItem('recipe_id', food.value.recipe.id);
-                sessionStorage.setItem('serving_count', food.value.servings_per_container);
-                sessionStorage.setItem('recipe_name', food.value.description);
-                sessionStorage.setItem('recipe_image', food.value.title_image);
-            }
-        }
-
-
-        if (added) {
-
-            createToast(
-                {
-                    title: 'Added!',
-                    description: food.value.recipe_ingredients.length ? 'Recipe ingredients was added' : 'Ingredient was added to recipe'
-                }, 
-                { type: 'success', position: 'bottom-right' }
-            );
-
-            emit('update-ingredient-count-child');
-        }
-
-    }
-}
-
-
 const addToRecipe = () => {
     
     if (process.client) {
 
-        addIngredientToRecipe(food.value, food.value.serving_size);
+        addIngredientToRecipe(food.value, food.value.serving_size, selected_custom_serving.value, selected_serving_qty.value);
         
         createToast(
             {
