@@ -487,43 +487,7 @@
 
         </v-dialog>
 
-        <v-dialog
-            v-model="ingredientsInfoDialog"
-            fullscreen
-            transition="dialog-bottom-transition"
-            v-slot:default="{ isActive }"
-        >
-            <v-card title="Ingredients Analysis">
-                <template v-slot:text>
-
-                    <div v-for="(ingredient, index) in food_ingredients">
-                        <div class="mb-5">
-                            <div class="text-subtitle-1 font-weight-bold">{{ ingredient.name }}</div>
-                            <div class="mb-2 text-grey-darken-4">Score: {{ ingredient.score }} out of 5</div>
-                            <p class="text-body-2">{{ ingredient.effects }}</p>
-                            <div class="mt-3">
-                                <div class="font-weight-medium">Health Risks</div>
-                                <p class="text-body-2">{{ ingredient.health_risks }}</p>
-                            </div>
-                        </div>
-
-                        <v-divider class="mb-5"></v-divider>
-                    </div>
-                   
-
-                </template>
-
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                        text="close"
-                        variant="flat"
-                        @click="isActive.value = false"
-                    ></v-btn>
-                </v-card-actions>
-            </v-card>
-
-        </v-dialog>
+        <IngredientsAnalysisModal v-model:open="ingredientsInfoDialog" :food_ingredients="food_ingredients" />
 
 
         <ReportIssueModal v-model:open="reportIssueModalVisible" :slug="route.params.food" />
@@ -621,6 +585,8 @@ import DailyValuesModal from '@/components/Modals/DailyValuesModal.vue';
 import ImageGallery from '@/components/ImageGallery.vue';
 
 import ReportIssueModal from '@/components/Modals/ReportIssueModal.vue';
+
+import IngredientsAnalysisModal from '@/components/Modals/IngredientsAnalysisModal.vue';
 
 const API_BASE_URI = import.meta.env.VITE_API_URI;
 
