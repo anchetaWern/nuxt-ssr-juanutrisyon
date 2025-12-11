@@ -362,11 +362,7 @@
                 :faoNutrientContentClaims="fao_nutrient_claims"  />
         </div>   
         
-        <div id="export-image" class="text-center mt-2">
-            <v-btn variant="plain" size="x-small" @click="exportAsImage">
-            Download Nutrition Label
-            </v-btn>
-        </div>
+        <DownloadNutritionLabel :food="food" :exportable="exportable" />
     </div>
 
     <div id="ingredients-section" class="mt-5 text-center" v-if="food.ingredients">
@@ -531,8 +527,6 @@ import { addIngredientToRecipe } from '@/helpers/RecipeIngredients';
 import { convertWeight, FAONutrientContentClaim, normalizeFoodState, convertKjToKcal, extractNutrients } from '@/helpers/Nutrients';
 import Tour from '@/components/Tour.vue';
 
-import { toPng } from 'html-to-image';
-
 import { getSortedByName, findAgeData } from '@/helpers/Arr';
 import { 
     amountPerContainer, 
@@ -563,7 +557,9 @@ import IngredientsAnalysisModal from '@/components/Modals/IngredientsAnalysisMod
 
 import ModifyServingCountModal from '@/components/Modals/ModifyServingCountModal.vue';
 
-import RecipeIngredients from '@/components/RecipeIngredients.vue'
+import RecipeIngredients from '@/components/RecipeIngredients.vue';
+
+import DownloadNutritionLabel from '@/components/DownloadNutritionLabel.vue';
 
 const API_BASE_URI = import.meta.env.VITE_API_URI;
 
@@ -849,30 +845,7 @@ const openModifyServingSizeModal = async () => {
     modifyServingSizeDialog.value = true;
 }
 
-const exportAsImage = () => {
-    
-    const node = exportable.value;
 
-    
-    node.classList.remove('hidden');
-
-    toPng(node)
-        .then((dataUrl) => {
-            
-            const link = document.createElement('a');
-            link.download = `${food.value.description_slug}-nutrient-info.png`;
-            link.href = dataUrl;
-            link.click();
-
-            node.classList.add('hidden');
-            
-        })
-        .catch((error) => {
-            console.log('error: ', error);
-            node.classList.add('hidden');
-            console.error('Error exporting image:', error);
-        });
-}
 
 const openIngredientsInfoModal = async () => {
   
