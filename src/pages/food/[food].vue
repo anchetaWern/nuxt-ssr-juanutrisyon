@@ -12,27 +12,7 @@
 
   <div class="mt-5" v-if="food">
     
-    <div :class="`pt-3 sticky-title ${food.type ? 'pt-5' : 'pt-12'}`">
-        <div class="d-flex justify-end cursor-pointer">
-            <div>
-                <v-chip id="food-category" size="small" variant="outlined" v-if="food.type">
-                <span @click="viewCategory(food.type.slug)">{{ food.type.name }}</span> <span @click="viewCategory(food.subtype.slug)" v-if="food.subtype">&nbsp;/ {{ food.subtype.name }}</span>
-                </v-chip>
-            </div>
-        </div>
-
-        <div class="d-flex justify-space-between align-center mt-3">
-            <div class="mt-1">
-                <h1 class="text-body-1" id="food-description">{{ food.description }}</h1>
-                <span id="food-alternate-names" v-if="food.alternate_names != 'N/A'" class="text-medium-emphasis text-subtitle-2">{{ food.alternate_names }}</span>
-            </div>
-            <div class="w-33">
-                <v-btn id="add-to-recipe" size="x-small" color="success" variant="outlined" @click="addToRecipe">Add to Recipe</v-btn>
-                <v-btn id="add-to-analyze" size="x-small" color="primary" variant="outlined" @click="addForAnalysis">Analyze</v-btn>
-            </div>
-        </div>
-
-    </div>
+    <FoodHeader :food="food" :selectedCustomServing="selected_custom_serving" :selectedServingQty="selected_serving_qty" :newServingSize="newServingSize" />
 
     <div class="mt-5" v-if="food.nutrients.length === 0 || food.calories === null || food.serving_size === null">
         <v-alert 
@@ -527,6 +507,8 @@ import { addIngredientToRecipe } from '@/helpers/RecipeIngredients';
 import { convertWeight, FAONutrientContentClaim, normalizeFoodState, convertKjToKcal, extractNutrients } from '@/helpers/Nutrients';
 import Tour from '@/components/Tour.vue';
 
+import FoodHeader from '@/components/FoodHeader.vue';
+
 import { getSortedByName, findAgeData } from '@/helpers/Arr';
 import { 
     amountPerContainer, 
@@ -860,81 +842,6 @@ const getValueColor = (value, daily_limit) => {
 
     return 'deep-purple-lighten-2';
 };
-
-
-const addToRecipe = () => {
-    
-    if (process.client) {
-
-        addIngredientToRecipe(food.value, food.value.serving_size, selected_custom_serving.value, selected_serving_qty.value);
-        
-        createToast(
-            {
-                title: 'Added!',
-                description: food.value.recipe_ingredients.length ? 'Recipe ingredients was added' : 'Ingredient was added to recipe'
-            }, 
-            { type: 'success', position: 'bottom-right' }
-        );
-
-        emit('update-ingredient-count-child');
-        
-    }
-}
-
-
-const addForAnalysis = () => {
-
-    if (process.client) {
-
-        const analyze = sessionStorage.getItem('analyze');
-        let analyze_data = [];
-        if (analyze) {
-            analyze_data = JSON.parse(analyze);
-        }
-
-        const index = analyze_data.findIndex(itm => itm.description_slug === food.value.description_slug);
-        if (index === -1) {
-            analyze_data.push(food.value);
-            sessionStorage.setItem('analyze', JSON.stringify(analyze_data));
-
-            let serving_size_data = {};
-            const serving_size = sessionStorage.getItem('analyze_serving_sizes');
-            if (serving_size) {
-                serving_size_data = JSON.parse(serving_size);
-            }
-
-            serving_size_data[food.value.description_slug] = newServingSize.value ? newServingSize.value : food.value.serving_size; 
-            sessionStorage.setItem('analyze_serving_sizes', JSON.stringify(serving_size_data));
-
-            
-            let stored_custom_servings = {};
-            const stored_cs = sessionStorage.getItem('analyze_custom_servings');
-            if (stored_cs) {
-                stored_custom_servings = JSON.parse(stored_cs);
-            }
-
-            stored_custom_servings[food.value.description_slug] = {
-                'weight': selected_custom_serving.value ? selected_custom_serving.value : food.value.serving_size, 
-                'qty': selected_serving_qty.value ? selected_serving_qty.value : 1, 
-            }
-
-            sessionStorage.setItem('analyze_custom_servings', JSON.stringify(stored_custom_servings));
-            
-
-            createToast(
-                {
-                    title: 'Added!',
-                    description: 'Food was added for analysis'
-                }, 
-                { type: 'success', position: 'bottom-right' }
-            );
-
-            emit('update-analyze-count-child');
-        }
-
-    }
-}
-
 
 const modifyServingSize = () => {
     modifyServingSizeDialog.value = false;
