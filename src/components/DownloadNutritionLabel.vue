@@ -18,7 +18,7 @@ const props = defineProps({
         default: null,
     },
     exportable: {
-        type: [HTMLElement, Object], 
+        type: Object, 
         required: true
     }
 });
