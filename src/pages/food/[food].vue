@@ -417,9 +417,7 @@
 
     </div>
 
-    <div class="mt-5" v-if="food.origin_country && food.origin_country !== 'PH'">
-        <div class="text-body-2 mb-1">Origin Country: {{ food.origin_country }}</div>
-    </div>
+    <CountryOfOrigin :country="food.origin_country" />
 
     <div id="report-issue" class="mt-5 text-center">
         <v-btn size="x-small" variant="text" @click="openReportIssueModal">
@@ -507,6 +505,8 @@ import HowToContribute from '@/components/HowToContribute.vue';
 import AllergenInfo from '@/components/AllergenInfo.vue';
 
 import IngredientsInfo from '@/components/IngredientsInfo.vue';
+
+import CountryOfOrigin from '@/components/CountryOfOrigin.vue';
 
 const API_BASE_URI = import.meta.env.VITE_API_URI;
 
