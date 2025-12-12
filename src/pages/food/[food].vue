@@ -461,17 +461,8 @@
       v-if="tourModeEnabled"
     />
 
-    <section class="mt-6 text-caption font-italic">
-        <p>Nutrition data sourced from the 
-            <a href="https://www.fnri.dost.gov.ph" target="_blank" rel="noopener">
-            Philippine Food Composition Tables (FNRI-DOST)
-            </a> 
-            and 
-            <a href="https://fdc.nal.usda.gov/" target="_blank" rel="noopener">
-            USDA FoodData Central
-            </a>.
-        </p>
-    </section>
+    <DataSourceInfo />
+    
 
     <section class="mt-3 border-thin px-3 py-3">
         <p class="text-caption">
@@ -542,6 +533,8 @@ import ModifyServingCountModal from '@/components/Modals/ModifyServingCountModal
 import RecipeIngredients from '@/components/RecipeIngredients.vue';
 
 import DownloadNutritionLabel from '@/components/DownloadNutritionLabel.vue';
+
+import DataSourceInfo from '@/components/DataSourceInfo.vue';
 
 const API_BASE_URI = import.meta.env.VITE_API_URI;
 
