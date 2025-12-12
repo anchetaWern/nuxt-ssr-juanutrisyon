@@ -357,13 +357,7 @@
        </v-btn>
     </div>
 
-    <div id="allergen-section" class="mt-5" v-if="food.allergen_information">
-        <div class="text-body-2 mb-1 text-center font-weight-medium">Allergen Info</div>
-
-        <p class="text-subtitle2 text-grey-darken-3">
-            {{ food.allergen_information }}
-        </p>
-    </div>
+    <AllergenInfo :allergens="food.allergen_information" />
 
     <RecipeIngredients 
         :food="food"
@@ -526,6 +520,8 @@ import DownloadNutritionLabel from '@/components/DownloadNutritionLabel.vue';
 import DataSourceInfo from '@/components/DataSourceInfo.vue';
 
 import HowToContribute from '@/components/HowToContribute.vue';
+
+import AllergenInfo from '@/components/AllergenInfo.vue';
 
 const API_BASE_URI = import.meta.env.VITE_API_URI;
 
