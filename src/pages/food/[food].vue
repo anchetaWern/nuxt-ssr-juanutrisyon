@@ -345,17 +345,7 @@
         <DownloadNutritionLabel :food="food" :exportable="exportable" />
     </div>
 
-    <div id="ingredients-section" class="mt-5 text-center" v-if="food.ingredients">
-        <div class="text-body-2 mb-1 text-center font-weight-medium">Ingredients</div>
-
-        <p class="text-subtitle2 text-grey-darken-3">
-            {{ food.ingredients }}
-        </p>
-
-       <v-btn variant="plain" size="x-small" @click="openIngredientsInfoModal" v-if="food.hasIngredientsInfo">
-       View More Info
-       </v-btn>
-    </div>
+    <IngredientsInfo :foodSlug="route.params.food" :ingredients="food.ingredients" :hasAnalysis="food.hasIngredientsInfo" />
 
     <AllergenInfo :allergens="food.allergen_information" />
 
@@ -421,8 +411,6 @@
         </v-dialog>
 
         <ModifyServingCountModal v-model:open="modifyServingCountDialog" v-model:newServingCount="newServingCount" />
-
-        <IngredientsAnalysisModal v-model:open="ingredientsInfoDialog" :food_ingredients="food_ingredients" />
 
 
         <ReportIssueModal v-model:open="reportIssueModalVisible" :slug="route.params.food" />
@@ -506,8 +494,6 @@ import ImageGallery from '@/components/ImageGallery.vue';
 
 import ReportIssueModal from '@/components/Modals/ReportIssueModal.vue';
 
-import IngredientsAnalysisModal from '@/components/Modals/IngredientsAnalysisModal.vue';
-
 import ModifyServingCountModal from '@/components/Modals/ModifyServingCountModal.vue';
 
 import RecipeIngredients from '@/components/RecipeIngredients.vue';
@@ -519,6 +505,8 @@ import DataSourceInfo from '@/components/DataSourceInfo.vue';
 import HowToContribute from '@/components/HowToContribute.vue';
 
 import AllergenInfo from '@/components/AllergenInfo.vue';
+
+import IngredientsInfo from '@/components/IngredientsInfo.vue';
 
 const API_BASE_URI = import.meta.env.VITE_API_URI;
 
@@ -638,8 +626,6 @@ const hasValuesPerContainerToggle = ref(false);
 const modifyServingSizeDialog = ref(false);
 
 const modifyServingCountDialog = ref(false);
-
-const ingredientsInfoDialog = ref(false);
 
 const newServingSize = ref(null);
 
@@ -802,17 +788,6 @@ const openModifyServingCountModal = () => {
 const openModifyServingSizeModal = async () => {
 
     modifyServingSizeDialog.value = true;
-}
-
-
-
-const openIngredientsInfoModal = async () => {
-  
-    const food_slug = route.params.food;
-    const res = await useFetch(`${API_BASE_URI}/food-ingredients/${food_slug}`)
-    food_ingredients.value = res.data.value;
-
-    ingredientsInfoDialog.value = true;
 }
 
 const getValueColor = (value, daily_limit) => {
