@@ -365,12 +365,7 @@
         :selectedServingQty="selected_serving_qty" 
     />
 
-    <div id="recipe-source-section" class="mt-5 text-center" v-if="food.recipe && food.recipe_source">
-        <div class="text-body-2 mb-1 text-center font-weight-medium">Recipe Source</div>
-        <div>
-            <a :href="food.recipe.source_url" target="_blank">{{ food.recipe_source.name }}</a>
-        </div>
-    </div>
+    <RecipeSource v-if="food.recipe && food.recipe_source" :name="food.recipe_source.name" :url="food.recipe.source_url" />
 
 
     <div class="mt-5 pt-5 text-center">
@@ -482,6 +477,8 @@ import { convertWeight, FAONutrientContentClaim, normalizeFoodState, convertKjTo
 import Tour from '@/components/Tour.vue';
 
 import FoodHeader from '@/components/FoodHeader.vue';
+
+import RecipeSource from '@/components/RecipeSource.vue';
 
 import { getSortedByName, findAgeData } from '@/helpers/Arr';
 import { 
