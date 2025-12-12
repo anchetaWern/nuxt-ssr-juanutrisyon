@@ -347,53 +347,12 @@
 
         <ImageGallery :images="images" />
 
-
-        <v-dialog
-            v-model="modifyServingSizeDialog"
-            width="300"
-        >
-            <v-card title="Modify Serving Size">
-                <div class="px-5 py-2">
-                    <div v-if="custom_serving_sizes">
-                        <v-radio-group v-model="selected_custom_serving">
-                            <v-radio 
-                                :label="cs.name" 
-                                :value="cs.volume_in_ml ? convertWeight(food.density.density, cs.volume_in_ml) : cs.weight" 
-                                v-for="cs in custom_serving_sizes">
-                            </v-radio>
-                        </v-radio-group>
-
-                        <div class="text-medium-emphasis">Quantity</div>
-                        <v-number-input
-                            control-variant="split"
-                            inset
-                            v-model="selected_serving_qty"
-                        ></v-number-input>
-                    </div>
-                    
-                    <div v-if="food.custom_serving_size" class="text-body-2 text-medium-emphasis py-1">
-                    {{ food.custom_serving_size }} = {{ food.serving_size }}{{ food.serving_size_unit }}
-                    </div>
-
-                    <div v-else-if="food.serving_size" class="text-body-2 text-medium-emphasis py-1">
-                    Original serving size: {{ food.serving_size }}{{ food.serving_size_unit }}
-                    </div>
-
-                    <div v-if="food.servings_per_container" class="text-body-2 text-medium-emphasis py-1">
-                    Servings per container: {{ food.servings_per_container }} 
-                    </div>
-
-                    <v-text-field
-                        label="Serving size in grams"
-                        placeholder="50"
-                        v-model="newServingSize"
-                    ></v-text-field>
-
-                    <v-btn color="primary" block @click="modifyServingSize" rounded="0">Modify serving size</v-btn>
-                </div>
-            </v-card>
-
-        </v-dialog>
+        <ModifyServingSizeModal 
+            :food="food"
+            v-model:open="modifyServingSizeDialog" 
+            :customServingSizes="custom_serving_sizes"
+            v-model:qty="selected_serving_qty"
+            v-model:servingSize="newServingSize" />
 
         <ModifyServingCountModal v-model:open="modifyServingCountDialog" v-model:newServingCount="newServingCount" />
 
@@ -473,6 +432,8 @@ import ImageGallery from '@/components/ImageGallery.vue';
 import ReportIssue from '@/components/ReportIssue.vue';
 
 import ModifyServingCountModal from '@/components/Modals/ModifyServingCountModal.vue';
+
+import ModifyServingSizeModal from '@/components/Modals/ModifyServingSizeModal.vue';
 
 import RecipeIngredients from '@/components/RecipeIngredients.vue';
 
@@ -759,8 +720,8 @@ const openModifyServingCountModal = () => {
     modifyServingCountDialog.value = true;
 }
 
-const openModifyServingSizeModal = async () => {
-
+const openModifyServingSizeModal = () => {
+    console.log('lulu')
     modifyServingSizeDialog.value = true;
 }
 
