@@ -240,21 +240,6 @@
             hide-details
             inset
         ></v-switch>
-        
-
-        <div ref="exportable" class="capture-area hidden" v-if="recommended_daily_values">
-
-            <NutritionLabel 
-                :name="food.description"
-                :servingsPerContainer="food.servings_per_container"
-                :servingSize="food.serving_size"
-                :calories="food.calories"
-                :caloriesUnit="food.calories_unit"
-                :nutritionData="food.nutrients"
-                :ingredients="food.ingredients"
-                :recommended_daily_values="recommended_daily_values"
-            />
-        </div>
 
         <div class="mt-3" v-if="elements && elements.length && recommended_daily_values && displayMoreNutrients">
             <span class="text-subtitle-2">Elements</span>
@@ -342,7 +327,7 @@
                 :faoNutrientContentClaims="fao_nutrient_claims"  />
         </div>   
         
-        <DownloadNutritionLabel :food="food" :exportable="exportable" />
+        <DownloadNutritionLabel :food="food" :recommended_daily_values="recommended_daily_values" />
     </div>
 
     <IngredientsInfo :foodSlug="route.params.food" :ingredients="food.ingredients" :hasAnalysis="food.hasIngredientsInfo" />
@@ -548,8 +533,6 @@ const macros = ref(null);
 const vitamins = ref(null);
 const minerals = ref(null);
 const others = ref(null);
-
-const exportable = ref(null);
 
 const dvHelp = ref(false);
 
@@ -1345,16 +1328,6 @@ const viewCategory = (slug) => {
 <style>
 #food-container {
     padding: 0.5rem 0 !important;
-}
-
-.capture-area {
-    width: 300px;
-    position: relative;
-    background-color: #FFFFFF;
-}
-
-.hidden {
-    display: none;
 }
 
 .add-padding {
