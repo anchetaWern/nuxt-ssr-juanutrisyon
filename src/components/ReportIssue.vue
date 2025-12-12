@@ -1,8 +1,13 @@
 <template>
 
+    <div id="report-issue" class="mt-5 text-center">
+        <v-btn size="x-small" variant="text" @click="openReportIssueModal">
+        Report Issue
+        </v-btn>
+    </div>
 
     <v-dialog
-        v-model="props.open"
+        v-model="reportIssueModalVisible"
         width="300"
         max-width="400"
     >
@@ -23,7 +28,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits } from 'vue';
+import { ref, defineProps } from 'vue';
 import axios from 'axios';
 import Toast, { createToast } from 'mosha-vue-toastify'
 
@@ -40,9 +45,9 @@ const props = defineProps({
 
 const API_BASE_URI = import.meta.env.VITE_API_URI;
 
-const emit = defineEmits(['update:open']);
-
 const issueDescription = ref('');
+
+const reportIssueModalVisible = ref(false);
 
 const submitIssue = async () => {
    
@@ -65,7 +70,7 @@ const submitIssue = async () => {
             );
 
             issueDescription.value = '';
-            emit('update:open', false);
+            reportIssueModalVisible.value = false;
             
         } catch (err) {
             console.log('submit issue error: ', err);
@@ -74,4 +79,8 @@ const submitIssue = async () => {
     
 }
 
+
+const openReportIssueModal = () => {
+    reportIssueModalVisible.value = true;
+}
 </script>

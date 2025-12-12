@@ -413,17 +413,12 @@
         <ModifyServingCountModal v-model:open="modifyServingCountDialog" v-model:newServingCount="newServingCount" />
 
 
-        <ReportIssueModal v-model:open="reportIssueModalVisible" :slug="route.params.food" />
+        <ReportIssue :slug="route.params.food" />
 
     </div>
 
     <CountryOfOrigin :country="food.origin_country" />
 
-    <div id="report-issue" class="mt-5 text-center">
-        <v-btn size="x-small" variant="text" @click="openReportIssueModal">
-        Report Issue
-        </v-btn>
-    </div>
 
   </div>
 
@@ -490,7 +485,7 @@ import DailyValuesModal from '@/components/Modals/DailyValuesModal.vue';
 
 import ImageGallery from '@/components/ImageGallery.vue';
 
-import ReportIssueModal from '@/components/Modals/ReportIssueModal.vue';
+import ReportIssue from '@/components/ReportIssue.vue';
 
 import ModifyServingCountModal from '@/components/Modals/ModifyServingCountModal.vue';
 
@@ -545,10 +540,6 @@ const chartOptions = {
 
 
 ChartJS.register(ArcElement, Tooltip, Legend)
-
-const reportIssueModalVisible = ref(false);
-
-
 
 const nutrients = ref(null);
 
@@ -1348,9 +1339,7 @@ const viewCategory = (slug) => {
 
 
 
-const openReportIssueModal = () => {
-    reportIssueModalVisible.value = true;
-}
+
 </script>
 
 <style>
