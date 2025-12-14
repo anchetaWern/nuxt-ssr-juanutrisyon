@@ -121,53 +121,17 @@
                             :newServingCount="newServingCount"
                             :faoNutrientContentClaims="fao_nutrient_claims" />
 
-                        <v-progress-linear 
-                            id="calories-bar"
-                            class="mt-1"
-                            :model-value="
-                                calculatePercentage(
-                                    convertKjToKcal(
-                                        amountPerContainer(
-                                            food.calories, 
-                                            servingsPerContainer, 
-                                            displayValuesPerContainer, 
-                                            food.serving_size, 
-                                            newServingSize, 
-                                            newServingCount
-                                        ), 
-                                        food.calories_unit
-                                    ),
-                                    calorie_req_in_kcal
-                                )" 
-                            :bg-color="
-                                getCalorieBgColor(
-                                    convertKjToKcal(
-                                        amountPerContainer(
-                                            food.calories, 
-                                            servingsPerContainer, 
-                                            displayValuesPerContainer, 
-                                            food.serving_size, 
-                                            newServingSize, 
-                                            newServingCount
-                                        ),
-                                        food.calories_unit
-                                    )
-                                )" 
-                            :color="
-                                getCalorieColor(
-                                    convertKjToKcal(
-                                        amountPerContainer(
-                                            food.calories, 
-                                            servingsPerContainer, 
-                                            displayValuesPerContainer, 
-                                            food.serving_size, 
-                                            newServingSize, 
-                                            newServingCount
-                                        ),
-                                        food.calories_unit
-                                    )
-                                )">
-                        </v-progress-linear>
+                        <NutrientContentBar 
+                            :value="food.calories"
+                            :servingSize="food.serving_size"
+                            :requirement="calorie_req_in_kcal"
+                            :originalServingSize="food.serving_size"
+                            :originalServingUnit="food.calories_unit" 
+                            :originalServingsPerContainer="servingsPerContainer"
+                            :newServingSize="newServingSize"
+                            :newServingCount="newServingCount"
+                            :displayValuesPerContainer="displayValuesPerContainer"
+                        />
                     </td>
                 </tr>
             </tbody>
@@ -389,7 +353,8 @@ import IngredientsInfo from '@/components/IngredientsInfo.vue';
 
 import CountryOfOrigin from '@/components/CountryOfOrigin.vue';
 
-import FAOContentClaim from '@/components/FAOContentClaim.vue'
+import FAOContentClaim from '@/components/FAOContentClaim.vue';
+import NutrientContentBar from '@/components/NutrientContentBar.vue';
 
 const API_BASE_URI = import.meta.env.VITE_API_URI;
 
@@ -647,14 +612,6 @@ const getFAOColor = (value) => {
         'high': 'red'
     };
     return fao_colors[value];
-}
-
-const getCalorieBgColor = (calories) => {
-    return 'grey-darken-3';
-}
-
-const getCalorieColor = (calories) => {
-    return 'deep-purple-lighten-2';
 }
 
 const openModifyServingCountModal = () => {
