@@ -67,48 +67,20 @@
                 </tr>
                 <tr id="calories-available" v-if="food.calories">
                     <td class="text-grey-darken-3">
-                        Calories: 
 
-                        <span id="calories-provided">
-                        {{ 
-                            formatNumber(
-                                convertKjToKcal(
-                                    amountPerContainer(
-                                        food.calories, 
-                                        servingsPerContainer, 
-                                        displayValuesPerContainer, 
-                                        food.serving_size, 
-                                        newServingSize, 
-                                        newServingCount
-                                    ),
-                                    food.calories_unit
-                                )
-                            ) 
-                        }}
-                        kcal
-                        </span> / <span id="calories-required">{{ calorie_req_in_kcal }}kcal</span>
-
-                        <span id="calories-provided-percentage">
-                        ({{ 
-                            formatNumber(
-                                calculatePercentage(
-                                    convertKjToKcal(
-                                        amountPerContainer(
-                                            food.calories, 
-                                            servingsPerContainer, 
-                                            displayValuesPerContainer, 
-                                            food.serving_size, 
-                                            newServingSize, 
-                                            newServingCount
-                                        ),
-                                        food.calories_unit
-                                    ), 
-                                    calorie_req_in_kcal
-                                )
-                            ) 
-                        }}%) 
-                        </span>
-
+                        <NutrientContentLabel  
+                            labelId="calories-provided"
+                            requirementLabelId="calories-required"
+                            percentageId="calories-provided-percentage"
+                            :value="food.calories"
+                            :servingSize="food.serving_size"
+                            :requirement="calorie_req_in_kcal"
+                            requirementUnit="kcal"
+                            :originalServingUnit="food.calories_unit" 
+                            :originalServingsPerContainer="servingsPerContainer"
+                            :newServingSize="newServingSize"
+                            :newServingCount="newServingCount"
+                            :displayValuesPerContainer="displayValuesPerContainer" />
                         
                         <FAOContentClaim 
                             :value="food.calories"
@@ -355,6 +327,7 @@ import IngredientsInfo from '@/components/IngredientsInfo.vue';
 import CountryOfOrigin from '@/components/CountryOfOrigin.vue';
 
 import FAOContentClaim from '@/components/FAOContentClaim.vue';
+import NutrientContentLabel from '@/components/NutrientContentLabel.vue';
 import NutrientContentBar from '@/components/NutrientContentBar.vue';
 
 const API_BASE_URI = import.meta.env.VITE_API_URI;
