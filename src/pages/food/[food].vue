@@ -1149,30 +1149,10 @@ const fetchData = async () => {
 
 }
 
-
-const viewCategory = (slug) => {
-    router.push(`/search?category=${slug}`);
-}
-
-
-
-
 </script>
 
 <style>
 #food-container {
     padding: 0.5rem 0 !important;
-}
-
-.add-padding {
-    width: 120%;
-    padding: 20px;
-}
-
-.sticky-title {
-    position: sticky;
-    top: 0;
-    background: #FFF;
-    z-index: 10;
 }
 </style>

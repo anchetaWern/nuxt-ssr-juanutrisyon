@@ -122,3 +122,11 @@ const addForAnalysis = () => {
 }
 </script>
 
+<style>
+.sticky-title {
+    position: sticky;
+    top: 0;
+    background: #FFF;
+    z-index: 10;
+}
+</style>
