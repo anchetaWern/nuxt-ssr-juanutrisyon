@@ -122,6 +122,7 @@
                             :faoNutrientContentClaims="fao_nutrient_claims" />
 
                         <NutrientContentBar 
+                            elementId="calories-bar"
                             :value="food.calories"
                             :servingSize="food.serving_size"
                             :requirement="calorie_req_in_kcal"

@@ -1,6 +1,6 @@
 <template>
     <v-progress-linear 
-        id="calories-bar"
+        :id="elementId"
         class="mt-1"
         :model-value="
             calculatePercentage(
@@ -61,6 +61,7 @@ const getProgressColor = (calories) => {
 }
 
 const props = defineProps({
+    elementId: String,
     value: [String, Number],
     servingSize: [String, Number],
     requirement: [String, Number],
