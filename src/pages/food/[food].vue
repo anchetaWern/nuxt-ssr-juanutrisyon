@@ -109,78 +109,18 @@
                         }}%) 
                         </span>
 
-                        <v-chip 
-                            class="fao-content-claim"
-                            size="small" 
-                            density="compact" 
-                            :color="getFAOColor(
-                                FAONutrientContentClaim(
-                                    'energy', 
-                                    food.calories, 
-                                    calculatePercentage(
-                                        convertKjToKcal(
-                                            amountPerContainer(
-                                                food.calories, 
-                                                servingsPerContainer, 
-                                                displayValuesPerContainer, 
-                                                food.serving_size, 
-                                                100, 
-                                                newServingCount
-                                            ),
-                                            food.calories_unit
-                                        ),
-                                        calorie_req_in_kcal
-                                    ), 
-                                    food.serving_size, 
-                                    food.state.name, 
-                                    fao_nutrient_claims
-                                )
-                            )"
-                            v-if="
-                                FAONutrientContentClaim(
-                                    'energy', 
-                                    food.calories, 
-                                    calculatePercentage(
-                                        convertKjToKcal(
-                                            amountPerContainer(
-                                                food.calories, 
-                                                servingsPerContainer, 
-                                                displayValuesPerContainer, 
-                                                food.serving_size, 
-                                                100, 
-                                                newServingCount
-                                            ), 
-                                            food.calories_unit 
-                                        ),
-                                        calorie_req_in_kcal
-                                    ), 
-                                    food.serving_size, 
-                                    food.state.name, 
-                                    fao_nutrient_claims)">
-                                        {{ 
-                                            FAONutrientContentClaim(
-                                                'energy', 
-                                                food.calories, 
-                                                calculatePercentage(
-                                                    convertKjToKcal(
-                                                        amountPerContainer(
-                                                            food.calories, 
-                                                            servingsPerContainer, 
-                                                            displayValuesPerContainer, 
-                                                            food.serving_size, 
-                                                            newServingSize, 
-                                                            newServingCount
-                                                        ),
-                                                        food.calories_unit
-                                                    ), 
-                                                    calorie_req_in_kcal
-                                                ), 
-                                                food.serving_size, 
-                                                food.state.name, 
-                                                fao_nutrient_claims
-                                            ) 
-                                        }}
-                                    </v-chip>
+                        
+                        <FAOContentClaim 
+                            :value="food.calories"
+                            :unit="food.calories_unit"
+                            :requirement="calorie_req_in_kcal"
+                            :food="food" 
+                            :servingsPerContainer="servingsPerContainer" 
+                            :displayValuesPerContainer="displayValuesPerContainer" 
+                            :newServingSize="newServingSize" 
+                            :newServingCount="newServingCount"
+                            :faoNutrientContentClaims="fao_nutrient_claims" />
+
                         <v-progress-linear 
                             id="calories-bar"
                             class="mt-1"
@@ -448,6 +388,8 @@ import AllergenInfo from '@/components/AllergenInfo.vue';
 import IngredientsInfo from '@/components/IngredientsInfo.vue';
 
 import CountryOfOrigin from '@/components/CountryOfOrigin.vue';
+
+import FAOContentClaim from '@/components/FAOContentClaim.vue'
 
 const API_BASE_URI = import.meta.env.VITE_API_URI;
 

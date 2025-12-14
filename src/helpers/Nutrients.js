@@ -892,4 +892,15 @@ export function extractNutrients(data, wanted = []) {
     if (data) search(data);
     return results;
 }
-  
+
+
+export function getFAOColor(value) {
+    const fao_colors = {
+        'free': 'blue-grey-lighten-1',
+        'very low': 'blue-grey-darken-1',
+        'low': 'blue',
+        'source': 'yellow',
+        'high': 'red'
+    };
+    return fao_colors[value];
+}
