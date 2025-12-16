@@ -102,13 +102,7 @@
             </tbody>
         </v-table>
 
-        <v-switch 
-            v-model="displayMoreNutrients" 
-            label="Show more nutrient data"
-            color="success"
-            hide-details
-            inset
-        ></v-switch>
+        <Toggle v-model:show="displayMoreNutrients" label="Show more nutrient data" />
 
         <div class="mt-3" v-if="elements && elements.length && recommended_daily_values && displayMoreNutrients">
             <span class="text-subtitle-2">Elements</span>
@@ -322,6 +316,8 @@ import CountryOfOrigin from '@/components/CountryOfOrigin.vue';
 import FAOContentClaim from '@/components/FAOContentClaim.vue';
 import NutrientContentLabel from '@/components/NutrientContentLabel.vue';
 import NutrientContentBar from '@/components/NutrientContentBar.vue';
+
+import Toggle from '@/components/Toggle.vue';
 
 const API_BASE_URI = import.meta.env.VITE_API_URI;
 
