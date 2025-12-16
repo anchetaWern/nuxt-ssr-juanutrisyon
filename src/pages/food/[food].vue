@@ -14,15 +14,7 @@
     
     <FoodHeader :food="food" :selectedCustomServing="selected_custom_serving" :selectedServingQty="selected_serving_qty" :newServingSize="newServingSize" />
 
-    <div class="mt-5" v-if="food.nutrients.length === 0 || food.calories === null || food.serving_size === null">
-        <v-alert 
-            density="compact"
-            type="warning"
-            variant="outlined"
-        >
-            This food has incomplete data.
-        </v-alert>
-    </div>  
+    <AlertBox :show="food.nutrients.length === 0 || food.calories === null || food.serving_size === null" /> 
 
     <div class="mt-3" v-if="hasMacros" id="macros-section">
         <div class="text-body-2 mb-1 text-center font-weight-medium">Macronutrients</div>
@@ -278,6 +270,7 @@ import { addIngredientToRecipe } from '@/helpers/RecipeIngredients';
 import { convertWeight, FAONutrientContentClaim, normalizeFoodState, convertKjToKcal, extractNutrients } from '@/helpers/Nutrients';
 import Tour from '@/components/Tour.vue';
 
+import AlertBox from '@/components/AlertBox.vue';
 import FoodHeader from '@/components/FoodHeader.vue';
 
 import RecipeSource from '@/components/RecipeSource.vue';
