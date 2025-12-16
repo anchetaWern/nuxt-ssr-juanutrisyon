@@ -26,17 +26,7 @@
     <div class="mt-5 pt-5" v-if="food.nutrients.length > 0">
         <h2 class="text-body-2 text-center font-weight-medium">Nutrition Facts <v-btn id="nutrition-help" variant="text" size="x-small" icon="mdi-help" @click="dvHelp = true"></v-btn></h2>
         
-        <v-switch 
-            id="display-values-per-container"
-            v-if="hasValuesPerContainerToggle"
-            label="Display values per container" 
-            v-model="displayValuesPerContainer" 
-            color="success"
-            hide-details
-            inset
-            
-        >
-        </v-switch>
+        <Toggle id="display-values-per-container" v-if="hasValuesPerContainerToggle" v-model:show="displayValuesPerContainer" label="Display values per container"  />
 
         <v-table>
             <tbody>
@@ -102,7 +92,7 @@
             </tbody>
         </v-table>
 
-        <Toggle v-model:show="displayMoreNutrients" label="Show more nutrient data" />
+        <Toggle id="show-more-nutrients" v-model:show="displayMoreNutrients" label="Show more nutrient data" />
 
         <div class="mt-3" v-if="elements && elements.length && recommended_daily_values && displayMoreNutrients">
             <span class="text-subtitle-2">Elements</span>
