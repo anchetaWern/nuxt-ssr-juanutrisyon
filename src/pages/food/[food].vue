@@ -42,11 +42,9 @@
                         <v-btn size="x-small" @click="openModifyServingSizeModal">Modify</v-btn>
                     </td>
                 </tr>
-                <tr id="edible-portion" v-if="food.edible_portion && food.edible_portion < 100">
-                    <td class="text-grey-darken-3">
-                       Edible Portion: {{ food.edible_portion }}%
-                    </td>
-                </tr>
+
+                <EdiblePortion :value="food.edible_portion" />
+
                 <tr id="calories-available" v-if="food.calories">
                     <td class="text-grey-darken-3">
 
@@ -258,6 +256,8 @@ import AlertBox from '@/components/AlertBox.vue';
 import FoodHeader from '@/components/FoodHeader.vue';
 
 import RecipeSource from '@/components/RecipeSource.vue';
+
+import EdiblePortion from '@/components/EdiblePortion.vue';
 
 import { getSortedByName, findAgeData } from '@/helpers/Arr';
 import { 
