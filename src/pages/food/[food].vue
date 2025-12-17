@@ -45,48 +45,15 @@
 
                 <EdiblePortion :value="food.edible_portion" />
 
-                <tr id="calories-available" v-if="food.calories">
-                    <td class="text-grey-darken-3">
-
-                        <NutrientContentLabel  
-                            labelId="calories-provided"
-                            requirementLabelId="calories-required"
-                            percentageId="calories-provided-percentage"
-                            :value="food.calories"
-                            :servingSize="food.serving_size"
-                            :requirement="calorie_req_in_kcal"
-                            requirementUnit="kcal"
-                            :originalServingUnit="food.calories_unit" 
-                            :originalServingsPerContainer="servingsPerContainer"
-                            :newServingSize="newServingSize"
-                            :newServingCount="newServingCount"
-                            :displayValuesPerContainer="displayValuesPerContainer" />
-                        
-                        <FAOContentClaim 
-                            :value="food.calories"
-                            :unit="food.calories_unit"
-                            :requirement="calorie_req_in_kcal"
-                            :food="food" 
-                            :servingsPerContainer="servingsPerContainer" 
-                            :displayValuesPerContainer="displayValuesPerContainer" 
-                            :newServingSize="newServingSize" 
-                            :newServingCount="newServingCount"
-                            :faoNutrientContentClaims="fao_nutrient_claims" />
-
-                        <NutrientContentBar 
-                            elementId="calories-bar"
-                            :value="food.calories"
-                            :servingSize="food.serving_size"
-                            :requirement="calorie_req_in_kcal"
-                            :originalServingSize="food.serving_size"
-                            :originalServingUnit="food.calories_unit" 
-                            :originalServingsPerContainer="servingsPerContainer"
-                            :newServingSize="newServingSize"
-                            :newServingCount="newServingCount"
-                            :displayValuesPerContainer="displayValuesPerContainer"
-                        />
-                    </td>
-                </tr>
+                <CaloriesInfo 
+                    :food="food" 
+                    :requirement="calorie_req_in_kcal" 
+                    :servingsPerContainer="servingsPerContainer" 
+                    :displayValuesPerContainer="displayValuesPerContainer"
+                    :newServingSize="newServingSize"
+                    :newServingCount="newServingCount"
+                    :faoNutrientContentClaims="fao_nutrient_claims"
+                />
             </tbody>
         </v-table>
 
@@ -258,6 +225,7 @@ import FoodHeader from '@/components/FoodHeader.vue';
 import RecipeSource from '@/components/RecipeSource.vue';
 
 import EdiblePortion from '@/components/EdiblePortion.vue';
+import CaloriesInfo from '@/components/CaloriesInfo.vue';
 
 import { getSortedByName, findAgeData } from '@/helpers/Arr';
 import { 
