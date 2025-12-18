@@ -135,7 +135,6 @@
     
     <HowToContribute />
 
-
     </v-col>
     </v-row>
 
@@ -339,8 +338,6 @@ const food_ingredients = ref(null);
 const issueDescription = ref('');
 
 //
-
-
 const tourModeEnabled = inject("tourModeEnabled");
 
 const targets = ref([
@@ -352,20 +349,15 @@ const targets = ref([
     
 
 watch(selected_custom_serving, (new_custom_serving, old_custom_serving) => {
-    
     selected_serving_qty.value = 1;
     newServingSize.value = parseFloat(new_custom_serving);
-    
 });
 
 watch(selected_serving_qty, (new_serving_qty, old_serving_qty) => {
-    
     if (selected_custom_serving.value) {
         newServingSize.value = parseFloat(selected_custom_serving.value) * parseInt(new_serving_qty);
     }
 });
-
-
 
 // ===
 const pageTitle = computed(() => food.value?.description ?? 'Juan Nutrisyon')
@@ -464,31 +456,14 @@ useHead(() => ({
 
 // ===
 
-const getFAOColor = (value) => {
-    const fao_colors = {
-        'free': 'blue-grey-lighten-1',
-        'very low': 'blue-grey-darken-1',
-        'low': 'blue',
-        'source': 'yellow',
-        'high': 'red'
-    };
-    return fao_colors[value];
-}
-
 const openModifyServingCountModal = () => {
     
     modifyServingCountDialog.value = true;
 }
 
 const openModifyServingSizeModal = () => {
-    console.log('lulu')
     modifyServingSizeDialog.value = true;
 }
-
-const getValueColor = (value, daily_limit) => {
-
-    return 'deep-purple-lighten-2';
-};
 
 const modifyServingSize = () => {
     modifyServingSizeDialog.value = false;
@@ -711,9 +686,7 @@ const fetchFoodData = async () => {
     }
 }
 
-// 
-console.log('slug: ', route.params.food);
-
+//
 const { data: foodData, error } = await useAsyncData('food', () =>
     $fetch(`${API_BASE_URI}/foods/${route.params.food}`)
 )
@@ -925,8 +898,6 @@ const fetchData = async () => {
 
         daily_values_table.value = dv_table;
     
-        
-
         if (res.data.value.servings_per_container) {
             servingsPerContainer.value = res.data.value.servings_per_container;
 
@@ -1014,7 +985,6 @@ const fetchData = async () => {
         // get fao claims
         let fao_nutrient_content_claims = null;
        
-
         const fao_nutrient_content_claims_res = await useFetch(`${API_BASE_URI}/fao-nutrient-content-claims`);
         fao_nutrient_content_claims = fao_nutrient_content_claims_res.data.value;
         if (process.client) {
