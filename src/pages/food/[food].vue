@@ -59,91 +59,29 @@
 
         <Toggle id="show-more-nutrients" v-model:show="displayMoreNutrients" label="Show more nutrient data" />
 
-        <div class="mt-3" v-if="elements && elements.length && recommended_daily_values && displayMoreNutrients">
-            <span class="text-subtitle-2">Elements</span>
-            <NutrientsTable 
-                :nutrients="elements" 
-                :servingsPerContainer="servingsPerContainer" 
-                :displayValuesPerContainer="displayValuesPerContainer"
-                :displayMoreNutrients="displayMoreNutrients"
-                :recommended_daily_values="recommended_daily_values"
-                :originalServingSize="food.serving_size"
-                :newServingSize="newServingSize"
-                :newServingCount="newServingCount"
-                :getValueColor="getValueColor"
-                :foodState="food.state.name"
-                :foodCalories="food.calories"
-                :faoNutrientContentClaims="fao_nutrient_claims"  />
-        </div>
+        <NutrientsInfo 
+            :elements="elements"
+            :macros="macros"
+            :vitamins="vitamins"
+            :minerals="minerals"
+            :others="others"
 
-        <div id="macros-details-section" class="mt-3" v-if="macros && macros.length && recommended_daily_values">
-            <h2 class="text-subtitle-2">Macronutrients</h2>
-            <NutrientsTable 
-                :nutrients="macros" 
-                :servingsPerContainer="servingsPerContainer" 
-                :displayValuesPerContainer="displayValuesPerContainer"
-                :displayMoreNutrients="displayMoreNutrients"
-                :recommended_daily_values="recommended_daily_values"
-                :originalServingSize="food.serving_size"
-                :newServingSize="newServingSize"
-                :newServingCount="newServingCount"
-                :getValueColor="getValueColor"
-                :foodState="food.state.name" 
-                :foodCalories="food.calories"
-                :faoNutrientContentClaims="fao_nutrient_claims"
-            />
-        </div>
+            :calories="calories"
+            :foodState="food.state.name"
 
-        <div id="vitamins-section" class="mt-3" v-if="vitamins && vitamins.length && recommended_daily_values">
-            <h2 class="text-subtitle-2">Vitamins</h2>
-            <NutrientsTable 
-                :nutrients="vitamins" 
-                :servingsPerContainer="servingsPerContainer" 
-                :displayValuesPerContainer="displayValuesPerContainer"
-                :displayMoreNutrients="displayMoreNutrients"
-                :recommended_daily_values="recommended_daily_values"
-                :originalServingSize="food.serving_size"
-                :newServingSize="newServingSize"
-                :newServingCount="newServingCount"
-                :getValueColor="getValueColor"
-                :foodState="food.state.name"
-                :foodCalories="food.calories"
-                :faoNutrientContentClaims="fao_nutrient_claims"  />
-        </div>
+            :faoNutrientContentClaims="fao_nutrient_claims"
 
-        <div id="minerals-section" class="mt-3" v-if="minerals && minerals.length && recommended_daily_values">
-            <h2 class="text-subtitle-2">Minerals</h2>
-            <NutrientsTable 
-                :nutrients="minerals" 
-                :servingsPerContainer="servingsPerContainer" 
-                :displayValuesPerContainer="displayValuesPerContainer"
-                :displayMoreNutrients="displayMoreNutrients"
-                :recommended_daily_values="recommended_daily_values"
-                :originalServingSize="food.serving_size"
-                :newServingSize="newServingSize"
-                :newServingCount="newServingCount"
-                :getValueColor="getValueColor"
-                :foodState="food.state.name"
-                :foodCalories="food.calories"
-                :faoNutrientContentClaims="fao_nutrient_claims"  />
-        </div>
+            :recommendedDailyValues="recommended_daily_values"
 
-        <div id="others-section" class="mt-3" v-if="others && others.length && recommended_daily_values">
-            <h2 class="text-subtitle-2">Others</h2>
-            <NutrientsTable 
-                :nutrients="others" 
-                :servingsPerContainer="servingsPerContainer" 
-                :displayValuesPerContainer="displayValuesPerContainer"
-                :displayMoreNutrients="displayMoreNutrients"
-                :recommended_daily_values="recommended_daily_values"
-                :originalServingSize="food.serving_size"
-                :newServingSize="newServingSize"
-                :newServingCount="newServingCount"
-                :getValueColor="getValueColor"
-                :foodState="food.state.name"
-                :foodCalories="food.calories"
-                :faoNutrientContentClaims="fao_nutrient_claims"  />
-        </div>   
+            :servingsPerContainer="servingsPerContainer"
+            :displayValuesPerContainer="displayValuesPerContainer"
+            :newServingCount="newServingCount"
+            :newServingSize="newServingSize"
+
+            :displayMoreNutrients="displayMoreNutrients"
+
+            :originalServingSize="food.serving_size"
+        />
         
         <DownloadNutritionLabel :food="food" :recommended_daily_values="recommended_daily_values" />
     </div>
@@ -274,6 +212,8 @@ import CountryOfOrigin from '@/components/CountryOfOrigin.vue';
 import FAOContentClaim from '@/components/FAOContentClaim.vue';
 import NutrientContentLabel from '@/components/NutrientContentLabel.vue';
 import NutrientContentBar from '@/components/NutrientContentBar.vue';
+
+import NutrientsInfo from '@/components/NutrientsInfo.vue';
 
 import Toggle from '@/components/Toggle.vue';
 
