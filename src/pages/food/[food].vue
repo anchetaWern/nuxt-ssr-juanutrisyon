@@ -617,9 +617,7 @@ const fetchFoodData = async () => {
         () => $fetch(`/api/foods/${route.params.food}`),
         {
             server: true,
-            lazy: false,
-            transform: (data) => data,
-            getCachedData: (key) => nuxtApp.payload.data[key]
+            lazy: false
         }
     );
 
