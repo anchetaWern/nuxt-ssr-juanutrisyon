@@ -2,6 +2,9 @@
 import vuetify from 'vite-plugin-vuetify'
 
 export default defineNuxtConfig({
+  routeRules: {
+    '/foods/**': { isr: 86400 } // or 604800 = 7 days
+  },
   runtimeConfig: {
     public: {
       apiBaseUri: process.env.VITE_API_URI || 'http://localhost:3000'
@@ -66,7 +69,7 @@ export default defineNuxtConfig({
   ssr: true,
 
   nitro: {
-    preset: 'vercel', // 'cloudflare-pages'
+    preset: 'vercel-static', //'vercel', // 'cloudflare-pages'
     compressPublicAssets: true,
 
     prerender: {
