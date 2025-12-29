@@ -7,7 +7,9 @@
         <v-card title="Modify Serving Size">
             <div class="px-5 py-2">
                 <div v-if="customServingSizes">
-                    <v-radio-group v-model="selected_custom_serving">
+                    <v-radio-group 
+                        :model-value="selectedCustomServing"
+                        @update:model-value="val => $emit('update:selectedCustomServing', val)">
                         <v-radio 
                             :label="cs.name" 
                             :value="cs.volume_in_ml ? convertWeight(food.density.density, cs.volume_in_ml) : cs.weight" 
@@ -68,9 +70,10 @@ const props = defineProps({
     customServingSizes: Array,
     qty: [String, Number],
     servingSize: [String, Number],
+    selectedCustomServing: [String, Number],
 });
 
-const emit = defineEmits(['update:open', 'update:qty', 'update:servingSize']);
+const emit = defineEmits(['update:open', 'update:qty', 'update:servingSize', 'update:selectedCustomServing']);
 
 const updateQty = (updatedQty) => {
     emit('update:qty', updatedQty);

@@ -108,7 +108,8 @@
             v-model:open="modifyServingSizeDialog" 
             :customServingSizes="custom_serving_sizes"
             v-model:qty="selected_serving_qty"
-            v-model:servingSize="newServingSize" />
+            v-model:servingSize="newServingSize"
+            v-model:selectedCustomServing="selected_custom_serving" />
 
         <ModifyServingCountModal v-model:open="modifyServingCountDialog" v-model:newServingCount="newServingCount" />
 
