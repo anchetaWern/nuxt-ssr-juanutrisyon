@@ -80,26 +80,7 @@ export default defineNuxtConfig({
         '/recipe',
         '/analyze',
         '/ai',       
-        '/categories',
-        '/food/hominy',
-        '/food/bamboo-shoot',
-        '/food/banana-latundan',
-        '/food/milkfish',
-        '/food/banana-saba-boiled',
-        '/food/onion-bombay-bulb',
-        '/food/tinolang-manok',
-        '/food/bicho-bicho',
-        '/food/rice-prep-glutinous-suman-sa-ibos',
-        '/food/garlic-bulb',
-        '/food/pinakbet',
-        '/food/banana-stem',
-        '/food/bear-brand-sterilized-full-cream-milk',
-        '/food/nestle-bear-brand-powdered-milk-drink',
-        '/food/bread-pan-de-bonete',
-        '/food/cassava-suman',
-        '/food/cookies-apas',
-        '/food/banana-fritter',
-        '/food/canola-oil'
+        '/categories'
       ]
     }
   },
