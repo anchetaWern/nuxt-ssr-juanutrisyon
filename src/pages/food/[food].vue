@@ -201,7 +201,7 @@ import DownloadNutritionLabel from '@/components/DownloadNutritionLabel.vue';
 
 import DataSourceInfo from '@/components/DataSourceInfo.vue';
 
-import HowToContribute from '@/components/HowToContribute.vue';
+import HowToContribute from '@/components/HowToContribute.client.vue';
 
 import AllergenInfo from '@/components/AllergenInfo.vue';
 
