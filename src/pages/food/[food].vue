@@ -51,7 +51,7 @@
                     :servingsPerContainer="servingsPerContainer" 
                     :displayValuesPerContainer="displayValuesPerContainer"
                     :newServingSize="newServingSize"
-                    :newServingCount="newServingCount"
+                    :newServingCount="newServingCount ? newServingCount : food.servings_per_container"
                     :faoNutrientContentClaims="fao_nutrient_claims"
                 />
             </tbody>
@@ -75,7 +75,7 @@
 
             :servingsPerContainer="servingsPerContainer"
             :displayValuesPerContainer="displayValuesPerContainer"
-            :newServingCount="newServingCount"
+            :newServingCount="newServingCount ? newServingCount : food.servings_per_container"
             :newServingSize="newServingSize"
 
             :displayMoreNutrients="displayMoreNutrients"
