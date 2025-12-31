@@ -72,6 +72,7 @@ export default defineNuxtConfig({
     preset: 'cloudflare-pages', // 'vercel-static', //'vercel', // 'cloudflare-pages'
     compressPublicAssets: true,
 
+    /*
     prerender: {
       routes: [
         '/',     
@@ -83,6 +84,7 @@ export default defineNuxtConfig({
         '/categories'
       ]
     }
+    */
   },
 
   app: {
