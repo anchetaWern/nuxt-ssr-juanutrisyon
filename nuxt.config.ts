@@ -69,7 +69,7 @@ export default defineNuxtConfig({
   ssr: true,
 
   nitro: {
-    preset: 'vercel-static', //'vercel', // 'cloudflare-pages'
+    preset: 'cloudflare-pages', // 'vercel-static', //'vercel', // 'cloudflare-pages'
     compressPublicAssets: true,
 
     prerender: {
