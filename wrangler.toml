@@ -1,4 +1,4 @@
 # wrangler.toml
-name = "wernancheta-nuxt-juanutrisyon"
+name = "nuxt-ssr-juanutrisyon"
 compatibility_date = "2024-11-01"
-pages_build_output_dir = "./dist/client"
+pages_build_output_dir = ".output/public"
