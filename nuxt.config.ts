@@ -70,6 +70,14 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'cloudflare-pages', // 'vercel-static', //'vercel', // 'cloudflare-pages'
+
+    prerender: {
+      autoSubfolderIndex: false,
+      ignore: [
+        '/images/**' 
+      ]
+    },
+
     compressPublicAssets: true,
 
     /*
