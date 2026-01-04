@@ -69,7 +69,7 @@ export default defineNuxtConfig({
   ssr: true,
 
   nitro: {
-    preset: 'node-server', // 'cloudflare-pages', // 'vercel-static', //'vercel', // 'cloudflare-pages'
+    //preset: 'node-server', // 'cloudflare-pages', // 'vercel-static', //'vercel', // 'cloudflare-pages'
 
     prerender: {
       autoSubfolderIndex: false,
