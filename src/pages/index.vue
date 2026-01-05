@@ -25,7 +25,7 @@
             title=""
           >
             <div class="px-5 pb-3 text-body-1">
-                <h1 class="text-h6">Juan Nutrisyons – Nutrition Facts for Filipino Foods and Recipes.</h1>
+                <h1 class="text-h6">Juan Nutrisyon – Nutrition Facts for Filipino Foods and Recipes.</h1>
                 <div>
                 Helping you make informed food choices—without guilt or fear.
                 </div>
