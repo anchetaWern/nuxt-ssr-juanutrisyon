@@ -2,11 +2,11 @@
 import vuetify from 'vite-plugin-vuetify'
 
 export default defineNuxtConfig({
-  /*
+ 
   routeRules: {
     '/food/**': { isr: 2592000, fallback: true } // or 604800 = 7 days
   },
-  */
+  
   runtimeConfig: {
     public: {
       apiBaseUri: process.env.VITE_API_URI || 'http://localhost:3000'
