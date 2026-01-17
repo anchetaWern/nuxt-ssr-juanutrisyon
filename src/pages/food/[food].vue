@@ -12,7 +12,14 @@
 
   <div class="mt-5" v-if="food">
     
-    <FoodHeader :food="food" :selectedCustomServing="selected_custom_serving" :selectedServingQty="selected_serving_qty" :newServingSize="newServingSize" />
+    <FoodHeader 
+        :food="food" 
+        :selectedCustomServing="selected_custom_serving" 
+        :selectedServingQty="selected_serving_qty" 
+        :newServingSize="newServingSize" 
+        :updateRecipeIngredientCount="updateRecipeIngredientCount"
+        :updateAnalyzeIngredientCount="updateAnalyzeIngredientCount"
+    />
 
     <AlertBox :show="food.nutrients.length === 0 || food.calories === null || food.serving_size === null" /> 
 
@@ -85,6 +92,7 @@
         
         <DownloadNutritionLabel :food="food" :recommended_daily_values="recommended_daily_values" />
     </div>
+
 
     <IngredientsInfo :foodSlug="route.params.food" :ingredients="food.ingredients" :hasAnalysis="food.hasIngredientsInfo" />
 
@@ -1003,6 +1011,15 @@ const fetchData = async () => {
         isLoading.value = false;
     }
 
+}
+
+
+const updateRecipeIngredientCount = () => {
+    emit('update-ingredient-count-child');
+}
+
+const updateAnalyzeIngredientCount = () => {
+    emit('update-analyze-count-child');
 }
 
 </script>

@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, defineEmits } from 'vue';
 
 import Toast, { createToast } from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css'
@@ -45,6 +45,12 @@ const props = defineProps({
     },
     newServingSize: {
         type: Number,
+    },
+    updateRecipeIngredientCount: {
+        type: Function,
+    },
+    updateAnalyzeIngredientCount: {
+        type: Function,
     }
 });
 
@@ -62,8 +68,7 @@ const addToRecipe = () => {
             { type: 'success', position: 'bottom-right' }
         );
 
-        emit('update-ingredient-count-child'); // TODO
-        
+        props.updateRecipeIngredientCount();
     }
 }
 
@@ -115,7 +120,7 @@ const addForAnalysis = () => {
                 { type: 'success', position: 'bottom-right' }
             );
 
-            emit('update-analyze-count-child'); // TODO
+            props.updateAnalyzeIngredientCount();
         }
 
     }
