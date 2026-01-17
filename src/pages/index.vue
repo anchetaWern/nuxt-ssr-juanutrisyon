@@ -25,25 +25,25 @@
             title=""
           >
             <div class="px-5 pb-3 text-body-1">
-                <h1 class="text-h6">Juan Nutrisyon – Nutrition Facts for Filipino Foods and Recipes.</h1>
+                <h1 class="text-h6">Nutrition information for everyday food — without judgment.</h1>
                 <div>
-                Helping you make informed food choices—without guilt or fear.
+                Juan Nutrisyon gives you clear nutrition context for Filipino dishes, recipes, and meals, so you’re not left guessing.
                 </div>
 
                 <div class="mt-5">
-                ✅ Search for foods and instantly view their nutrient content.
+                ✅ Look up foods and their nutrients
                 </div>
 
                 <div>
-                ✅ Build recipes and get a full breakdown of combined nutrients.
+                ✅ Combine ingredients and view recipe breakdowns
                 </div>
 
                 <div>
-                ✅ Track your daily intake and find out if you're meeting your nutritional goals.
+                ✅ Track intake for your own understanding
                 </div>
 
                 <div class="mt-4">
-                ✨ Remember: Your body is resilient, and all foods can have a place in a balanced diet. Focus on eating more <strong>whole foods</strong>, <strong>fiber</strong>, and <strong>essential nutrients</strong>, but also enjoy treats in moderation. You deserve to eat, and no single food defines your health. Moderation, not restriction, is key. 💛
+                ✨ No rules. No guilt. Just information — in a way that respects culture, real life, and personal choice.
                 </div>
             </div>
 
