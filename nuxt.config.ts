@@ -27,7 +27,8 @@ export default defineNuxtConfig({
 
   site: {
     url: "https://app.juanutrisyon.info",
-    name: "Juan Nutrisyon"
+    name: "Juan Nutrisyon",
+    indexable: true
   },
 
 
@@ -159,6 +160,7 @@ export default defineNuxtConfig({
     workbox: {
      
       globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+      maximumFileSizeToCacheInBytes: 10 * 1024 * 1024   // 10 MB
     },
     
     ssr: true,
