@@ -16,7 +16,10 @@
         type="warning"
         variant="outlined"
       >
-        You haven't added any foods yet. You can click on the 'Analyze' button on a food page to add it. 
+        You haven't added any foods yet. Click the button below to look for foods. Once on the food page, click on the "Log as Meal" button then go back to this page.
+        <div>
+          <v-btn variant="outlined" size="x-small" color="success" @click="triggerSearch">Search Food</v-btn>
+        </div>
       </v-alert>
 
       <div id="analyzed-foods" v-if="analyze && analyze.length > 0 && servingSizes">
@@ -251,6 +254,7 @@ import { calculatePercentage } from '@/helpers/Numbers';
 
 import Tour from '@/components/Tour.vue';
 
+import { bus } from '@/utils/bus'
 
 const API_BASE_URI = import.meta.env.VITE_API_URI;
 
@@ -711,6 +715,11 @@ const submitIssue = async () => {
   
 }
 
+
+const triggerSearch = () => {
+  bus.emit('appbar:trigger');
+  console.log('matia')
+}
 
 
 //

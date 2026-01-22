@@ -162,12 +162,22 @@
 </template>
 <script setup>
 
-import { ref, inject } from 'vue';
+import { ref, inject, onMounted, onUnmounted } from 'vue';
 import { auth } from '@/firebase.js';
 import { signOut } from "firebase/auth";
 import Toast, { createToast } from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css';
 import { useRouter } from 'vue-router';
+
+import { bus } from '@/utils/bus'
+
+function handler() {
+  console.log('App bar button triggered')
+  searchDialog.value = true;
+}
+
+onMounted(() => bus.on('appbar:trigger', handler))
+onUnmounted(() => bus.off('appbar:trigger', handler))
 
 // Props
 const props = defineProps({

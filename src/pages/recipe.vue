@@ -13,7 +13,10 @@
         type="warning"
         variant="outlined"
       >
-        You haven't added any foods yet. You can click on the 'Add to recipe' button on a food page to add it. 
+        You haven't added any foods yet. Click the button below to look for foods. Once on the food page, click on the "Add to Recipe" button then go back to this page.
+        <div>
+          <v-btn variant="outlined" size="x-small" color="success" @click="triggerSearch">Search Food</v-btn>
+        </div>
       </v-alert>
 
       <div v-if="recipe && recipe.length > 0">
@@ -1089,5 +1092,9 @@ const submitIssue = async () => {
           console.log('submit issue error: ', err);
       }
   } 
+}
+
+const triggerSearch = () => {
+  bus.emit('appbar:trigger');
 }
 </script>

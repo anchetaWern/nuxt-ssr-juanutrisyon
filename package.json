@@ -7,14 +7,17 @@
     "generate": "nuxt generate",
     "postinstall": "nuxt prepare",
     "preview": "nuxt preview",
-    "start": "nuxt start"
+    "start": "nuxt start",
+    "build:widget": "vite build --config vite.widget.config.js"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.7.23",
+    "@heroicons/vue": "^2.2.0",
     "@mdi/font": "^7.4.47",
+    "@mdi/js": "^7.4.47",
     "@nuxt/image": "^1.11.0",
     "@nuxtjs/robots": "^5.5.1",
     "@nuxtjs/sitemap": "^7.4.3",
-    "@vercel/analytics": "^1.5.0",
     "@vite-pwa/nuxt": "^1.1.0",
     "@vueuse/head": "^2.0.0",
     "axios": "^1.6.8",
@@ -23,6 +26,7 @@
     "compressorjs": "^1.2.1",
     "firebase": "^11.1.0",
     "html-to-image": "^1.11.11",
+    "mitt": "^3.0.1",
     "mosha-vue-toastify": "^1.0.23",
     "nuxt": "^3.17.1",
     "p-retry": "^6.2.1",

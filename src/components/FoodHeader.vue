@@ -15,7 +15,7 @@
             </div>
             <div class="w-33">
                 <v-btn id="add-to-recipe" size="x-small" color="success" variant="outlined" @click="addToRecipe">Add to Recipe</v-btn>
-                <v-btn id="add-to-analyze" size="x-small" color="primary" variant="outlined" @click="addForAnalysis">Analyze</v-btn>
+                <v-btn id="add-to-analyze" size="x-small" color="primary" variant="outlined" @click="addForAnalysis">Log as Meal</v-btn>
             </div>
         </div>
 
