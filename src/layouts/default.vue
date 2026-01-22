@@ -22,15 +22,58 @@
 
       <FloatingActionButton />
       
+
+    <!-- Install Banner -->
+    <v-slide-y-reverse-transition>
+      <v-card
+        v-if="showBanner"
+        class="install-banner"
+        elevation="8"
+      >
+        <div class="install-content">
+          <div>
+            <strong>Install Juan Nutrisyon</strong><br />
+
+            <small v-if="!isIOS">
+              Access faster.
+            </small>
+
+            <small v-else>
+              Tap
+              <v-icon size="16">mdi-export-variant</v-icon>
+              then <b>Add to Home Screen</b>
+            </small>
+          </div>
+
+          <div class="actions">
+            <v-btn
+              v-if="canInstall && !isIOS"
+              color="yellow-darken-2"
+              @click="install"
+              class="px-3 py-1"
+            >
+              Install
+            </v-btn>
+
+            <v-btn icon @click="dismiss">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </div>
+        </div>
+      </v-card>
+    </v-slide-y-reverse-transition>
+
+
   </v-app>
 </template>
 
 <script setup>
 import { computed, ref, onMounted, provide } from 'vue';
+import { usePWAInstall } from '@/composables/usePWAInstall'
+
 import { useRouter } from 'vue-router'
 import { auth } from '@/firebase.js';
 import { onAuthStateChanged } from "firebase/auth";
-import { Analytics } from '@vercel/analytics/nuxt'
 
 import DefaultBar from './default-bar.vue'
 import DefaultView from './default-view.vue'
@@ -141,4 +184,39 @@ const updateTourMode = (value) => {
   tourModeEnabled.value = value
 }
 provide('updateTourMode', updateTourMode)
+
+
+const dismissed = ref(false)
+
+const { canInstall, isIOS, showBanner, install, dismiss } = usePWAInstall()
+console.log('can install: ', canInstall.value);
+console.log('is ios: ', isIOS.value);
+console.log('show banner: ', showBanner.value);
+
 </script>
+
+<style>
+.install-banner {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 520px;
+  border-radius: 16px;
+  z-index: 9999;
+}
+
+.install-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+</style>
