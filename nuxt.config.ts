@@ -57,7 +57,8 @@ export default defineNuxtConfig({
   },
   vite: {
     plugins: [
-      vuetify({ autoImport: true })
+      vuetify({ autoImport: true }),
+      { src: './src/plugins/gtag.client.js', mode: 'client' }
     ],
     define: {
       'process.env.DEBUG': false, 
