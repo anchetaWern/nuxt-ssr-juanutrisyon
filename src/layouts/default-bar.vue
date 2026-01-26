@@ -1,10 +1,13 @@
 <template>
   <v-app-bar flat>
-    <v-app-bar-title>
-      <a href="/" style="color: #333;">
-        <NuxtImg src="/juan-nutrisyon-logo.jpg" alt="juan nutrisyon logo" style="width:130px;" id="appIcon" />
+    <v-btn v-if="canGoBack" size="x-small" icon @click="$router.back()">
+      <v-icon>mdi-arrow-left</v-icon>
+    </v-btn>
+ 
+      <a href="/" style="color: #333; margin-left: 10px;">
+        <NuxtImg src="/juan-nutrisyon-logo.jpg" alt="juan nutrisyon logo" style="width:100%;" id="appIcon" />
       </a>
-    </v-app-bar-title>
+    
 
     <template v-slot:append>  
       <v-btn size="x-small" icon="mdi-login" @click="goToLogin" v-if="!loggedInUser" id="loginButton"></v-btn>
@@ -175,6 +178,13 @@ function handler() {
   console.log('App bar button triggered')
   searchDialog.value = true;
 }
+
+const canGoBack = ref(false)
+
+onMounted(() => {
+  if (process.server) return
+  canGoBack.value = window.history.length > 1
+})
 
 onMounted(() => bus.on('appbar:trigger', handler))
 onUnmounted(() => bus.off('appbar:trigger', handler))

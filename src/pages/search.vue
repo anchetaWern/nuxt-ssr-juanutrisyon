@@ -177,24 +177,34 @@ if (params.get("q")) {
 }
 searchSummary.value = summary;
 
-// Function to update search summary
 function updateSearchSummary(newSummary) {
   searchSummary.value = newSummary;
 }
 
-// Watchers for reactive updates
 watch(currentPage, (newPage) => {
-  router.push({ query: { ...route.query, page: newPage } });
-  console.log('tanddo')
-  updateSearchResults();
-});
+  const query = { ...route.query }
+
+  if (newPage <= 1) {
+    delete query.page
+    router.replace({ query }) 
+  } else {
+    query.page = newPage.toString()
+    router.push({ query })
+  }
+
+  updateSearchResults()
+})
 
 watch(
   () => route.query.page,
   (newPage) => {
-    currentPage.value = parseInt(newPage) || 1;
-  }
-);
+    const page = parseInt(newPage)
+
+    currentPage.value = Number.isNaN(page) || page < 1 ? 1 : page
+  },
+  { immediate: true }
+)
+
 
 watch(
   () => route.query.category,
