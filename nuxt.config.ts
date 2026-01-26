@@ -4,7 +4,7 @@ import vuetify from 'vite-plugin-vuetify'
 export default defineNuxtConfig({
  
   routeRules: {
-    '/food/**': { isr: 2592000, fallback: true } // or 604800 = 7 days
+    '/food/**': { ssr: false } 
   },
   
   runtimeConfig: {
