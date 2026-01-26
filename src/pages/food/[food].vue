@@ -152,12 +152,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watchEffect, watch, defineEmits, inject, computed } from 'vue';
+import { ref, onMounted, watchEffect, watch, defineEmits, inject, computed, defineAsyncComponent } from 'vue';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Pie } from 'vue-chartjs'
 import axios from 'axios'
-import NutrientsTable from '@/components/NutrientsTable.vue'
-import NutritionLabel from '@/components/NutritionLabel.vue'
+const NutrientsTable = defineAsyncComponent(() =>
+  import('@/components/NutrientsTable.vue')
+)
+
+const NutritionLabel = defineAsyncComponent(() =>
+  import('@/components/NutritionLabel.vue')
+)
 import { calculatePercentage, formatNumber } from '@/helpers/Numbers';
 
 import { addIngredientToRecipe } from '@/helpers/RecipeIngredients';
@@ -168,10 +173,16 @@ import Tour from '@/components/Tour.vue';
 import AlertBox from '@/components/AlertBox.vue';
 import FoodHeader from '@/components/FoodHeader.vue';
 
-import RecipeSource from '@/components/RecipeSource.vue';
+const RecipeSource = defineAsyncComponent(() =>
+  import('@/components/RecipeSource.vue')
+)
 
-import EdiblePortion from '@/components/EdiblePortion.vue';
-import CaloriesInfo from '@/components/CaloriesInfo.vue';
+const EdiblePortion = defineAsyncComponent(() =>
+  import('@/components/EdiblePortion.vue')
+)
+const CaloriesInfo = defineAsyncComponent(() =>
+  import('@/components/CaloriesInfo.vue')
+)
 
 import { getSortedByName, findAgeData } from '@/helpers/Arr';
 import { 
@@ -193,35 +204,67 @@ import 'mosha-vue-toastify/dist/style.css'
 
 import { useHead } from '@vueuse/head'
 
-import DailyValuesModal from '@/components/Modals/DailyValuesModal.vue';
+const DailyValuesModal = defineAsyncComponent(() =>
+  import('@/components/Modals/DailyValuesModal.vue')
+)
 
-import ImageGallery from '@/components/ImageGallery.vue';
+const ImageGallery = defineAsyncComponent(() =>
+  import('@/components/ImageGallery.vue')
+)
 
-import ReportIssue from '@/components/ReportIssue.vue';
+const ReportIssue = defineAsyncComponent(() =>
+  import('@/components/ReportIssue.vue')
+)
 
-import ModifyServingCountModal from '@/components/Modals/ModifyServingCountModal.vue';
+const ModifyServingCountModal = defineAsyncComponent(() =>
+  import('@/components/Modals/ModifyServingCountModal.vue')
+)
 
-import ModifyServingSizeModal from '@/components/Modals/ModifyServingSizeModal.vue';
 
-import RecipeIngredients from '@/components/RecipeIngredients.vue';
+const ModifyServingSizeModal = defineAsyncComponent(() =>
+  import('@/components/Modals/ModifyServingSizeModal.vue')
+)
 
-import DownloadNutritionLabel from '@/components/DownloadNutritionLabel.vue';
+const RecipeIngredients = defineAsyncComponent(() =>
+  import('@/components/RecipeIngredients.vue')
+)
 
-import DataSourceInfo from '@/components/DataSourceInfo.vue';
+const DownloadNutritionLabel = defineAsyncComponent(() =>
+  import('@/components/DownloadNutritionLabel.vue')
+)
+const DataSourceInfo = defineAsyncComponent(() =>
+  import('@/components/DataSourceInfo.vue')
+)
 
-import HowToContribute from '@/components/HowToContribute.vue';
+const HowToContribute = defineAsyncComponent(() =>
+  import('@/components/HowToContribute.vue')
+)
 
-import AllergenInfo from '@/components/AllergenInfo.vue';
+const AllergenInfo = defineAsyncComponent(() =>
+  import('@/components/AllergenInfo.vue')
+)
 
-import IngredientsInfo from '@/components/IngredientsInfo.vue';
+const IngredientsInfo = defineAsyncComponent(() =>
+  import('@/components/IngredientsInfo.vue')
+)
+const CountryOfOrigin = defineAsyncComponent(() =>
+  import('@/components/CountryOfOrigin.vue')
+)
 
-import CountryOfOrigin from '@/components/CountryOfOrigin.vue';
+const FAOContentClaim = defineAsyncComponent(() =>
+  import('@/components/FAOContentClaim.vue')
+)
+const NutrientContentLabel = defineAsyncComponent(() =>
+  import('@/components/NutrientContentLabel.vue')
+)
 
-import FAOContentClaim from '@/components/FAOContentClaim.vue';
-import NutrientContentLabel from '@/components/NutrientContentLabel.vue';
-import NutrientContentBar from '@/components/NutrientContentBar.vue';
+const NutrientContentBar = defineAsyncComponent(() =>
+  import('@/components/NutrientContentBar.vue')
+)
 
-import NutrientsInfo from '@/components/NutrientsInfo.vue';
+const NutrientsInfo = defineAsyncComponent(() =>
+  import('@/components/NutrientsInfo.vue')
+)
 
 import Toggle from '@/components/Toggle.vue';
 
