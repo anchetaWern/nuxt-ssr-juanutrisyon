@@ -6,9 +6,7 @@
       <v-col cols="12" md="8" lg="6" xl="6">
 
     
-<div class="text-center mt-10" v-if="isLoading">
-    <v-progress-circular indeterminate color="primary"></v-progress-circular>
-</div>
+<FoodSkeletonLoader v-if="isLoading" />
 
   <div class="mt-5" v-if="food">
     
@@ -172,6 +170,7 @@ import Tour from '@/components/Tour.vue';
 
 import AlertBox from '@/components/AlertBox.vue';
 import FoodHeader from '@/components/FoodHeader.vue';
+import FoodSkeletonLoader from '@/components/FoodSkeletonLoader.vue';
 
 const RecipeSource = defineAsyncComponent(() =>
   import('@/components/RecipeSource.vue')
@@ -320,7 +319,7 @@ const displayValuesPerContainer = ref(false);
 
 const route = useRoute();
 
-const isLoading = ref(false);
+const isLoading = ref(true);
 
 const food = ref(null);
 
@@ -660,7 +659,7 @@ const updateTargets = (food) => {
 }
 
 
-
+/*
 const fetchFoodData = async () => {
    
     const { data: foodData } = await useAsyncData(
@@ -735,8 +734,10 @@ const fetchFoodData = async () => {
        
     }
 }
+*/
 
 //
+/*
 const { data: foodData, error } = await useAsyncData('food', () =>
     $fetch(`${API_BASE_URI}/foods/${route.params.food}`)
 )
@@ -746,7 +747,6 @@ if (error) {
 }
 
 if (foodData.value) {
-    
 
     food.value = foodData.value;
     updateTargets(foodData.value);
@@ -848,6 +848,7 @@ if (foodData.value) {
     }
 
 }
+*/
 
 
 const { data: consolidatedDailyNutrientDv, error: daily_nutrient_dv_err } = await useAsyncData('dailyNutrient', () => 
@@ -1055,6 +1056,19 @@ const fetchData = async () => {
     }
 
 }
+
+
+//
+onMounted(async () => {
+  try {
+    fetchData();
+  } catch (e) {
+    error.value = e
+  } finally {
+    
+  }
+})
+//
 
 
 const updateRecipeIngredientCount = () => {
