@@ -1,10 +1,8 @@
 <template>
     
     <div class="mt-5 pt-5">
-        <div class="text-center">
-          <v-progress-circular indeterminate v-if="isLoading" color="primary"></v-progress-circular>
-        </div>
-
+        <SearchSkeleton v-if="isLoading" />
+      
         <div v-if="!isLoading">
           <v-alert
               border="top"
@@ -65,6 +63,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { unslugify } from '@/helpers/Str';
 import { convertKjToKcal } from '@/helpers/Nutrients';
 import Tour from '@/components/Tour.vue';
+import SearchSkeleton from '@/components/SearchSkeleton.vue';
 
 import { retryAxios } from '@/api/retryAxios';
 
