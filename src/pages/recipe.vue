@@ -1,6 +1,11 @@
 <template>
  
-    <v-container class="mt-5" id="recipe-container">
+<v-container class="mt-5" id="recipe-container">
+
+
+<v-row justify="center">
+  <v-col cols="12">
+
     
       <div class="text-subtitle-1 mb-2">
         Create Recipe
@@ -62,7 +67,130 @@
 
       </div>
 
-      <v-dialog
+
+      <div v-if="recipe && recipe.length > 0">
+
+        <v-table>
+            <tbody>
+                <tr>
+                    <td id="serving-size-mirror" class="text-grey-darken-3">
+                        Serving Size: {{ wholeNumber(serving_size) }}g
+                    </td>
+                </tr>
+                <tr>
+                    <td id="serving-count-mirror" class="text-grey-darken-3">
+                        Total Servings: {{ wholeNumber(servingCount) }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td id="calories-per-serving" class="text-grey-darken-3">
+                        Calories per serving: <span id="calories">{{ wholeNumber(recipe_calories_per_serving) }}kcal</span> / <span id="calories-required">2000kcal</span> <span id="calories-percent-of-required">({{ formatNumber(calculatePercentage(amountPerContainer(recipe_calories_per_serving, servingCount, displayValuesPerContainer, serving_size, serving_size, servingCount), 2000)) }}%)</span>
+                        <v-progress-linear 
+                          id="calories-progress"
+                          class="mt-1"
+                          :model-value="calculatePercentage(amountPerContainer(recipe_calories_per_serving, servingCount, true, serving_size, serving_size, servingCount), 2000)" 
+                          bg-color="grey-darken-3" 
+                          color="deep-purple-lighten-2">
+                        </v-progress-linear>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td id="total-calories" class="text-grey-darken-3">
+                        Total Calories: {{ wholeNumber(recipe_total_calories) }}kcal
+                    </td>
+                </tr>
+
+                <tr>
+                    <td id="ingredient-count" class="text-grey-darken-3">
+                        Ingredient count: {{ ingredients_count }}
+                    </td>
+                </tr>
+
+            </tbody>
+        </v-table>
+
+        <v-switch 
+            v-model="displayMoreNutrients" 
+            label="Show more nutrient data"
+            color="success"
+            hide-details
+            inset
+        ></v-switch>
+
+        <div class="text-subtitle-1 mb-2">Estimated nutrients per serving</div>
+
+        <div id="macros-section" class="mt-3" v-if="macros.length && recommended_daily_values">
+          <span class="text-subtitle-2">Macronutrients</span>
+          <NutrientsTable 
+            v-if="macros"
+            :nutrients="macros" 
+            :displayMoreNutrients="displayMoreNutrients"
+            servingsPerContainer="1" 
+            displayValuesPerContainer="false"
+            :recommended_daily_values="recommended_daily_values"
+            :newServingSize="newServingSize"
+            :newServingCount="newServingCount"
+            :getValueColor="getValueColor" />
+        </div>
+
+
+        <div id="vitamins-section" class="mt-3" v-if="vitamins.length && recommended_daily_values">
+          <span class="text-subtitle-2">Vitamins</span>
+          <NutrientsTable 
+            :nutrients="vitamins" 
+            servingsPerContainer="1"
+            :displayMoreNutrients="displayMoreNutrients" 
+            displayValuesPerContainer="false"
+            :recommended_daily_values="recommended_daily_values"
+            :newServingSize="newServingSize"
+            :newServingCount="newServingCount"
+            :getValueColor="getValueColor" />
+        </div>
+
+        <div id="minerals-section" class="mt-3" v-if="minerals.length && recommended_daily_values">
+          <span class="text-subtitle-2">Minerals</span>
+          <NutrientsTable 
+            :nutrients="minerals" 
+            servingsPerContainer="1"
+            :displayMoreNutrients="displayMoreNutrients" 
+            displayValuesPerContainer="false"
+            :recommended_daily_values="recommended_daily_values"
+            :newServingSize="newServingSize"
+            :newServingCount="newServingCount"
+            :getValueColor="getValueColor" />
+        </div>
+
+        <div id="other-nutrients-section" class="mt-3" v-if="others.length && recommended_daily_values">
+          <span class="text-subtitle-2">Others</span>
+          <NutrientsTable 
+            :nutrients="others" 
+            servingsPerContainer="1" 
+            :displayMoreNutrients="displayMoreNutrients"
+            displayValuesPerContainer="false"
+            :recommended_daily_values="recommended_daily_values"
+            :newServingSize="newServingSize"
+            :newServingCount="newServingCount"
+            :getValueColor="getValueColor" />
+        </div>
+
+
+        <div class="mt-5 text-center">
+          <v-btn id="report-issue" size="x-small" variant="text" @click="openReportIssueModal">
+          Report Issue
+          </v-btn>
+        </div>
+
+      </div>
+
+    </v-col>
+  </v-row>
+</v-container>
+
+
+
+ <v-dialog
           v-model="modifyServingSizeDialog"
           width="300"
       >
@@ -129,125 +257,6 @@
               </template>
           </v-card>
       </v-dialog>
-
-
-    </v-container>
-
-    <div v-if="recipe && recipe.length > 0">
-
-      <v-table>
-          <tbody>
-              <tr>
-                  <td id="serving-size-mirror" class="text-grey-darken-3">
-                      Serving Size: {{ wholeNumber(serving_size) }}g
-                  </td>
-              </tr>
-              <tr>
-                  <td id="serving-count-mirror" class="text-grey-darken-3">
-                      Total Servings: {{ wholeNumber(servingCount) }}
-                  </td>
-              </tr>
-
-              <tr>
-                  <td id="calories-per-serving" class="text-grey-darken-3">
-                      Calories per serving: <span id="calories">{{ wholeNumber(recipe_calories_per_serving) }}kcal</span> / <span id="calories-required">2000kcal</span> <span id="calories-percent-of-required">({{ formatNumber(calculatePercentage(amountPerContainer(recipe_calories_per_serving, servingCount, displayValuesPerContainer, serving_size, serving_size, servingCount), 2000)) }}%)</span>
-                      <v-progress-linear 
-                        id="calories-progress"
-                        class="mt-1"
-                        :model-value="calculatePercentage(amountPerContainer(recipe_calories_per_serving, servingCount, true, serving_size, serving_size, servingCount), 2000)" 
-                        bg-color="grey-darken-3" 
-                        color="deep-purple-lighten-2">
-                      </v-progress-linear>
-                  </td>
-              </tr>
-
-              <tr>
-                  <td id="total-calories" class="text-grey-darken-3">
-                      Total Calories: {{ wholeNumber(recipe_total_calories) }}kcal
-                  </td>
-              </tr>
-
-              <tr>
-                  <td id="ingredient-count" class="text-grey-darken-3">
-                      Ingredient count: {{ ingredients_count }}
-                  </td>
-              </tr>
-
-          </tbody>
-      </v-table>
-
-      <v-switch 
-          v-model="displayMoreNutrients" 
-          label="Show more nutrient data"
-          color="success"
-          hide-details
-          inset
-      ></v-switch>
-
-      <div class="text-subtitle-1 mb-2">Estimated nutrients per serving</div>
-
-      <div id="macros-section" class="mt-3" v-if="macros.length && recommended_daily_values">
-        <span class="text-subtitle-2">Macronutrients</span>
-        <NutrientsTable 
-          v-if="macros"
-          :nutrients="macros" 
-          :displayMoreNutrients="displayMoreNutrients"
-          servingsPerContainer="1" 
-          displayValuesPerContainer="false"
-          :recommended_daily_values="recommended_daily_values"
-          :newServingSize="newServingSize"
-          :newServingCount="newServingCount"
-          :getValueColor="getValueColor" />
-      </div>
-
-
-      <div id="vitamins-section" class="mt-3" v-if="vitamins.length && recommended_daily_values">
-        <span class="text-subtitle-2">Vitamins</span>
-        <NutrientsTable 
-          :nutrients="vitamins" 
-          servingsPerContainer="1"
-          :displayMoreNutrients="displayMoreNutrients" 
-          displayValuesPerContainer="false"
-          :recommended_daily_values="recommended_daily_values"
-          :newServingSize="newServingSize"
-          :newServingCount="newServingCount"
-          :getValueColor="getValueColor" />
-      </div>
-
-      <div id="minerals-section" class="mt-3" v-if="minerals.length && recommended_daily_values">
-        <span class="text-subtitle-2">Minerals</span>
-        <NutrientsTable 
-          :nutrients="minerals" 
-          servingsPerContainer="1"
-          :displayMoreNutrients="displayMoreNutrients" 
-          displayValuesPerContainer="false"
-          :recommended_daily_values="recommended_daily_values"
-          :newServingSize="newServingSize"
-          :newServingCount="newServingCount"
-          :getValueColor="getValueColor" />
-      </div>
-
-      <div id="other-nutrients-section" class="mt-3" v-if="others.length && recommended_daily_values">
-        <span class="text-subtitle-2">Others</span>
-        <NutrientsTable 
-          :nutrients="others" 
-          servingsPerContainer="1" 
-          :displayMoreNutrients="displayMoreNutrients"
-          displayValuesPerContainer="false"
-          :recommended_daily_values="recommended_daily_values"
-          :newServingSize="newServingSize"
-          :newServingCount="newServingCount"
-          :getValueColor="getValueColor" />
-      </div>
-
-
-      <div class="mt-5 text-center">
-        <v-btn id="report-issue" size="x-small" variant="text" @click="openReportIssueModal">
-        Report Issue
-        </v-btn>
-      </div>
-
-    </div>
 
 
     <v-dialog

@@ -19,7 +19,7 @@
     </div>
 
   
-    <v-card class="mx-auto" max-width="450" v-if="!isLoading">
+    <v-card class="mx-auto" v-if="!isLoading">
       <v-list
         id="search-list"
         :items="items"

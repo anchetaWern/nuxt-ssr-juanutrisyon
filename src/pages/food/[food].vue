@@ -3,7 +3,7 @@
     <v-container class="mt-5" id="food-container">
 
 <v-row justify="center">
-      <v-col cols="12" md="8" lg="6" xl="6">
+      <v-col cols="12">
 
     
 <FoodSkeletonLoader v-if="isLoading" />

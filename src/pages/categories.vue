@@ -7,9 +7,6 @@
   }
 }
 
-#category-container {
-  max-width: 450px;
-}
 </style>
 
 

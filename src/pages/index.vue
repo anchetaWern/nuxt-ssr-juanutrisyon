@@ -7,9 +7,6 @@
   }
 }
 
-#main-container {
-  max-width: 450px;
-}
 </style>
 
 
