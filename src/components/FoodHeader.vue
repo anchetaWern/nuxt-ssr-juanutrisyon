@@ -57,17 +57,26 @@ const props = defineProps({
 const addToRecipe = () => {
     
     if (process.client) {
-
-        addIngredientToRecipe(props.food, props.food.serving_size, props.selectedCustomServing, props.selectedServingQty);
+        const ok = addIngredientToRecipe(props.food, props.food.serving_size, props.selectedCustomServing, props.newServingSize, props.selectedServingQty);
         
-        createToast(
-            {
-                title: 'Added!',
-                description: props.food.recipe_ingredients.length ? 'Recipe ingredients was added' : 'Ingredient was added to recipe'
-            }, 
-            { type: 'success', position: 'bottom-right' }
-        );
-
+        if (ok) {
+            createToast(
+                {
+                    title: 'Added!',
+                    description: props.food.recipe_ingredients.length ? 'Recipe ingredients was added' : 'Ingredient was added to recipe'
+                }, 
+                { type: 'success', position: 'bottom-right' }
+            );
+        } else {
+            createToast(
+                {
+                    title: 'Error!',
+                    description: 'Ingredient was already added to the recipe.'
+                }, 
+                { type: 'danger', position: 'bottom-right' }
+            );
+        }
+        
         props.updateRecipeIngredientCount();
     }
 }
@@ -121,6 +130,14 @@ const addForAnalysis = () => {
             );
 
             props.updateAnalyzeIngredientCount();
+        } else {
+            createToast(
+                {
+                    title: 'Error!',
+                    description: 'Food was already added for analysis.'
+                }, 
+                { type: 'danger', position: 'bottom-right' }
+            );
         }
 
     }

@@ -1,4 +1,4 @@
-export const addIngredientToRecipe = (ingredient, ingredient_serving_size, selected_custom_serving, selected_serving_qty) => {
+export const addIngredientToRecipe = (ingredient, ingredient_serving_size, selected_custom_serving, new_serving_size, selected_serving_qty) => {
 
     // selected_custom_serving = selected_custom_serving.value
     // selected_serving_qty = selected_serving_qty.value
@@ -23,7 +23,7 @@ export const addIngredientToRecipe = (ingredient, ingredient_serving_size, selec
                 serving_size_data = JSON.parse(serving_size);
             }
 
-            serving_size_data[ingredient.description_slug] = ingredient_serving_size;
+            serving_size_data[ingredient.description_slug] = new_serving_size ? new_serving_size : ingredient_serving_size; 
             sessionStorage.setItem('recipe_serving_sizes', JSON.stringify(serving_size_data));
 
             let stored_custom_servings = {};
@@ -33,7 +33,7 @@ export const addIngredientToRecipe = (ingredient, ingredient_serving_size, selec
             }
 
             stored_custom_servings[ingredient.description_slug] = {
-                'weight': selected_custom_serving ? selected_custom_serving : ingredient_serving_size, 
+                'weight': new_serving_size ? new_serving_size : ingredient_serving_size, 
                 'qty': selected_serving_qty ? selected_serving_qty : 1, 
             }
 
