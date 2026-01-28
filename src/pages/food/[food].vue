@@ -17,6 +17,7 @@
         :newServingSize="newServingSize" 
         :updateRecipeIngredientCount="updateRecipeIngredientCount"
         :updateAnalyzeIngredientCount="updateAnalyzeIngredientCount"
+        :openModifyServingSizeModal="openModifyServingSizeModal"
     />
 
     <AlertBox :show="food.nutrients.length === 0 || food.calories === null || food.serving_size === null" /> 
@@ -115,7 +116,8 @@
             :customServingSizes="custom_serving_sizes"
             v-model:qty="selected_serving_qty"
             v-model:servingSize="newServingSize"
-            v-model:selectedCustomServing="selected_custom_serving" />
+            v-model:selectedCustomServing="selected_custom_serving"
+            :modifyServingSizeAction="modifyServingSizeAction" />
 
         <ModifyServingCountModal v-model:open="modifyServingCountDialog" v-model:newServingCount="newServingCount" />
 
@@ -163,7 +165,7 @@ const NutritionLabel = defineAsyncComponent(() =>
 )
 import { calculatePercentage, formatNumber } from '@/helpers/Numbers';
 
-import { addIngredientToRecipe } from '@/helpers/RecipeIngredients';
+import { addIngredientToRecipe, addItemToSessionBucket } from '@/helpers/RecipeIngredients';
 
 import { convertWeight, FAONutrientContentClaim, normalizeFoodState, convertKjToKcal, extractNutrients } from '@/helpers/Nutrients';
 import Tour from '@/components/Tour.vue';
@@ -377,6 +379,7 @@ const servingsPerContainer = ref(1);
 const hasValuesPerContainerToggle = ref(false);
 
 const modifyServingSizeDialog = ref(false);
+const modifyServingSizeDialogAction = ref(null);
 
 const modifyServingCountDialog = ref(false);
 
@@ -512,7 +515,9 @@ const openModifyServingCountModal = () => {
     modifyServingCountDialog.value = true;
 }
 
-const openModifyServingSizeModal = () => {
+const openModifyServingSizeModal = (action = null) => {
+    console.log('action: ', action);
+    modifyServingSizeDialogAction.value = action;
     modifyServingSizeDialog.value = true;
 }
 
@@ -1079,6 +1084,76 @@ const updateAnalyzeIngredientCount = () => {
     emit('update-analyze-count-child');
 }
 
+const modifyServingSizeAction = () => {
+    console.log('modify serving size act: ', modifyServingSizeDialogAction.value);
+    if (modifyServingSizeDialogAction.value === 'recipe') {
+        addToRecipe();
+    } else if (modifyServingSizeDialogAction.value === 'analyze') {
+        addForAnalysis();
+    }
+}
+
+const addToRecipe = () => {
+    
+    if (process.client) {
+        const ok = addIngredientToRecipe(food.value, food.value.serving_size, selected_custom_serving.value, newServingSize.value, selected_serving_qty.value);
+        
+        if (ok) {
+            createToast(
+                {
+                    title: 'Added!',
+                    description: food.value.recipe_ingredients.length ? 'Recipe ingredients was added' : 'Ingredient was added to recipe'
+                }, 
+                { type: 'success', position: 'bottom-right' }
+            );
+        } else {
+            createToast(
+                {
+                    title: 'Error!',
+                    description: 'Ingredient was already added to the recipe.'
+                }, 
+                { type: 'danger', position: 'bottom-right' }
+            );
+        }
+        
+        updateRecipeIngredientCount();
+    }
+}
+
+
+const addForAnalysis = () => {
+    if (!process.client) return;
+
+    const ok = addItemToSessionBucket({
+        item: food.value,
+        bucketKey: 'analyze',
+        servingSizeKey: 'analyze_serving_sizes',
+        customServingKey: 'analyze_custom_servings',
+        defaultServingSize: food.value.serving_size,
+        selectedServingSize: newServingSize.value,
+        selectedServingQty: selected_serving_qty.value,
+    });
+
+    if (ok) {
+        createToast(
+            {
+                title: 'Added!',
+                description: 'Food was added for analysis',
+            },
+            { type: 'success', position: 'bottom-right' }
+        );
+
+        updateAnalyzeIngredientCount();
+    } else {
+        createToast(
+            {
+                title: 'Error!',
+                description: 'Food was already added for analysis.',
+            },
+            { type: 'danger', position: 'bottom-right' }
+        );
+    }
+};
 </script>
 
 <style>

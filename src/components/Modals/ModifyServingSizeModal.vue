@@ -45,7 +45,7 @@
                     @update:model-value="updateServingSize"
                 ></v-text-field>
 
-                <v-btn color="primary" block @click="emit('update:open', false)" rounded="0">Modify serving size</v-btn>
+                <v-btn color="primary" block @click="modifyServingSize" rounded="0">Modify serving size</v-btn>
             </div>
         </v-card>
 
@@ -71,10 +71,16 @@ const props = defineProps({
     qty: [String, Number],
     servingSize: [String, Number],
     selectedCustomServing: [String, Number],
+    modifyServingSizeAction: Function,
 });
 
 const emit = defineEmits(['update:open', 'update:qty', 'update:servingSize', 'update:selectedCustomServing']);
 
+const modifyServingSize = () => {
+    props.modifyServingSizeAction();
+    emit('update:open', false);
+}
+ 
 const updateQty = (updatedQty) => {
     emit('update:qty', updatedQty);
 }
