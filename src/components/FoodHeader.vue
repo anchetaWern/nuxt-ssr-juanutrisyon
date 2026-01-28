@@ -28,7 +28,7 @@ import { defineProps, defineEmits } from 'vue';
 import Toast, { createToast } from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css'
 
-import { addIngredientToRecipe } from '@/helpers/RecipeIngredients';
+import { addIngredientToRecipe, addItemToSessionBucket } from '@/helpers/RecipeIngredients';
 
 const props = defineProps({
     food: {
@@ -83,65 +83,38 @@ const addToRecipe = () => {
 
 
 const addForAnalysis = () => {
+    if (!process.client) return;
 
-    if (process.client) {
+    const ok = addItemToSessionBucket({
+        item: props.food,
+        bucketKey: 'analyze',
+        servingSizeKey: 'analyze_serving_sizes',
+        customServingKey: 'analyze_custom_servings',
+        defaultServingSize: props.food.serving_size,
+        selectedServingSize: props.newServingSize,
+        selectedServingQty: props.selectedServingQty,
+    });
 
-        const analyze = sessionStorage.getItem('analyze');
-        let analyze_data = [];
-        if (analyze) {
-            analyze_data = JSON.parse(analyze);
-        }
+    if (ok) {
+        createToast(
+            {
+                title: 'Added!',
+                description: 'Food was added for analysis',
+            },
+            { type: 'success', position: 'bottom-right' }
+        );
 
-        const index = analyze_data.findIndex(itm => itm.description_slug === props.food.description_slug);
-        if (index === -1) {
-            analyze_data.push(props.food);
-            sessionStorage.setItem('analyze', JSON.stringify(analyze_data));
-
-            let serving_size_data = {};
-            const serving_size = sessionStorage.getItem('analyze_serving_sizes');
-            if (serving_size) {
-                serving_size_data = JSON.parse(serving_size);
-            }
-
-            serving_size_data[props.food.description_slug] = props.newServingSize ? props.newServingSize : props.food.serving_size; 
-            sessionStorage.setItem('analyze_serving_sizes', JSON.stringify(serving_size_data));
-
-            
-            let stored_custom_servings = {};
-            const stored_cs = sessionStorage.getItem('analyze_custom_servings');
-            if (stored_cs) {
-                stored_custom_servings = JSON.parse(stored_cs);
-            }
-
-            stored_custom_servings[props.food.description_slug] = {
-                'weight': props.selectedCustomServing ? props.selectedCustomServing : props.food.serving_size, 
-                'qty': props.selectedServingQty ? props.selectedServingQty : 1, 
-            }
-
-            sessionStorage.setItem('analyze_custom_servings', JSON.stringify(stored_custom_servings));
-            
-
-            createToast(
-                {
-                    title: 'Added!',
-                    description: 'Food was added for analysis'
-                }, 
-                { type: 'success', position: 'bottom-right' }
-            );
-
-            props.updateAnalyzeIngredientCount();
-        } else {
-            createToast(
-                {
-                    title: 'Error!',
-                    description: 'Food was already added for analysis.'
-                }, 
-                { type: 'danger', position: 'bottom-right' }
-            );
-        }
-
+        props.updateAnalyzeIngredientCount();
+    } else {
+        createToast(
+            {
+                title: 'Error!',
+                description: 'Food was already added for analysis.',
+            },
+            { type: 'danger', position: 'bottom-right' }
+        );
     }
-}
+};
 </script>
 
 <style>

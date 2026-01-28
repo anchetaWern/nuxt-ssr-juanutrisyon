@@ -45,3 +45,53 @@ export const addIngredientToRecipe = (ingredient, ingredient_serving_size, selec
         return false;
     }
 }
+
+
+export const addItemToSessionBucket = ({
+    item,
+    bucketKey,
+    servingSizeKey,
+    customServingKey,
+    defaultServingSize,
+    selectedServingSize,
+    selectedServingQty,
+}) => {
+    if (!process.client) return false;
+
+    // Main bucket
+    const stored = sessionStorage.getItem(bucketKey);
+    let data = stored ? JSON.parse(stored) : [];
+
+    const index = data.findIndex(
+        itm => itm.description_slug === item.description_slug
+    );
+
+    if (index !== -1) {
+        return false;
+    }
+
+    data.push(item);
+    sessionStorage.setItem(bucketKey, JSON.stringify(data));
+
+    // Serving sizes
+    const ssStored = sessionStorage.getItem(servingSizeKey);
+    let servingSizes = ssStored ? JSON.parse(ssStored) : {};
+
+    servingSizes[item.description_slug] =
+        selectedServingSize || defaultServingSize;
+
+    sessionStorage.setItem(servingSizeKey, JSON.stringify(servingSizes));
+
+    // Custom servings
+    const csStored = sessionStorage.getItem(customServingKey);
+    let customServings = csStored ? JSON.parse(csStored) : {};
+
+    customServings[item.description_slug] = {
+        weight: selectedServingSize || defaultServingSize,
+        qty: selectedServingQty || 1,
+    };
+
+    sessionStorage.setItem(customServingKey, JSON.stringify(customServings));
+
+    return true;
+};
