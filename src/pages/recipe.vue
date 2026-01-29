@@ -1,299 +1,337 @@
 <template>
  
-<v-container class="mt-5" id="recipe-container">
+
+  <v-container class="mt-5" id="recipe-container">
+
+    <v-row justify="center">
+      <v-col cols="12">
+
+        <div class="text-subtitle-1 mb-2">
+          Create Recipe
+          <v-btn size="x-small" variant="text" icon="mdi-help" @click="helpDialog = true" id="helpButton"></v-btn>
+        </div> 
+
+        <v-alert 
+          v-if="!recipe || recipe.length === 0"
+          density="compact"
+          type="warning"
+          variant="outlined"
+        >
+          You haven't added any foods yet. Click the button below to look for foods. Once on the food page, click on the "Add to Recipe" button then go back to this page.
+          <div>
+            <v-btn variant="outlined" size="x-small" color="success" @click="triggerSearch">Search Food</v-btn>
+          </div>
+        </v-alert>
+
+        <v-row class="w-100">
+          
+          <v-col lg="4" md="6" cols="12">
+          
+            <div v-if="recipe && recipe.length > 0">
+              
+              <div id="recipe-foods" v-for="food in recipe" :key="food.description_slug" class="mb-3">
+                <FoodCard 
+                  :food="food" 
+                  :removeFood="removeFood" 
+                  :initialServingSize="servingSizes[food.description_slug]"
+                  @update-serving-size="updateServingSize"
+                  :openModifyServingSizeModal="openModifyServingSizeModal"
+                  :key="food_card_key" />
+              </div>
+
+            </div>
+          </v-col>
+
+          <v-col lg="4" md="6" cols="12">
+          
+            <div>
+              <v-text-field
+                id="serving-count"
+                v-model="servingCount"
+                @input="onUpdateServingCount"
+                label="Number of servings"
+              ></v-text-field>
+
+              <div v-if="loggedInUser">
+
+                <v-text-field
+                  id="recipe-name"
+                  v-model="recipeName"
+                  label="Recipe name"
+                ></v-text-field>
+
+                <v-file-input 
+                  id="recipe-image"
+                  clearable 
+                  @click:clear="clearImage"
+                  label="Recipe image" 
+                  @change="previewImage('captured_title_image_data', 'title_image_file_input', $event)" 
+                  ref="title_image_file_input">
+                </v-file-input>
+
+                <img id="recipe-image-preview" :src="recipe_image || captured_title_image_data" class="img" />
+
+                <v-btn id="save-recipe" color="primary" block @click="saveRecipe" rounded="0" :disabled="saveRecipeDisabled">Save Recipe</v-btn>
+              </div>
+
+            </div>
 
 
-<v-row justify="center">
-  <v-col cols="12">
+            <div v-if="mdAndUp && recipe && recipe.length > 0 && servingSizes" style="visibility: hidden;">
+              <div class="text-subtitle-1 mt-5 mb-2">Summary</div>
+
+              <v-row id="analysis-summary" v-if="summary_nutrients && summary_nutrients.length > 0" justify="space-between">
+                <v-col
+                  v-for="summary_nut in summary_nutrients"
+                  :key="summary_nut.name"
+                  sm="4" 
+                  md="4"
+                  class="mb-1"
+                >
+                  <NutritionCard :nutrient="summary_nut" :limits="recommended_daily_values" />
+                </v-col>
+              </v-row>
+
+            </div>
+
+
+          </v-col>
+
+          <v-col lg="4" md="6" cols="12">
+          
+            <div v-if="recipe && recipe.length > 0">
+
+              <v-table>
+                  <tbody>
+                      <tr>
+                          <td id="serving-size-mirror" class="text-grey-darken-3">
+                              Serving Size: {{ wholeNumber(serving_size) }}g
+                          </td>
+                      </tr>
+                      <tr>
+                          <td id="serving-count-mirror" class="text-grey-darken-3">
+                              Total Servings: {{ wholeNumber(servingCount) }}
+                          </td>
+                      </tr>
+
+                      <tr>
+                          <td id="calories-per-serving" class="text-grey-darken-3">
+                              Calories per serving: <span id="calories">{{ wholeNumber(recipe_calories_per_serving) }}kcal</span> / <span id="calories-required">2000kcal</span> <span id="calories-percent-of-required">({{ formatNumber(calculatePercentage(amountPerContainer(recipe_calories_per_serving, servingCount, displayValuesPerContainer, serving_size, serving_size, servingCount), 2000)) }}%)</span>
+                              <v-progress-linear 
+                                id="calories-progress"
+                                class="mt-1"
+                                :model-value="calculatePercentage(amountPerContainer(recipe_calories_per_serving, servingCount, true, serving_size, serving_size, servingCount), 2000)" 
+                                bg-color="grey-darken-3" 
+                                color="deep-purple-lighten-2">
+                              </v-progress-linear>
+                          </td>
+                      </tr>
+
+                      <tr>
+                          <td id="total-calories" class="text-grey-darken-3">
+                              Total Calories: {{ wholeNumber(recipe_total_calories) }}kcal
+                          </td>
+                      </tr>
+
+                      <tr>
+                          <td id="ingredient-count" class="text-grey-darken-3">
+                              Ingredient count: {{ ingredients_count }}
+                          </td>
+                      </tr>
+
+                  </tbody>
+              </v-table>
+
+              <v-switch 
+                  v-model="displayMoreNutrients" 
+                  label="Show more nutrient data"
+                  color="success"
+                  hide-details
+                  inset
+              ></v-switch>
+
+              <div class="text-subtitle-1 mb-2">Estimated nutrients per serving</div>
+
+              <div id="macros-section" class="mt-3" v-if="macros.length && recommended_daily_values">
+                <span class="text-subtitle-2">Macronutrients</span>
+                <NutrientsTable 
+                  v-if="macros"
+                  :nutrients="macros" 
+                  :displayMoreNutrients="displayMoreNutrients"
+                  servingsPerContainer="1" 
+                  displayValuesPerContainer="false"
+                  :recommended_daily_values="recommended_daily_values"
+                  :newServingSize="newServingSize"
+                  :newServingCount="newServingCount"
+                  :getValueColor="getValueColor" />
+              </div>
+
+
+              <div id="vitamins-section" class="mt-3" v-if="vitamins.length && recommended_daily_values">
+                <span class="text-subtitle-2">Vitamins</span>
+                <NutrientsTable 
+                  :nutrients="vitamins" 
+                  servingsPerContainer="1"
+                  :displayMoreNutrients="displayMoreNutrients" 
+                  displayValuesPerContainer="false"
+                  :recommended_daily_values="recommended_daily_values"
+                  :newServingSize="newServingSize"
+                  :newServingCount="newServingCount"
+                  :getValueColor="getValueColor" />
+              </div>
+
+              <div id="minerals-section" class="mt-3" v-if="minerals.length && recommended_daily_values">
+                <span class="text-subtitle-2">Minerals</span>
+                <NutrientsTable 
+                  :nutrients="minerals" 
+                  servingsPerContainer="1"
+                  :displayMoreNutrients="displayMoreNutrients" 
+                  displayValuesPerContainer="false"
+                  :recommended_daily_values="recommended_daily_values"
+                  :newServingSize="newServingSize"
+                  :newServingCount="newServingCount"
+                  :getValueColor="getValueColor" />
+              </div>
+
+              <div id="other-nutrients-section" class="mt-3" v-if="others.length && recommended_daily_values">
+                <span class="text-subtitle-2">Others</span>
+                <NutrientsTable 
+                  :nutrients="others" 
+                  servingsPerContainer="1" 
+                  :displayMoreNutrients="displayMoreNutrients"
+                  displayValuesPerContainer="false"
+                  :recommended_daily_values="recommended_daily_values"
+                  :newServingSize="newServingSize"
+                  :newServingCount="newServingCount"
+                  :getValueColor="getValueColor" />
+              </div>
+            </div>
+
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col>
+            <div class="mt-5 text-center">
+              <v-btn id="report-issue" size="x-small" variant="text" @click="openReportIssueModal">
+              Report Issue
+              </v-btn>
+            </div>
+          </v-col>
+        </v-row>
+
+
+      </v-col>
+    </v-row>
 
     
-      <div class="text-subtitle-1 mb-2">
-        Create Recipe
-        <v-btn size="x-small" variant="text" icon="mdi-help" @click="helpDialog = true" id="helpButton"></v-btn>
-      </div> 
+    
+  </v-container>
 
-      <v-alert 
-        v-if="!recipe || recipe.length === 0"
-        density="compact"
-        type="warning"
-        variant="outlined"
-      >
-        You haven't added any foods yet. Click the button below to look for foods. Once on the food page, click on the "Add to Recipe" button then go back to this page.
-        <div>
-          <v-btn variant="outlined" size="x-small" color="success" @click="triggerSearch">Search Food</v-btn>
+
+  <v-dialog
+    v-model="modifyServingSizeDialog"
+    width="300"
+  >
+    <v-card title="Modify Serving Size">
+        <div class="px-5 py-2">
+            <div v-if="custom_serving_sizes">
+            
+                <v-radio-group v-model="selected_custom_serving">
+                  <v-radio 
+                    :label="cs.name" 
+                    :value="cs.volume_in_ml ? convertWeight(current_food.density.density, cs.volume_in_ml): cs.weight" 
+                    v-for="cs in custom_serving_sizes">
+                  </v-radio>
+                </v-radio-group>
+
+                <div class="text-medium-emphasis">Quantity</div>
+                <v-number-input
+                    control-variant="split"
+                    inset
+                    v-model="selected_serving_qty"
+                ></v-number-input>
+            </div>
+
+            <div v-if="current_food.custom_serving_size" class="text-body-2 text-medium-emphasis py-1">
+              {{ current_food.custom_serving_size }} = {{ current_food.serving_size }}{{ current_food.serving_size_unit }}
+            </div>
+
+            <div v-else-if="current_food.serving_size" class="text-body-2 text-medium-emphasis py-1">
+              Original serving size: {{ current_food.serving_size }}{{ current_food.serving_size_unit }}
+            </div>
+
+            <div v-if="current_food.servings_per_container" class="text-body-2 text-medium-emphasis py-1">
+              Servings per container: {{ current_food.servings_per_container }} 
+            </div>
+
+            <v-text-field
+                label="Serving size in grams"
+                placeholder="50"
+                v-model="current_food_serving_size"
+            ></v-text-field>
+
+            <v-btn color="primary" block @click="changeServingSize" rounded="0">Modify serving size</v-btn>
         </div>
-      </v-alert>
+    </v-card>
 
-      <div v-if="recipe && recipe.length > 0">
-        
-        <div id="recipe-foods" v-for="food in recipe" :key="food.description_slug" class="mb-3">
-          <FoodCard 
-            :food="food" 
-            :removeFood="removeFood" 
-            :initialServingSize="servingSizes[food.description_slug]"
-            @update-serving-size="updateServingSize"
-            :openModifyServingSizeModal="openModifyServingSizeModal"
-            :key="food_card_key" />
-        </div>
-
-        <v-text-field
-          id="serving-count"
-          v-model="servingCount"
-          @input="onUpdateServingCount"
-          label="Number of servings"
-        ></v-text-field>
-
-        <div v-if="loggedInUser">
-
-          <v-text-field
-            id="recipe-name"
-            v-model="recipeName"
-            label="Recipe name"
-          ></v-text-field>
-
-          <v-file-input 
-            id="recipe-image"
-            clearable 
-            @click:clear="clearImage"
-            label="Recipe image" 
-            @change="previewImage('captured_title_image_data', 'title_image_file_input', $event)" 
-            ref="title_image_file_input">
-          </v-file-input>
-
-          <img id="recipe-image-preview" :src="recipe_image || captured_title_image_data" class="img" />
-
-          <v-btn id="save-recipe" color="primary" block @click="saveRecipe" rounded="0" :disabled="saveRecipeDisabled">Save Recipe</v-btn>
-        </div>
-
-      </div>
+  </v-dialog>
 
 
-      <div v-if="recipe && recipe.length > 0">
+  <v-dialog
+      v-model="reportIssueModalVisible"
+      width="300"
+  >
+    <v-card title="Report Issue">
+        <template v-slot:text>
+            
+            <v-textarea
+                label="Describe your issue"
+                v-model="issueDescription"
+                rows="2"
+            ></v-textarea>
 
-        <v-table>
-            <tbody>
-                <tr>
-                    <td id="serving-size-mirror" class="text-grey-darken-3">
-                        Serving Size: {{ wholeNumber(serving_size) }}g
-                    </td>
-                </tr>
-                <tr>
-                    <td id="serving-count-mirror" class="text-grey-darken-3">
-                        Total Servings: {{ wholeNumber(servingCount) }}
-                    </td>
-                </tr>
-
-                <tr>
-                    <td id="calories-per-serving" class="text-grey-darken-3">
-                        Calories per serving: <span id="calories">{{ wholeNumber(recipe_calories_per_serving) }}kcal</span> / <span id="calories-required">2000kcal</span> <span id="calories-percent-of-required">({{ formatNumber(calculatePercentage(amountPerContainer(recipe_calories_per_serving, servingCount, displayValuesPerContainer, serving_size, serving_size, servingCount), 2000)) }}%)</span>
-                        <v-progress-linear 
-                          id="calories-progress"
-                          class="mt-1"
-                          :model-value="calculatePercentage(amountPerContainer(recipe_calories_per_serving, servingCount, true, serving_size, serving_size, servingCount), 2000)" 
-                          bg-color="grey-darken-3" 
-                          color="deep-purple-lighten-2">
-                        </v-progress-linear>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td id="total-calories" class="text-grey-darken-3">
-                        Total Calories: {{ wholeNumber(recipe_total_calories) }}kcal
-                    </td>
-                </tr>
-
-                <tr>
-                    <td id="ingredient-count" class="text-grey-darken-3">
-                        Ingredient count: {{ ingredients_count }}
-                    </td>
-                </tr>
-
-            </tbody>
-        </v-table>
-
-        <v-switch 
-            v-model="displayMoreNutrients" 
-            label="Show more nutrient data"
-            color="success"
-            hide-details
-            inset
-        ></v-switch>
-
-        <div class="text-subtitle-1 mb-2">Estimated nutrients per serving</div>
-
-        <div id="macros-section" class="mt-3" v-if="macros.length && recommended_daily_values">
-          <span class="text-subtitle-2">Macronutrients</span>
-          <NutrientsTable 
-            v-if="macros"
-            :nutrients="macros" 
-            :displayMoreNutrients="displayMoreNutrients"
-            servingsPerContainer="1" 
-            displayValuesPerContainer="false"
-            :recommended_daily_values="recommended_daily_values"
-            :newServingSize="newServingSize"
-            :newServingCount="newServingCount"
-            :getValueColor="getValueColor" />
-        </div>
-
-
-        <div id="vitamins-section" class="mt-3" v-if="vitamins.length && recommended_daily_values">
-          <span class="text-subtitle-2">Vitamins</span>
-          <NutrientsTable 
-            :nutrients="vitamins" 
-            servingsPerContainer="1"
-            :displayMoreNutrients="displayMoreNutrients" 
-            displayValuesPerContainer="false"
-            :recommended_daily_values="recommended_daily_values"
-            :newServingSize="newServingSize"
-            :newServingCount="newServingCount"
-            :getValueColor="getValueColor" />
-        </div>
-
-        <div id="minerals-section" class="mt-3" v-if="minerals.length && recommended_daily_values">
-          <span class="text-subtitle-2">Minerals</span>
-          <NutrientsTable 
-            :nutrients="minerals" 
-            servingsPerContainer="1"
-            :displayMoreNutrients="displayMoreNutrients" 
-            displayValuesPerContainer="false"
-            :recommended_daily_values="recommended_daily_values"
-            :newServingSize="newServingSize"
-            :newServingCount="newServingCount"
-            :getValueColor="getValueColor" />
-        </div>
-
-        <div id="other-nutrients-section" class="mt-3" v-if="others.length && recommended_daily_values">
-          <span class="text-subtitle-2">Others</span>
-          <NutrientsTable 
-            :nutrients="others" 
-            servingsPerContainer="1" 
-            :displayMoreNutrients="displayMoreNutrients"
-            displayValuesPerContainer="false"
-            :recommended_daily_values="recommended_daily_values"
-            :newServingSize="newServingSize"
-            :newServingCount="newServingCount"
-            :getValueColor="getValueColor" />
-        </div>
-
-
-        <div class="mt-5 text-center">
-          <v-btn id="report-issue" size="x-small" variant="text" @click="openReportIssueModal">
-          Report Issue
-          </v-btn>
-        </div>
-
-      </div>
-
-    </v-col>
-  </v-row>
-</v-container>
-
-
-
- <v-dialog
-          v-model="modifyServingSizeDialog"
-          width="300"
-      >
-          <v-card title="Modify Serving Size">
-              <div class="px-5 py-2">
-                  <div v-if="custom_serving_sizes">
-                  
-                      <v-radio-group v-model="selected_custom_serving">
-                        <v-radio 
-                          :label="cs.name" 
-                          :value="cs.volume_in_ml ? convertWeight(current_food.density.density, cs.volume_in_ml): cs.weight" 
-                          v-for="cs in custom_serving_sizes">
-                        </v-radio>
-                      </v-radio-group>
-
-                      <div class="text-medium-emphasis">Quantity</div>
-                      <v-number-input
-                          control-variant="split"
-                          inset
-                          v-model="selected_serving_qty"
-                      ></v-number-input>
-                  </div>
-
-                  <div v-if="current_food.custom_serving_size" class="text-body-2 text-medium-emphasis py-1">
-                    {{ current_food.custom_serving_size }} = {{ current_food.serving_size }}{{ current_food.serving_size_unit }}
-                  </div>
-
-                  <div v-else-if="current_food.serving_size" class="text-body-2 text-medium-emphasis py-1">
-                    Original serving size: {{ current_food.serving_size }}{{ current_food.serving_size_unit }}
-                  </div>
-
-                  <div v-if="current_food.servings_per_container" class="text-body-2 text-medium-emphasis py-1">
-                    Servings per container: {{ current_food.servings_per_container }} 
-                  </div>
-
-                  <v-text-field
-                      label="Serving size in grams"
-                      placeholder="50"
-                      v-model="current_food_serving_size"
-                  ></v-text-field>
-
-                  <v-btn color="primary" block @click="changeServingSize" rounded="0">Modify serving size</v-btn>
-              </div>
-          </v-card>
-
-      </v-dialog>
-
-
-      <v-dialog
-          v-model="reportIssueModalVisible"
-          width="300"
-          max-width="400"
-      >
-          <v-card title="Report Issue">
-              <template v-slot:text>
-                  
-                  <v-textarea
-                      label="Describe your issue"
-                      v-model="issueDescription"
-                      rows="2"
-                  ></v-textarea>
-
-                  <v-btn color="primary" block @click="submitIssue" rounded="0">Submit</v-btn>
-              </template>
-          </v-card>
-      </v-dialog>
-
-
-    <v-dialog
-        v-model="helpDialog"
-        width="auto"
-        max-width="350px"
-      >
-        <template v-slot:default="{ isActive }">
-          <v-card title="Help">
-            <template v-slot:text>
-              
-              Click the button below to start a tour of the page. <v-btn class="mt-2" color="primary" @click="enableTourMode" block>Start Tour</v-btn>
-
-              <br>
-              You can use the <a href="/recipe">recipe analysis</a> tool to analyze the nutrient content of a recipe. 
-              <br>
-              Recipe analysis works the same way as diet analysis: search for the individual ingredients and add them to a recipe by clicking on the <strong>add to recipe</strong> button. 
-              Once you've added all the ingredients, go to the <a href="/recipe">create recipe</a> page and modify the serving sizes for each of the ingredient.
-              You can do so by clicking on the weighing scale icon for each food and enter the weight in grams.
-              You will then be able to view the nutrient content of the recipe.
-              <br>
-              You can also save your recipe for other users to view and modify. But this requires a Juan Nutrisyon account. You can click here to <a href="/register">register.</a>
-
-            </template>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-
-              <v-btn
-                text="ok"
-                variant="flat"
-                @click="isActive.value = false"
-              ></v-btn>
-            </v-card-actions>
-          </v-card>
+            <v-btn color="primary" block @click="submitIssue" rounded="0">Submit</v-btn>
         </template>
-      </v-dialog>
+    </v-card>
+  </v-dialog>
+
+
+  <v-dialog
+      v-model="helpDialog"
+      width="auto"
+      max-width="350px"
+    >
+      <template v-slot:default="{ isActive }">
+        <v-card title="Help">
+          <template v-slot:text>
+            
+            Click the button below to start a tour of the page. <v-btn class="mt-2" color="primary" @click="enableTourMode" block>Start Tour</v-btn>
+
+            <br>
+            You can use the <a href="/recipe">recipe analysis</a> tool to analyze the nutrient content of a recipe. 
+            <br>
+            Recipe analysis works the same way as diet analysis: search for the individual ingredients and add them to a recipe by clicking on the <strong>add to recipe</strong> button. 
+            Once you've added all the ingredients, go to the <a href="/recipe">create recipe</a> page and modify the serving sizes for each of the ingredient.
+            You can do so by clicking on the weighing scale icon for each food and enter the weight in grams.
+            You will then be able to view the nutrient content of the recipe.
+            <br>
+            You can also save your recipe for other users to view and modify. But this requires a Juan Nutrisyon account. You can click here to <a href="/register">register.</a>
+
+          </template>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn
+              text="ok"
+              variant="flat"
+              @click="isActive.value = false"
+            ></v-btn>
+          </v-card-actions>
+        </v-card>
+      </template>
+    </v-dialog>
 
 
     <Tour 
@@ -301,7 +339,6 @@
       :isLoading="isLoading"
       v-if="tourModeEnabled"
     />
-    
 
 </template>
 
@@ -322,6 +359,7 @@ import NutrientsTable from '@/components/NutrientsTable.vue'
 import { ref, watch, onMounted, nextTick, defineEmits, inject } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import { useDisplay } from 'vuetify'
 
 import Compressor from 'compressorjs'
 
@@ -374,6 +412,7 @@ useHead({
 
 });
 
+const { mdAndUp } = useDisplay()
 
 const router = useRouter();
 
@@ -1106,4 +1145,6 @@ const submitIssue = async () => {
 const triggerSearch = () => {
   bus.emit('appbar:trigger');
 }
+
+const summary_nutrients = ref([{"name":"water","amount":284.00184,"unit":"g"},{"name":"protein","amount":28.20028,"unit":"g"},{"name":"dietary fiber","amount":5.326,"unit":"g"},{"name":"sodium","amount":276.7498,"unit":"mg"},{"name":"saturated fat","amount":6.6152940000000005,"unit":"g"},{"name":"cholesterol","amount":841.8000000000001,"unit":"mg"},{"name":"sugar","amount":11.38212,"unit":"g"},{"name":"total carbohydrates","amount":30.482599999999998,"unit":"g","composition":[{"name":"dietary fiber","amount":5.326,"unit":"g"},{"name":"sugar","amount":11.38212,"unit":"g"}]},{"name":"total fat","amount":22.19798,"unit":"g","composition":[{"name":"saturated fat","amount":6.6152940000000005,"unit":"g"},{"name":"cholesterol","amount":841.8000000000001,"unit":"mg"},{"name":"unsaturated fat","amount":8.927256,"unit":"g"}]}]);
 </script>
