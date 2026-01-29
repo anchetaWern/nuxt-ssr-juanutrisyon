@@ -2,178 +2,198 @@
  
     <v-container class="mt-5" id="analyze-container">
     
-<v-row justify="center">
-      <v-col cols="12">
+      <v-row justify="center">
+        <v-col cols="12">
 
-      <div class="text-subtitle-1 mb-2">
-        Analyze your diet
-        <v-btn size="x-small" variant="text" icon="mdi-help" @click="helpDialog = true" id="helpButton"></v-btn>
-      </div>
+          <div class="text-subtitle-1 mb-2">
+            Analyze your diet
+            <v-btn size="x-small" variant="text" icon="mdi-help" @click="helpDialog = true" id="helpButton"></v-btn>
+          </div>
 
-      <v-alert 
-        v-if="!analyze || analyze.length === 0"
-        density="compact"
-        type="warning"
-        variant="outlined"
-      >
-        You haven't added any foods yet. Click the button below to look for foods. Once on the food page, click on the "Log as Meal" button then go back to this page.
-        <div>
-          <v-btn variant="outlined" size="x-small" color="success" @click="triggerSearch">Search Food</v-btn>
-        </div>
-      </v-alert>
-
-      <div id="analyzed-foods" v-if="analyze && analyze.length > 0 && servingSizes">
-       
-        <div v-for="food in analyze" :key="food.description_slug" class="mb-3">
-          <FoodCard 
-            :food="food" 
-            :removeFood="removeFood"
-            :initialServingSize="servingSizes[food.description_slug]"
-            @update-serving-size="updateServingSize"
-            :openModifyServingSizeModal="openModifyServingSizeModal"
-            :key="food_card_key" />
-        </div>
-      </div>
-
-      <div v-if="analyze && analyze.length > 0 && servingSizes">
-        <div class="text-subtitle-1 mt-5 mb-2">Summary</div>
-
-        <v-row id="analysis-summary" v-if="summary_nutrients && summary_nutrients.length > 0" justify="space-between" dense no-gutters>
-          <v-col
-            v-for="summary_nut in summary_nutrients"
-            :key="summary_nut.name"
-            sm="4" 
-            md="4"
-            class="mb-1"
+          <v-alert 
+            v-if="!analyze || analyze.length === 0"
+            density="compact"
+            type="warning"
+            variant="outlined"
           >
-            <NutritionCard :nutrient="summary_nut" :limits="recommended_daily_values" />
-          </v-col>
-        </v-row>
+            You haven't added any foods yet. Click the button below to look for foods. Once on the food page, click on the "Log as Meal" button then go back to this page.
+            <div>
+              <v-btn variant="outlined" size="x-small" color="success" @click="triggerSearch">Search Food</v-btn>
+            </div>
+          </v-alert>
 
-        <div v-if="deficient_nutrients && deficient_nutrients.length > 0">
-          <div class="text-subtitle-1 mt-5 mb-2">Deficient Nutrients</div>
+          <v-row>
+            <v-col lg="4" md="6" cols="12">
 
-          <div id="deficient-nutrients">
-            <NutrientsTable 
-              :nutrients="deficient_nutrients" 
-              servingsPerContainer="1" 
-              displayValuesPerContainer="false"
-              :recommended_daily_values="recommended_daily_values"
-              :newServingSize="newServingSize"
-              :newServingCount="newServingCount"
-              :getValueColor="getValueColor"  />
-          </div>
-        </div>
+              <div id="analyzed-foods" v-if="analyze && analyze.length > 0 && servingSizes">
 
-        <div v-if="overconsumed_nutrients && overconsumed_nutrients.length > 0">
-          <div class="text-subtitle-1 mt-5 mb-2">Over-consumed nutrients</div>
-
-          <div id="overconsumed-nutrients">
-            <NutrientsTable 
-              :nutrients="overconsumed_nutrients" 
-              servingsPerContainer="1" 
-              displayValuesPerContainer="false"
-              :recommended_daily_values="recommended_daily_values"
-              :newServingSize="newServingSize"
-              :newServingCount="newServingCount"
-              :getValueColor="getValueColor" />
-          </div>
-        </div>
-
-        <div v-if="good_coverage_nutrients && good_coverage_nutrients.length > 0">
-          <div class="text-subtitle-1 mt-5 mb-2">Nutrients with good coverage</div>
-
-          <div id="good-coverage-nutrients">
-            <NutrientsTable 
-              :nutrients="good_coverage_nutrients" 
-              servingsPerContainer="1" 
-              displayValuesPerContainer="false"
-              :recommended_daily_values="recommended_daily_values"
-              :newServingSize="newServingSize"
-              :newServingCount="newServingCount"
-              :getValueColor="getValueColor"  />
-          </div>
-        </div>
-
-
-        <div class="mt-5 text-center">
-          <v-btn id="report-issue" size="x-small" variant="text" @click="openReportIssueModal">
-          Report Issue
-          </v-btn>
-        </div>
-
-      </div>
-
-
-      <v-dialog
-          v-model="modifyServingSizeDialog"
-          width="300"
-      >
-          <v-card title="Modify Serving Size">
-              <div class="px-5 py-2">
-                  <div v-if="custom_serving_sizes">
-                  
-                      <v-radio-group v-model="selected_custom_serving">
-                        <v-radio 
-                          :label="cs.name" 
-                          :value="cs.volume_in_ml ? convertWeight(current_food.density.density, cs.volume_in_ml): cs.weight" 
-                          v-for="cs in custom_serving_sizes">
-                        </v-radio>
-                      </v-radio-group>
-
-                      <div class="text-medium-emphasis">Quantity</div>
-                      <v-number-input
-                          control-variant="split"
-                          inset
-                          v-model="selected_serving_qty"
-                      ></v-number-input>
-                  </div>
-
-                  <div v-if="current_food.custom_serving_size" class="text-body-2 text-medium-emphasis py-1">
-                    {{ current_food.custom_serving_size }} = {{ current_food.serving_size }}{{ current_food.serving_size_unit }}
-                  </div>
-
-                  <div v-else-if="current_food.serving_size" class="text-body-2 text-medium-emphasis py-1">
-                    Original serving size: {{ current_food.serving_size }}{{ current_food.serving_size_unit }}
-                  </div>
-
-                  <div v-if="current_food.servings_per_container" class="text-body-2 text-medium-emphasis py-1">
-                    Servings per container: {{ current_food.servings_per_container }} 
-                  </div>
-
-                  <v-text-field
-                      label="Serving size in grams"
-                      placeholder="50"
-                      v-model="current_food_serving_size"
-                  ></v-text-field>
-
-                  <v-btn color="primary" block @click="modifyServingSize" rounded="0">Modify serving size</v-btn>
+                <div v-for="food in analyze" :key="food.description_slug" class="mb-3">
+                  <FoodCard 
+                    :food="food" 
+                    :removeFood="removeFood"
+                    :initialServingSize="servingSizes[food.description_slug]"
+                    @update-serving-size="updateServingSize"
+                    :openModifyServingSizeModal="openModifyServingSizeModal"
+                    :key="food_card_key" />
+                </div>
               </div>
-          </v-card>
 
-      </v-dialog>
+            </v-col>
 
-      <v-dialog
-          v-model="reportIssueModalVisible"
-          width="300"
-          max-width="400"
-      >
-          <v-card title="Report Issue">
-              <template v-slot:text>
-                  
-                  <v-textarea
-                      label="Describe your issue"
-                      v-model="issueDescription"
-                      rows="2"
-                  ></v-textarea>
+            <v-col lg="4" md="6" cols="12">
 
-                  <v-btn color="primary" block @click="submitIssue" rounded="0">Submit</v-btn>
-              </template>
-          </v-card>
-      </v-dialog>
+              <div v-if="analyze && analyze.length > 0 && servingSizes">
+                <div class="text-subtitle-1 mt-5 mb-2">Summary</div>
 
-</v-col>
-</v-row>
+                <v-row id="analysis-summary" v-if="summary_nutrients && summary_nutrients.length > 0" justify="space-between" dense no-gutters>
+                  <v-col
+                    v-for="summary_nut in summary_nutrients"
+                    :key="summary_nut.name"
+                    sm="4" 
+                    md="4"
+                    class="mb-1"
+                  >
+                    <NutritionCard :nutrient="summary_nut" :limits="recommended_daily_values" />
+                  </v-col>
+                </v-row>
+
+              </div>
+
+            </v-col>
+
+            <v-col lg="4" md="6" cols="12">
+              <div v-if="analyze && analyze.length > 0 && servingSizes">
+
+                <div v-if="deficient_nutrients && deficient_nutrients.length > 0">
+                  <div class="text-subtitle-1 mt-5 mb-2">Deficient Nutrients</div>
+
+                  <div id="deficient-nutrients">
+                    <NutrientsTable 
+                      :nutrients="deficient_nutrients" 
+                      servingsPerContainer="1" 
+                      displayValuesPerContainer="false"
+                      :recommended_daily_values="recommended_daily_values"
+                      :newServingSize="newServingSize"
+                      :newServingCount="newServingCount"
+                      :getValueColor="getValueColor"  />
+                  </div>
+                </div>
+
+                <div v-if="overconsumed_nutrients && overconsumed_nutrients.length > 0">
+                  <div class="text-subtitle-1 mt-5 mb-2">Over-consumed nutrients</div>
+
+                  <div id="overconsumed-nutrients">
+                    <NutrientsTable 
+                      :nutrients="overconsumed_nutrients" 
+                      servingsPerContainer="1" 
+                      displayValuesPerContainer="false"
+                      :recommended_daily_values="recommended_daily_values"
+                      :newServingSize="newServingSize"
+                      :newServingCount="newServingCount"
+                      :getValueColor="getValueColor" />
+                  </div>
+                </div>
+
+                <div v-if="good_coverage_nutrients && good_coverage_nutrients.length > 0">
+                  <div class="text-subtitle-1 mt-5 mb-2">Nutrients with good coverage</div>
+
+                  <div id="good-coverage-nutrients">
+                    <NutrientsTable 
+                      :nutrients="good_coverage_nutrients" 
+                      servingsPerContainer="1" 
+                      displayValuesPerContainer="false"
+                      :recommended_daily_values="recommended_daily_values"
+                      :newServingSize="newServingSize"
+                      :newServingCount="newServingCount"
+                      :getValueColor="getValueColor"  />
+                  </div>
+                </div>
+
+              </div>
+            </v-col>
+
+          </v-row>
+
+          <v-row>
+            <v-col>
+              <div class="mt-5 text-center">
+                <v-btn id="report-issue" size="x-small" variant="text" @click="openReportIssueModal">
+                Report Issue
+                </v-btn>
+              </div>
+            </v-col>
+          </v-row>
+
+
+          <v-dialog
+              v-model="modifyServingSizeDialog"
+              width="300"
+          >
+            <v-card title="Modify Serving Size">
+                <div class="px-5 py-2">
+                    <div v-if="custom_serving_sizes">
+                    
+                        <v-radio-group v-model="selected_custom_serving">
+                          <v-radio 
+                            :label="cs.name" 
+                            :value="cs.volume_in_ml ? convertWeight(current_food.density.density, cs.volume_in_ml): cs.weight" 
+                            v-for="cs in custom_serving_sizes">
+                          </v-radio>
+                        </v-radio-group>
+
+                        <div class="text-medium-emphasis">Quantity</div>
+                        <v-number-input
+                            control-variant="split"
+                            inset
+                            v-model="selected_serving_qty"
+                        ></v-number-input>
+                    </div>
+
+                    <div v-if="current_food.custom_serving_size" class="text-body-2 text-medium-emphasis py-1">
+                      {{ current_food.custom_serving_size }} = {{ current_food.serving_size }}{{ current_food.serving_size_unit }}
+                    </div>
+
+                    <div v-else-if="current_food.serving_size" class="text-body-2 text-medium-emphasis py-1">
+                      Original serving size: {{ current_food.serving_size }}{{ current_food.serving_size_unit }}
+                    </div>
+
+                    <div v-if="current_food.servings_per_container" class="text-body-2 text-medium-emphasis py-1">
+                      Servings per container: {{ current_food.servings_per_container }} 
+                    </div>
+
+                    <v-text-field
+                        label="Serving size in grams"
+                        placeholder="50"
+                        v-model="current_food_serving_size"
+                    ></v-text-field>
+
+                    <v-btn color="primary" block @click="modifyServingSize" rounded="0">Modify serving size</v-btn>
+                </div>
+            </v-card>
+
+          </v-dialog>
+
+          <v-dialog
+              v-model="reportIssueModalVisible"
+              width="300"
+              max-width="400"
+          >
+              <v-card title="Report Issue">
+                  <template v-slot:text>
+                      
+                      <v-textarea
+                          label="Describe your issue"
+                          v-model="issueDescription"
+                          rows="2"
+                      ></v-textarea>
+
+                      <v-btn color="primary" block @click="submitIssue" rounded="0">Submit</v-btn>
+                  </template>
+              </v-card>
+          </v-dialog>
+
+        </v-col>
+      </v-row>
 
     </v-container>
 
