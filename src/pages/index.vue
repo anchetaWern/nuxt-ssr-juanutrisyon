@@ -12,131 +12,40 @@
 
 <template>
  
-    <div class="mt-5" id="main-container">
+    <v-container class="mt-5 overflow-y-auto" id="category-container">
 
       <v-row dense justify="center">
-        <v-col>
+        <v-col
+          v-for="card in cards"
+          :key="card.title"
+          lg="2"
+          md="3"
+          :cols="card.flex" 
+        >
+          <v-card @click="goToCategory(card.slug)" :id="card.slug === 'vegetables' ? 'categoryCard' : ''">
 
-
-          <v-card
-            title=""
-          >
-            <div class="px-5 pb-3 text-body-1">
-                <h1 class="text-h6">Nutrition information for everyday food — without judgment.</h1>
-                <div>
-                Juan Nutrisyon gives you clear nutrition context for Filipino dishes, recipes, and meals, so you’re not left guessing.
-                </div>
-
-                <div class="mt-5">
-                ✅ Look up foods and their nutrients
-                </div>
-
-                <div>
-                ✅ Combine ingredients and view recipe breakdowns
-                </div>
-
-                <div>
-                ✅ Track intake for your own understanding
-                </div>
-
-                <div class="mt-4">
-                ✨ No rules. No guilt. Just information — in a way that respects culture, real life, and personal choice.
-                </div>
-            </div>
-
-            
-          </v-card>
-
-        </v-col>
-      </v-row>
-
-
-      <v-row dense justify="center">
-        <v-col>
-
-          <v-card>
-            <div class="px-5 pt-3 pb-3 text-body-1">
-              <h2 class="text-subtitle-1 font-weight-bold">View Food Database</h2>
-              <p class="text-body-2">Juan Nutrisyon has over 15,000 foods in the database. Our food data is sourced from PhilFCT and USDA food database, but we also add nutrition facts from food labels.</p>
-            </div>
-
-            <div class="px-2 pb-2">
-              <v-btn block href="/categories" color="primary">
-              View
-              </v-btn>
+            <div class="relative" style="height: 200px; overflow: hidden;">
+              <img
+                :src="card.src"
+                :alt="card.title"
+                class="w-full h-full object-cover"
+                style="object-fit: cover; object-position: center; height: 200px; width: 100%;"
+              />
+             
+              <div
+                class="px-4 py-2"
+                style="position: absolute; bottom: 0; width: 100%; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7));"
+              >
+                <h2 class="text-white text-body-2">{{ card.title }}</h2>
+              </div>
             </div>
 
           </v-card>
-
         </v-col>
       </v-row>
 
-      <v-row>
-        <v-col>
+    </v-container>
 
-          <v-card>
-            <div class="px-5 pt-3 pb-3 text-body-1">
-              <h2 class="text-subtitle-1 font-weight-bold">Create & Analyze Recipes</h2>
-              <p class="text-body-2">Can't find a food in our database? You can sign up for an account and create your own recipes. Simply search for the ingredients and add them to a recipe. Adjust the serving sizes accordingly and the nutrients for each serving will now be estimated.</p>
-            </div>
-
-            <div class="px-2 pb-2">
-              <v-btn block href="/recipe" color="primary">
-              Create
-              </v-btn>
-            </div>
-
-          </v-card>
-
-        </v-col>
-
-      </v-row>
-
-      <v-row dense justify="center">
-        <v-col>
-
-          <v-card>
-            <div class="px-5 pt-3 pb-3 text-body-1">
-              <h2 class="text-subtitle-1 font-weight-bold">Analyze Your Diet</h2>
-              <p class="text-body-2">Ever wonder if you're consuming too much of a certain nutrient? Or if you're missing out on essential nutrients because of your diet? Fret not because this tool will allow you to analyze your diet. It will show you the most important nutrients you should be keeping an eye on, your over-consumed nutrients, your deficient nutrients, and your good to go nutrients.</p>
-            </div>
-
-            <div class="px-2 pb-2">
-              <v-btn block href="/analyze" color="primary">
-              Analyze
-              </v-btn>
-            </div>
-
-          </v-card>
-
-        </v-col>
-      </v-row>
-
-      <v-row>
-        <v-col>
-
-          <v-card>
-            <div class="px-5 pt-3 pb-3 text-body-1">
-              <h2 class="text-subtitle-1 font-weight-bold">Contribute Food Data</h2>
-              <p class="text-body-2">This project is funded out of pocket by a one-man team so we rely on community contribution for the food data.</p>
-            </div>
-
-            <div class="px-2 pb-2">
-              <v-btn block href="https://contribute.juanutrisyon.info" color="primary">
-              Contribute
-              </v-btn>
-            </div>
-
-          </v-card>
-
-        </v-col>
-
-      </v-row>
-
-    </div>
-
-
-  
   
     <Tour 
       :targets="targets" 
@@ -159,93 +68,25 @@ useHead({
   link: [
     {
       rel: 'canonical',
-      href: `https://app.juanutrisyon.info`
+      href: `https://app.juanutrisyon.info/categories`
     }
   ],
 
   meta: [
-    { hid: 'description', name: 'description', content: 'Explore nutrition facts for Filipino foods, track calories, analyze your diet, and calculate recipe nutrition.' },
+    { hid: 'description', name: 'description', content: 'Explore nutrition facts for Filipino foods with our database. Track calories, analyze your diet, calculate recipe nutrition, and discover healthier choices for everyday meals.' },
     { name: 'robots', content: 'index, follow' },
 
 
     // Open Graph (Facebook, LinkedIn, etc.)
     { property: 'og:title', content: 'Nutrition Facts for Filipino Foods – Juan Nutrisyon' },
-    { property: 'og:description', content: 'Explore nutrition facts for Filipino foods, track calories, analyze your diet, and calculate recipe nutrition.' },
+    { property: 'og:description', content: 'Explore nutrition facts for Filipino foods with our database. Track calories, analyze your diet, calculate recipe nutrition, and discover healthier choices for everyday meals.' },
     { property: 'og:type', content: 'website' },
 
     // Twitter Card
     { name: 'twitter:card', content: 'summary_large_image' },
     { name: 'twitter:title', content: 'Nutrition Facts for Filipino Foods – Juan Nutrisyon' },
-    { name: 'twitter:description', content: 'Explore nutrition facts for Filipino foods, track calories, analyze your diet, and calculate recipe nutrition.' },
+    { name: 'twitter:description', content: 'Explore nutrition facts for Filipino foods with our database. Track calories, analyze your diet, calculate recipe nutrition, and discover healthier choices for everyday meals.' },
 
-  ],
-
-  script: [
-    {
-      type: "application/ld+json",
-      children: JSON.stringify({
-        "@context": "https://schema.org",
-        "@graph": [
-          {
-            "@type": "WebSite",
-            "@id": "https://app.juanutrisyon.info/#website",
-            "name": "Juan Nutrisyon",
-            "url": "https://app.juanutrisyon.info",
-            "description": "Juan Nutrisyon helps Filipinos make healthier food choices by providing nutrition facts, diet analysis tools, food tracking, and recipe insights.",
-            "publisher": {
-              "@id": "https://app.juanutrisyon.info/#organization"
-            },
-            "potentialAction": {
-              "@type": "SearchAction",
-              "target": "https://app.juanutrisyon.info/search?q={search_term_string}",
-              "query-input": "required name=search_term_string"
-            },
-            "hasPart": [
-              {
-                "@type": "WebPage",
-                "name": "Recipe Creation",
-                "url": "https://app.juanutrisyon.info/recipe"
-              },
-              {
-                "@type": "WebPage",
-                "name": "Diet Analysis",
-                "url": "https://app.juanutrisyon.info/analyze"
-              },
-              {
-                "@type": "WebPage",
-                "name": "Food Contribution",
-                "url": "https://contribute.juanutrisyon.info"
-              }
-            ]
-          },
-          {
-            "@type": "WebApplication",
-            "@id": "https://app.juanutrisyon.info/#webapp",
-            "name": "Juan Nutrisyon",
-            "url": "https://app.juanutrisyon.info",
-            "operatingSystem": "Web",
-            "applicationCategory": "HealthApplication",
-            "description": "Analyze and track your diet, create and view recipe nutrients with Filipino food nutrition data.",
-            "publisher": {
-              "@id": "https://app.juanutrisyon.info/#organization"
-            }
-          },
-          {
-            "@type": "Organization",
-            "@id": "https://app.juanutrisyon.info/#organization",
-            "name": "Juan Nutrisyon",
-            "url": "https://app.juanutrisyon.info",
-            "logo": {
-              "@type": "ImageObject",
-              "url": "https://app.juanutrisyon.info/juan-nutrisyon-logo.jpg"
-            },
-            "sameAs": [
-              "https://www.facebook.com/juanutrisyon"
-            ]
-          }
-        ]
-      })
-    }
   ]
 
 });
@@ -253,13 +94,6 @@ useHead({
 
 const router = useRouter();
 
-const welcomeModalVisible = ref(false);
-
-onMounted(() => {
-  if (process.client) {
-    welcomeModalVisible.value = !localStorage.getItem('welcome_done');
-  }
-});
 
 const tourModalVisible = ref(true);
 
@@ -334,6 +168,11 @@ onAuthStateChanged(auth, (user) => {
     {
       target: "#appIcon",
       description: "Click on this if you want to go back to the home page"
+    },
+
+    {
+      target: "#categoryCard",
+      description: "Click this to list foods of a specific food category"
     }
   ]);
 
@@ -344,12 +183,7 @@ const goToCategory = (slug) => {
   router.push(`/search?category=${slug}`);
 };
 
-const closeWelcomeModal = () => {
-  welcomeModalVisible.value = false;
-  if (process.client) {
-    localStorage.setItem('welcome_done', 'yes');
-  }
-};
+
 
 //
 const steps = ref([

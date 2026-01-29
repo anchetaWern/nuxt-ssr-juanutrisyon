@@ -87,8 +87,7 @@ export default defineNuxtConfig({
    
     prerender: {
       routes: [
-        '/',               
-        '/categories',
+        '/',            
 
         '/food/hominy',
         '/food/bamboo-shoot',
