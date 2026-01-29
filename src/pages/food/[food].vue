@@ -1,153 +1,168 @@
 <template>
 
-    <v-container class="mt-5" id="food-container">
+  <v-container class="mt-5" id="food-container">
 
-<v-row justify="center">
+    <v-row justify="center">
       <v-col cols="12">
 
-    
-<FoodSkeletonLoader v-if="isLoading" />
+        <FoodSkeletonLoader v-if="isLoading" />
 
-  <div class="mt-5" v-if="food">
-    
-    <FoodHeader 
-        :food="food" 
-        :selectedCustomServing="selected_custom_serving" 
-        :selectedServingQty="selected_serving_qty" 
-        :newServingSize="newServingSize" 
-        :updateRecipeIngredientCount="updateRecipeIngredientCount"
-        :updateAnalyzeIngredientCount="updateAnalyzeIngredientCount"
-        :openModifyServingSizeModal="openModifyServingSizeModal"
-    />
+        <div class="mt-5" v-if="food">
+          
+          <FoodHeader 
+              :food="food" 
+              :selectedCustomServing="selected_custom_serving" 
+              :selectedServingQty="selected_serving_qty" 
+              :newServingSize="newServingSize" 
+              :updateRecipeIngredientCount="updateRecipeIngredientCount"
+              :updateAnalyzeIngredientCount="updateAnalyzeIngredientCount"
+              :openModifyServingSizeModal="openModifyServingSizeModal"
+          />
 
-    <AlertBox :show="food.nutrients.length === 0 || food.calories === null || food.serving_size === null" /> 
+          <AlertBox :show="food.nutrients.length === 0 || food.calories === null || food.serving_size === null" /> 
 
-    <div class="mt-3" v-if="hasMacros" id="macros-section">
-        <div class="text-body-2 mb-1 text-center font-weight-medium">Macronutrients</div>
-        <div class="mt-1" style="height: 130px;">
-            <Pie :data="chartData" :options="chartOptions" />
-        </div>
-    </div>
+          <v-row>
+            <v-col lg="4" md="6" cols="12">
 
-    <div class="mt-5 pt-5" v-if="food.nutrients.length > 0">
-        <h2 class="text-body-2 text-center font-weight-medium">Nutrition Facts <v-btn id="nutrition-help" variant="text" size="x-small" icon="mdi-help" @click="dvHelp = true"></v-btn></h2>
-        
-        <Toggle id="display-values-per-container" v-if="hasValuesPerContainerToggle" v-model:show="displayValuesPerContainer" label="Display values per container"  />
+              <div class="mt-10" v-if="hasMacros" id="macros-section">
+                  <div class="text-body-2 mb-1 text-center font-weight-medium">Macronutrients</div>
+                  <div class="mt-1 chart-container">
+                      <Pie :data="chartData" :options="chartOptions" />
+                  </div>
+              </div>
 
-        <v-table>
-            <tbody>
-                <tr id="servings-per-container" v-if="food.servings_per_container">
-                    <td class="text-grey-darken-3">
-                        {{ newServingCount ? newServingCount : food.servings_per_container }} Servings Per Container
-                        <v-btn id="modify-serving-size" size="x-small" @click="openModifyServingCountModal">Modify</v-btn>
-                    </td>
-                </tr>
-                <tr id="serving-size" v-if="food.serving_size">
-                    <td class="text-grey-darken-3">
-                        Serving Size: {{ servingSize(food.serving_size, newServingSize) }}{{ food.serving_size_unit }} <span v-if="food.custom_serving_size">/ {{ food.custom_serving_size }}</span>
-                        <v-btn size="x-small" @click="openModifyServingSizeModal">Modify</v-btn>
-                    </td>
-                </tr>
+            </v-col>
 
-                <EdiblePortion :value="food.edible_portion" />
+            <v-col lg="4" md="6" cols="12">
 
-                <CaloriesInfo 
-                    :food="food" 
-                    :requirement="calorie_req_in_kcal" 
-                    :servingsPerContainer="servingsPerContainer" 
-                    :displayValuesPerContainer="displayValuesPerContainer"
-                    :newServingSize="newServingSize"
-                    :newServingCount="newServingCount ? newServingCount : food.servings_per_container"
+              <div class="mt-5 pt-5" v-if="food.nutrients.length > 0">
+                <h2 class="text-body-2 text-center font-weight-medium">Nutrition Facts <v-btn id="nutrition-help" variant="text" size="x-small" icon="mdi-help" @click="dvHelp = true"></v-btn></h2>
+                
+                <Toggle id="display-values-per-container" v-if="hasValuesPerContainerToggle" v-model:show="displayValuesPerContainer" label="Display values per container"  />
+
+                <v-table>
+                    <tbody>
+                        <tr id="servings-per-container" v-if="food.servings_per_container">
+                            <td class="text-grey-darken-3">
+                                {{ newServingCount ? newServingCount : food.servings_per_container }} Servings Per Container
+                                <v-btn id="modify-serving-size" size="x-small" @click="openModifyServingCountModal">Modify</v-btn>
+                            </td>
+                        </tr>
+                        <tr id="serving-size" v-if="food.serving_size">
+                            <td class="text-grey-darken-3">
+                                Serving Size: {{ servingSize(food.serving_size, newServingSize) }}{{ food.serving_size_unit }} <span v-if="food.custom_serving_size">/ {{ food.custom_serving_size }}</span>
+                                <v-btn size="x-small" @click="openModifyServingSizeModal">Modify</v-btn>
+                            </td>
+                        </tr>
+
+                        <EdiblePortion :value="food.edible_portion" />
+
+                        <CaloriesInfo 
+                            :food="food" 
+                            :requirement="calorie_req_in_kcal" 
+                            :servingsPerContainer="servingsPerContainer" 
+                            :displayValuesPerContainer="displayValuesPerContainer"
+                            :newServingSize="newServingSize"
+                            :newServingCount="newServingCount ? newServingCount : food.servings_per_container"
+                            :faoNutrientContentClaims="fao_nutrient_claims"
+                        />
+                    </tbody>
+                </v-table>
+
+                <Toggle id="show-more-nutrients" v-model:show="displayMoreNutrients" label="Show more nutrient data" />
+
+                <NutrientsInfo 
+                    :elements="elements"
+                    :macros="macros"
+                    :vitamins="vitamins"
+                    :minerals="minerals"
+                    :others="others"
+
+                    :calories="calories"
+                    :foodState="food.state.name"
+
                     :faoNutrientContentClaims="fao_nutrient_claims"
+
+                    :recommendedDailyValues="recommended_daily_values"
+
+                    :servingsPerContainer="servingsPerContainer"
+                    :displayValuesPerContainer="displayValuesPerContainer"
+                    :newServingCount="newServingCount ? newServingCount : food.servings_per_container"
+                    :newServingSize="newServingSize"
+
+                    :displayMoreNutrients="displayMoreNutrients"
+
+                    :originalServingSize="food.serving_size"
                 />
-            </tbody>
-        </v-table>
+                
+                <DownloadNutritionLabel :food="food" :recommended_daily_values="recommended_daily_values" />
+              </div>
+            </v-col>
 
-        <Toggle id="show-more-nutrients" v-model:show="displayMoreNutrients" label="Show more nutrient data" />
+            <v-col lg="4" md="6" cols="12">
+              <div>
 
-        <NutrientsInfo 
-            :elements="elements"
-            :macros="macros"
-            :vitamins="vitamins"
-            :minerals="minerals"
-            :others="others"
+                <IngredientsInfo :foodSlug="route.params.food" :ingredients="food.ingredients" :hasAnalysis="food.hasIngredientsInfo" />
 
-            :calories="calories"
-            :foodState="food.state.name"
+                <AllergenInfo :allergens="food.allergen_information" />
 
-            :faoNutrientContentClaims="fao_nutrient_claims"
+                <RecipeIngredients 
+                    :food="food"
+                    :selectedCustomServing="selected_custom_serving"   
+                    :selectedServingQty="selected_serving_qty" 
+                />
 
-            :recommendedDailyValues="recommended_daily_values"
+                <RecipeSource v-if="food.recipe && food.recipe_source" :name="food.recipe_source.name" :url="food.recipe.source_url" />
 
-            :servingsPerContainer="servingsPerContainer"
-            :displayValuesPerContainer="displayValuesPerContainer"
-            :newServingCount="newServingCount ? newServingCount : food.servings_per_container"
-            :newServingSize="newServingSize"
 
-            :displayMoreNutrients="displayMoreNutrients"
+                <div class="mt-5 pt-5 text-center">
 
-            :originalServingSize="food.serving_size"
+                    <ImageGallery :images="images" />
+
+                    <ModifyServingSizeModal 
+                        :food="food"
+                        v-model:open="modifyServingSizeDialog" 
+                        :customServingSizes="custom_serving_sizes"
+                        v-model:qty="selected_serving_qty"
+                        v-model:servingSize="newServingSize"
+                        v-model:selectedCustomServing="selected_custom_serving"
+                        :modifyServingSizeAction="modifyServingSizeAction" />
+
+                    <ModifyServingCountModal v-model:open="modifyServingCountDialog" v-model:newServingCount="newServingCount" />
+
+                </div>
+
+                <CountryOfOrigin :country="food.origin_country" />
+
+              </div>
+            </v-col>
+
+          </v-row>
+
+          <v-row>
+            <v-col>
+              <ReportIssue :slug="route.params.food" />
+            </v-col>
+          </v-row>
+
+        </div>
+
+        <DailyValuesModal v-model:open="dvHelp" />
+
+        <Tour 
+          :targets="targets" 
+          :isLoading="isLoading"
+          v-if="tourModeEnabled"
         />
+
+        <DataSourceInfo />
         
-        <DownloadNutritionLabel :food="food" :recommended_daily_values="recommended_daily_values" />
-    </div>
+        <HowToContribute />
 
-
-    <IngredientsInfo :foodSlug="route.params.food" :ingredients="food.ingredients" :hasAnalysis="food.hasIngredientsInfo" />
-
-    <AllergenInfo :allergens="food.allergen_information" />
-
-    <RecipeIngredients 
-        :food="food"
-        :selectedCustomServing="selected_custom_serving"   
-        :selectedServingQty="selected_serving_qty" 
-    />
-
-    <RecipeSource v-if="food.recipe && food.recipe_source" :name="food.recipe_source.name" :url="food.recipe.source_url" />
-
-
-    <div class="mt-5 pt-5 text-center">
-
-        <ImageGallery :images="images" />
-
-        <ModifyServingSizeModal 
-            :food="food"
-            v-model:open="modifyServingSizeDialog" 
-            :customServingSizes="custom_serving_sizes"
-            v-model:qty="selected_serving_qty"
-            v-model:servingSize="newServingSize"
-            v-model:selectedCustomServing="selected_custom_serving"
-            :modifyServingSizeAction="modifyServingSizeAction" />
-
-        <ModifyServingCountModal v-model:open="modifyServingCountDialog" v-model:newServingCount="newServingCount" />
-
-
-        <ReportIssue :slug="route.params.food" />
-
-    </div>
-
-    <CountryOfOrigin :country="food.origin_country" />
-
-
-  </div>
-
-
-    <DailyValuesModal v-model:open="dvHelp" />
-
-    <Tour 
-      :targets="targets" 
-      :isLoading="isLoading"
-      v-if="tourModeEnabled"
-    />
-
-    <DataSourceInfo />
-    
-    <HowToContribute />
-
-    </v-col>
+      </v-col>
     </v-row>
 
-</v-container>
+  </v-container>
 
 </template>
 
@@ -1156,8 +1171,19 @@ const addForAnalysis = () => {
 };
 </script>
 
-<style>
+<style scoped>
 #food-container {
     padding: 0.5rem 0 !important;
 }
+
+.chart-container {
+  height: 130px; /* mobile default */
+}
+
+@media (min-width: 960px) { /* Vuetify desktop breakpoint */
+  .chart-container {
+    height: 300px; /* larger on desktop */
+  }
+}
+
 </style>

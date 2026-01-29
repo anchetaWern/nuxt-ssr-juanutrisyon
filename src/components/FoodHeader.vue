@@ -8,14 +8,14 @@
             </div>
         </div>
 
-        <div class="d-flex justify-space-between align-center mt-3">
+        <div class="d-flex align-center mt-3">
             <div class="mt-1">
                 <h1 class="text-body-1" id="food-description">{{ food.description }}</h1>
                 <span id="food-alternate-names" v-if="food.alternate_names != 'N/A'" class="text-medium-emphasis text-subtitle-2">{{ food.alternate_names }}</span>
             </div>
-            <div class="w-33">
+            <div class="ml-auto d-flex gap-2">
                 <v-btn id="add-to-recipe" size="x-small" color="success" variant="outlined" @click="openModifyServingSizeModal('recipe')">Add to Recipe</v-btn>
-                <v-btn id="add-to-analyze" size="x-small" color="primary" variant="outlined" @click="openModifyServingSizeModal('analyze')">Log as Meal</v-btn>
+                <v-btn id="add-to-analyze" class="ml-1" size="x-small" color="primary" variant="outlined" @click="openModifyServingSizeModal('analyze')">Log as Meal</v-btn>
             </div>
         </div>
 
