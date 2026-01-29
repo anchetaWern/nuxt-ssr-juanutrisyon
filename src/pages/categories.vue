@@ -18,7 +18,9 @@
         <v-col
           v-for="card in cards"
           :key="card.title"
-          :cols="card.flex"
+          lg="2"
+          md="3"
+          :cols="card.flex" 
         >
           <v-card @click="goToCategory(card.slug)" :id="card.slug === 'vegetables' ? 'categoryCard' : ''">
 
